@@ -70,7 +70,7 @@ ROOT_URLCONF = 'ai_cctv.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR,"ai_cctv","templates")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
