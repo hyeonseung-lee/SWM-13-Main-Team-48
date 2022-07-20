@@ -9,7 +9,8 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-import os, json
+import os
+import json
 from pathlib import Path
 from django.core.exceptions import ImproperlyConfigured
 
@@ -20,19 +21,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
-#secret file
-secret_file=os.path.join(BASE_DIR,'secrets.json')
+# secret file
+secret_file = os.path.join(BASE_DIR, 'secrets.json')
 
-with open(secret_file,'r') as f:
+with open(secret_file, 'r') as f:
     secrets = json.loads(f.read())
-    
-def get_secret(setting,secrets=secrets):
+
+
+def get_secret(setting, secrets=secrets):
     try:
         return secrets[setting]
     except KeyError:
         error_msg = "Set the {} environment variable.".format(setting)
         raise ImproperlyConfigured(error_msg)
-    
+
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = get_secret("SECRET_KEY")
 
@@ -53,6 +56,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "django.contrib.sites",
     "camera",
+    # "pwa"
 ]
 
 MIDDLEWARE = [
@@ -70,7 +74,7 @@ ROOT_URLCONF = 'ai_cctv.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,"ai_cctv","templates")],
+        'DIRS': [os.path.join(BASE_DIR, "ai_cctv", "templates")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -132,6 +136,8 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

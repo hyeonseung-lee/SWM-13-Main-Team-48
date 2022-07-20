@@ -213,3 +213,8 @@ Temporary Items
 #secret key
 *secrets.json
 *Pipfile
+
+
+# to template
+.prettierignore
+node_modules/
