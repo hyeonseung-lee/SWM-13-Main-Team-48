@@ -21,5 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('camera/', include('camera.urls')),
     path('', main, name='main'),
+    path('analytics/', analytics, name='analytics'),
     # path('', include('pwa.urls')),
 ]
