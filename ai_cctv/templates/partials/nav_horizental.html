@@ -1,3 +1,5 @@
+{% load socialaccount %}
+
 <nav id="header1" class="bg-gray-100 w-auto flex-1 border-b-1 border-gray-300 order-1 lg:order-2">
   <div class="flex h-full justify-between items-center">
     <div>
@@ -31,6 +33,7 @@
           </button>
           <div id="userMenu" class="bg-white nunito rounded shadow-md mt-2 absolute mt-12 top-0 right-0 min-w-full overflow-auto z-30 invisible">
             <ul class="list-reset">
+              {% if user.is_authenticated %}
               <li>
                 <a href="#" class="px-4 py-2 block text-gray-900 hover:bg-indigo-400 hover:text-white no-underline hover:no-underline">My account</a>
               </li>
@@ -41,8 +44,22 @@
                 <hr class="border-t mx-2 border-gray-400"/>
               </li>
               <li>
-                <a href="#" class="px-4 py-2 block text-gray-900 hover:bg-indigo-400 hover:text-white no-underline hover:no-underline">Logout</a>
+                <a href="{% url 'account_logout' %}" class="px-4 py-2 block text-gray-900 hover:bg-indigo-400 hover:text-white no-underline hover:no-underline">Logout</a>
               </li>
+              {% else %}
+              <li>
+                <a href="{% url 'account_login' %}" class="px-4 py-2 block text-gray-900 hover:bg-indigo-400 hover:text-white no-underline hover:no-underline">Login</a>
+              </li>
+              <li>
+                <a href="{% url 'account_signup' %}" class="px-4 py-2 block text-gray-900 hover:bg-indigo-400 hover:text-white no-underline hover:no-underline">Signup</a>
+              </li>
+              <li>
+                <hr class="border-t mx-2 border-gray-400"/>
+              </li>
+              <li>
+                <a href="{% provider_login_url 'kakao' %}" class="px-4 py-2 block text-gray-900 hover:bg-indigo-400 hover:text-white no-underline hover:no-underline">Kakao Login</a>
+              </li>
+              {% endif %}
             </ul>
           </div>
         </div>

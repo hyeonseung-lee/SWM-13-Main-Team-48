@@ -22,5 +22,6 @@ urlpatterns = [
     path('camera/', include('camera.urls')),
     path('', main, name='main'),
     path('analytics/', analytics, name='analytics'),
+    path('accounts/', include('allauth.urls')),
     # path('', include('pwa.urls')),
 ]
