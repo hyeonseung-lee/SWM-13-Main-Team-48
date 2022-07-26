@@ -89,7 +89,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                
+
             ],
         },
     },
@@ -164,6 +164,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/'		# 로그인 후 리디렉션할 페이지
-ACCOUNT_LOGOUT_REDIRECT_URL ='/'	# 로그아웃 후 리디렉션 할 페이지
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'  # 로그아웃 후 리디렉션 할 페이지
 
-SITE_ID = 2
+SITE_ID = 1

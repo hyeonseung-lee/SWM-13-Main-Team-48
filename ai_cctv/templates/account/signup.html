@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+  html,
+  body {
+    height: 100%;
+  }
+
+  .container {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+</style>
+<div class="container" data-aos="fade-down">
+      <div>
+    <form class="signup" method="POST" action="{% url 'account_signup' %}">
+      {% csrf_token %}
+      <div class="c-left">
+        {{ form.as_p }}<br />
+        <div class="signup-btn">
+          <input
+            type="submit"
+            class="upload-btn btn btn-outline-dark"
+            value="완료"
+          />
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
