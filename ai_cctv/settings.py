@@ -62,7 +62,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.kakao',
 
-    "camera",
+    'camera',
     # "pwa"
 ]
 
