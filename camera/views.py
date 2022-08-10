@@ -1,18 +1,16 @@
 from django.shortcuts import render
 from django.http.response import StreamingHttpResponse
 from django.views.decorators import gzip
-from camera.ai_models.check import *
-# Create your views here.
+from camera.ai_models.default import *
+from camera.ai_models.mediapipe import *
+#미디어파이프
+import mediapipe as mp
+from os.path import abspath, join, dirname
+
 
 def camerapage(request):
     return render(request,'camera.html')
-
-def gen(camera):
-    while True:
-        frame = camera.get_frame()
-        yield(b'--frame\r\n'
-              b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
-
+    
 @gzip.gzip_page
 def livecam(request):
     try:
@@ -21,3 +19,8 @@ def livecam(request):
     except:  # This is bad! replace it with proper handling
         print("에러입니다...")
         pass
+
+@gzip.gzip_page
+def mediapipe(request):
+    return StreamingHttpResponse(mediapipe_stream(), content_type="multipart/x-mixed-replace;boundary=frame")
+ 
