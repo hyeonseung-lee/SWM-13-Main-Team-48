@@ -1,4 +1,8 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %}
+{% block content %}
+    
+<img style="width: 768px; height:432px;" src="{% url 'camera:mediapipe' %}"  />
+<img style="width: 768px; height:432px;" src="{% url 'camera:livecam' %}"  />
 
-<img src="{% url 'camera:livecam' %}" style="" />
 {% endblock content %}
+
