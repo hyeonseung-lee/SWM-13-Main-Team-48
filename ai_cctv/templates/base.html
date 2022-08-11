@@ -22,51 +22,13 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.css"/>
     <script src="https://kit.fontawesome.com/fad942d57d.js" crossorigin="anonymous"></script>
     
-    <style>
-      .nunito {
-        font-family: "nunito", font-sans;
-      }
-
-      .border-b-1 {
-        border-bottom-width: 1px;
-      }
-
-      .border-l-1 {
-        border-left-width: 1px;
-      }
-
-      hover\:border-none:hover {
-        border-style: none;
-      }
-
-      #sidebar {
-        transition: ease-in-out all 0.3s;
-        z-index: 9999;
-      }
-
-      #sidebar span {
-        opacity: 0;
-        position: absolute;
-        transition: ease-in-out all 0.1s;
-      }
-
-      #sidebar:hover {
-        width: 150px;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        /*shadow-2xl*/
-      }
-
-      #sidebar:hover span {
-        opacity: 1;
-      }
-    </style>
   </head>
 
   <body class="">
     {% include "partials/nav_horizental.html" %}
     {% include "partials/nav_vertical.html" %}
     
-    <div class="ml-16 flex h-screen w-screen bg-gray-100 font-sans">
+    <div class="pl-16 flex h-screen w-screen bg-gray-100 font-sans">
       {% block content %}
       {% endblock content %}
     </div>
