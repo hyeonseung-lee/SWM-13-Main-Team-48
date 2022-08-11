@@ -9,7 +9,7 @@ def mediapipe_stream():
     mp_pose = mp.solutions.pose
 
     # For webcam input:
-    cap = cv2.VideoCapture('rtsp://admin:somateam23@192.168.1.106:554/profile2/media.smp')
+    cap = cv2.VideoCapture('rtsp://admin:somateam23@aicctv.iptime.org:554/profile2/media.smp')
     with mp_pose.Pose(
         min_detection_confidence=0.5,
         min_tracking_confidence=0.5) as pose:
@@ -42,7 +42,7 @@ def mediapipe_stream():
                 mp_pose.POSE_CONNECTIONS,
                 landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
 
-            _, jpeg = cv2.imencode('.jpg', cv2.flip(background, 1))
+            _, jpeg = cv2.imencode('.jpg', background)
             frame=jpeg.tobytes()
 
             yield(b'--frame\r\n'
