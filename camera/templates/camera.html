@@ -1,8 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
-    
-<img style="width: 768px; height:432px;" src="{% url 'camera:mediapipe' %}"  />
-<img style="width: 768px; height:432px;" src="{% url 'camera:livecam' %}"  />
 
+<div>
+    <img style="width: 768px; height:432px;" src="{% url 'camera:mediapipe' %}"  />
+    <img style="width: 768px; height:432px;" src="{% url 'camera:livecam' %}"  />
+</div>
+<div>
+    <img style="width: 768px; height:432px;" src="{% url 'camera:mediapipe_with_yolo' %}"  />
+    <img style="width: 768px; height:432px;" src="{% url 'camera:enhancement_yolo' %}"  />
+
+</div>
 {% endblock content %}
 
