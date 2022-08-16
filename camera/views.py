@@ -3,6 +3,8 @@ from django.http.response import StreamingHttpResponse
 from django.views.decorators import gzip
 from camera.ai_models.default import *
 from camera.ai_models.mediapipe import *
+from camera.ai_models.mediapipe_with_yolo import *
+from camera.ai_models.enhancement_yolo import *
 #미디어파이프
 import mediapipe as mp
 from os.path import abspath, join, dirname
@@ -23,4 +25,12 @@ def livecam(request):
 @gzip.gzip_page
 def mediapipe(request):
     return StreamingHttpResponse(mediapipe_stream(), content_type="multipart/x-mixed-replace;boundary=frame")
+ 
+@gzip.gzip_page
+def mediapipe_with_yolo(request):
+    return StreamingHttpResponse(mediapipe_with_yolo_stream(), content_type="multipart/x-mixed-replace;boundary=frame")
+ 
+@gzip.gzip_page
+def enhancement_yolo(request):
+    return StreamingHttpResponse(enhancement_yolo_stream(), content_type="multipart/x-mixed-replace;boundary=frame")
  
