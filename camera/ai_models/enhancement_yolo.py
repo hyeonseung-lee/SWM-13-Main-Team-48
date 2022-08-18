@@ -31,9 +31,9 @@ def enhancement_yolo_stream():
     pose_estimator_detected_object_loc = []
 
     # For webcam input:
-    # cap = cv2.VideoCapture(0)
-    cap = cv2.VideoCapture(
-        'rtsp://admin:somateam23@172.16.101.157:554/profile2/media.smp')
+    cap = cv2.VideoCapture(0)
+    # cap = cv2.VideoCapture(
+    #     'rtsp://admin:somateam23@172.16.101.157:554/profile2/media.smp')
 
     while cap.isOpened():
         success, image = cap.read()
