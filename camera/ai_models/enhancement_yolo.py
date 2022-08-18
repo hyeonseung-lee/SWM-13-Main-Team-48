@@ -1,4 +1,4 @@
-#using YOLO
+# using YOLO
 # from asyncio.windows_events import INFINITE
 from unittest import result
 import cv2
@@ -8,13 +8,14 @@ import numpy
 import time
 
 
-
 def compareDistance(prev, pres):
-  xDistance = prev[0] - pres[0]
-  yDistance = prev[1] - pres[1]
-  return int(xDistance + yDistance)
+    xDistance = abs(prev[0] - pres[0])
+    yDistance = abs(prev[1] - pres[1])
+    return int(xDistance + yDistance)
+
 
 def enhancement_yolo_stream():
+
   #YOLOv5
   model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
   #since we are only intrested in detecting person
@@ -31,19 +32,22 @@ def enhancement_yolo_stream():
   pose_estimator_detected_object_loc = []
 
   # For webcam input:
-  # cap = cv2.VideoCapture(0)
+  cap = cv2.VideoCapture(0)
   # cap = cv2.VideoCapture('rtsp://admin:somateam23@172.16.101.157:554/profile2/media.smp')
-  cap = cv2.VideoCapture('rtsp://admin:somateam23@aicctv.iptime.org:554/profile2/media.smp')
+  # cap = cv2.VideoCapture('rtsp://admin:somateam23@aicctv.iptime.org:554/profile2/media.smp')
 
 
-
+  prev_frame_time = 0
+  new_frame_time = 0
   while cap.isOpened():
+
     success, image = cap.read()
     if not success:
       print("Ignoring empty camera frame.")
       # If loading a video, use 'break' instead of 'continue'.
       continue
-    
+
+    time.sleep(0.5)
     
     yolo_results = model([image])
     yolo_objects_label, yolo_objects_informations = yolo_results.xyxyn[0][:, -1].cpu().numpy(), yolo_results.xyxyn[0][:, :-1].cpu().numpy()
@@ -90,7 +94,7 @@ def enhancement_yolo_stream():
         else : # object's location update
           previous_score = numpy.Infinity
           for index, pre_info in enumerate(pose_estimator_detected_object_loc):
-            # print(f'pre info : {pre_info}, next info : {[mx, my]}')
+            print(f'pre info : {pre_info}, next info : {[mx, my]}')
             if type(pre_info) == type(1) :
               continue
             score = compareDistance(pre_info, [mx, my])
@@ -113,13 +117,16 @@ def enhancement_yolo_stream():
     pose_estimator_detected_object_loc = next_pose_estimator_detected_object_loc
 
     _, jpeg = cv2.imencode('.jpg', image)
-    frame=jpeg.tobytes()
+    frame = jpeg.tobytes()
 
     yield(b'--frame\r\n'
-                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
-    
+          b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+
     # cv2.imshow('MediaPipe Pose with Yolo', cv2.flip(image, 1))
     # cv2.imwrite(f'save_images/test.png', background)
     # if cv2.waitKey(5) & 0xFF == 27:
     #   break
   cap.release()
+
+
+ 
