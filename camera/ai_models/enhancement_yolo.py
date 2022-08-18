@@ -94,7 +94,7 @@ def enhancement_yolo_stream():
         else : # object's location update
           previous_score = numpy.Infinity
           for index, pre_info in enumerate(pose_estimator_detected_object_loc):
-            print(f'pre info : {pre_info}, next info : {[mx, my]}')
+            # print(f'pre info : {pre_info}, next info : {[mx, my]}')
             if type(pre_info) == type(1) :
               continue
             score = compareDistance(pre_info, [mx, my])

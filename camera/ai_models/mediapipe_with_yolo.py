@@ -21,7 +21,8 @@ def mediapipe_with_yolo_stream():
 
   # For webcam input:
   # cap = cv2.VideoCapture('rtsp://admin:somateam23@172.16.101.157:554/profile2/media.smp')
-  cap = cv2.VideoCapture('rtsp://admin:somateam23@aicctv.iptime.org:554/profile2/media.smp')
+  # cap = cv2.VideoCapture('rtsp://admin:somateam23@aicctv.iptime.org:554/profile2/media.smp')
+  cap = cv2.VideoCapture(0)
 
   with mp_pose.Pose(
       min_detection_confidence=0.5,
