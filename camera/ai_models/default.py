@@ -4,7 +4,10 @@ import threading
 
 class VideoCamera(object):
     def __init__(self):
-        self.video = cv2.VideoCapture('rtsp://admin:somateam23@172.16.101.157:554/profile2/media.smp')
+        # self.video = cv2.VideoCapture('rtsp://admin:somateam23@172.16.101.157:554/profile2/media.smp')
+        # self.video = cv2.VideoCapture('rtsp://admin:somateam23@aicctv.iptime.org:554/profile2/media.smp')
+        self.video = cv2.VideoCapture(0)
+
         (self.grabbed, self.frame) = self.video.read()
         threading.Thread(target=self.update, args=()).start()
 
