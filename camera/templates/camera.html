@@ -157,7 +157,7 @@
                             </div>
                             <div class="relative p-1 flex items-center justify-end w-1/4 ml-5 mr-4 sm:mr-0 sm:right-auto">
                                 <a href="#" class="block relative">
-                                    <img alt="profil" src="/images/person/1.jpg" class="mx-auto object-cover rounded-full h-10 w-10 "/>
+                                    <img alt="profil" src="{% static '/images/person/1.jpeg' %}" class="mx-auto object-cover rounded-full h-10 w-10 "/>
                                 </a>
                             </div>
                         </div>
@@ -169,13 +169,13 @@
                             {% comment %} Video Box {% endcomment %}
                             <div class="mb-4 mx-0 sm:ml-4 xl:mr-4">
                                 <div class="shadow-lg rounded-2xl p-4 bg-white dark:bg-gray-700 w-full">
-                                    <div>
+                                    {% comment %} <div>
                                         <img style="width: 768px; height:432px;" src="{% url 'camera:mediapipe' %}"  />
                                         <img style="width: 768px; height:432px;" src="{% url 'camera:livecam' %}"  />
-                                    </div>
+                                    </div> {% endcomment %}
                                     <div>
                                         <img style="width: 768px; height:432px;" src="{% url 'camera:mediapipe_with_yolo' %}"  />
-                                        <img style="width: 768px; height:432px;" src="{% url 'camera:enhancement_yolo' %}"  />
+                                        {% comment %} <img style="width: 768px; height:432px;" src="{% url 'camera:enhancement_yolo' %}"  /> {% endcomment %}
                                     
                                     </div>                                    
                                 </div>
@@ -850,7 +850,7 @@
                                     <ul>
                                         <li class="flex items-center my-6 space-x-2">
                                             <a href="#" class="block relative">
-                                                <img alt="profil" src="/images/person/1.jpg" class="mx-auto object-cover rounded-full h-10 w-10 "/>
+                                                <img alt="profil" src="{% static '/images/person/1.jpeg' %}" class="mx-auto object-cover rounded-full h-10 w-10 "/>
                                             </a>
                                             <div class="flex flex-col">
                                                 <span class="text-sm text-gray-900 font-semibold dark:text-white ml-2">
@@ -863,7 +863,7 @@
                                         </li>
                                         <li class="flex items-center my-6 space-x-2">
                                             <a href="#" class="block relative">
-                                                <img alt="profil" src="/images/person/5.jpg" class="mx-auto object-cover rounded-full h-10 w-10 "/>
+                                                <img alt="profil" src="{% static '/images/person/5.jpeg' %}" class="mx-auto object-cover rounded-full h-10 w-10 "/>
                                             </a>
                                             <div class="flex flex-col">
                                                 <span class="text-sm text-gray-900 font-semibold dark:text-white ml-2">
@@ -876,7 +876,7 @@
                                         </li>
                                         <li class="flex items-center my-6 space-x-2">
                                             <a href="#" class="block relative">
-                                                <img alt="profil" src="/images/person/6.jpg" class="mx-auto object-cover rounded-full h-10 w-10 "/>
+                                                <img alt="profil" src="{% static '/images/person/6.jpeg' %}" class="mx-auto object-cover rounded-full h-10 w-10 "/>
                                             </a>
                                             <div class="flex flex-col">
                                                 <span class="text-sm text-gray-900 font-semibold dark:text-white ml-2">
@@ -889,7 +889,7 @@
                                         </li>
                                         <li class="flex items-center my-6 space-x-2">
                                             <a href="#" class="block relative">
-                                                <img alt="profil" src="/images/person/7.jpg" class="mx-auto object-cover rounded-full h-10 w-10 "/>
+                                                <img alt="profil" src="{% static '/images/person/7.jpeg' %}" class="mx-auto object-cover rounded-full h-10 w-10 "/>
                                             </a>
                                             <div class="flex flex-col">
                                                 <span class="text-sm text-gray-900 font-semibold dark:text-white ml-2">
