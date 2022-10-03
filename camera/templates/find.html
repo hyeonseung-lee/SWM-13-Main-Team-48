@@ -1,0 +1,10 @@
+<form action="{% url 'camera:find' %}">
+    <p><input type="date" name="date"></p>
+    <p><input type="submit" value="Submit"></p>
+</form>
+
+
+{% if count %}
+    <a href="{% url 'camera:show' date %}">{{count}}개 사진</a>
+    
+{% endif %}
