@@ -169,12 +169,13 @@
                             {% comment %} Video Box {% endcomment %}
                             <div class="mb-4 mx-0 sm:ml-4 xl:mr-4">
                                 <div class="shadow-lg rounded-2xl p-4 bg-white dark:bg-gray-700 w-full">
-                                    {% comment %} <div>
-                                        <img style="width: 768px; height:432px;" src="{% url 'camera:mediapipe' %}"  />
-                                        <img style="width: 768px; height:432px;" src="{% url 'camera:livecam' %}"  />
-                                    </div> {% endcomment %}
                                     <div>
-                                        <img style="width: 768px; height:432px;" src="{% url 'camera:mediapipe_with_yolo' %}"  />
+                                        {% comment %} <img style="width: 768px; height:432px;" src="{% url 'camera:mediapipe' %}"  /> {% endcomment %}
+                                        {% comment %} <img style="width: 768px; height:432px;" src="{% url 'camera:livecam' %}"  /> {% endcomment %}
+                                    </div> 
+                                    <div>
+                                        {% comment %} <img style="width: 768px; height:432px;" src="{% url 'camera:mediapipe_with_yolo' %}"  /> {% endcomment %}
+                                        <img style="width: 768px; height:432px;" src="{% url 'camera:mmaction2' %}"  />
                                         {% comment %} <img style="width: 768px; height:432px;" src="{% url 'camera:enhancement_yolo' %}"  /> {% endcomment %}
                                     
                                     </div>                                    

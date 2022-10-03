@@ -13,6 +13,7 @@ import os
 import json
 from pathlib import Path
 from django.core.exceptions import ImproperlyConfigured
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -56,14 +57,21 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
 
-    "django.contrib.sites",
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.kakao',
+    # "django.contrib.sites",
+    # 'allauth',
+    # 'allauth.account',
+    # 'allauth.socialaccount',
+    # 'allauth.socialaccount.providers.kakao',
 
     'camera',
+    'users',
     # "pwa"
+
+
+    # for rest_framework
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 MIDDLEWARE = [
@@ -96,13 +104,41 @@ TEMPLATES = [
 ]
 
 
-AUTHENTICATION_BACKENDS = (
-    # Needed to login by username in Django admin, regardless of `allauth`
-    'django.contrib.auth.backends.ModelBackend',
+# AUTHENTICATION_BACKENDS = (
+#     # Needed to login by username in Django admin, regardless of `allauth`
+#     'django.contrib.auth.backends.ModelBackend',
 
-    # # `allauth` specific authentication methods, such as login by e-mail
-    'allauth.account.auth_backends.AuthenticationBackend',
-)
+#     # # `allauth` specific authentication methods, such as login by e-mail
+#     'allauth.account.auth_backends.AuthenticationBackend',
+# )
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=1000),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1000),
+    "ROTATE_REFRESH_TOKENS": False,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "ALGORITHM": "HS256",
+    "SIGNING_KEY": SECRET_KEY,
+    "VERIFYING_KEY": None,
+    "AUTH_HEADER_TYPES": ("Bearer",),
+    "USER_ID_FIELD": "id",
+    "USER_ID_CLAIM": "user_id",
+    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
+    "TOKEN_TYPE_CLAIM": "token_type",
+    "TOKEN_USER_CLASS" : "users.User",
+}
+
+AUTH_USER_MODEL="users.User"
+
 
 WSGI_APPLICATION = 'ai_cctv.wsgi.application'
 
@@ -158,6 +194,10 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
 
+
+MEDIA_URL = '/media/'		
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
@@ -166,4 +206,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/'		# 로그인 후 리디렉션할 페이지
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'  # 로그아웃 후 리디렉션 할 페이지
 
-SITE_ID = 1
+# SITE_ID = 1
+
+# kakao 로그인 세팅
+
+SOCIAL_OUTH_CONFIG = {
+    'KAKAO_REST_API_KEY': get_secret("KAKAO_REST_API_KEY"),
+    'KAKAO_REDIRECT_URI': get_secret("KAKAO_REDIRECT_URI"),
+    'KAKAO_SECRET_KEY': get_secret("KAKAO_SECRET_KEY"),
+    'KAKAO_LOGOUT_REDIRECT_URI': get_secret("KAKAO_LOGOUT_REDIRECT_URI"),
+}
+
+

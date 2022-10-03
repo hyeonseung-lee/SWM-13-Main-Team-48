@@ -2,6 +2,8 @@ import mediapipe as mp
 from os.path import abspath, join, dirname
 import cv2
 
+from django.utils import timezone
+
 def mediapipe_stream():
 
     mp_drawing = mp.solutions.drawing_utils
@@ -12,6 +14,19 @@ def mediapipe_stream():
     # cap = cv2.VideoCapture('rtsp://admin:somateam23@aicctv.iptime.org:554/profile2/media.smp')
     # cap = cv2.VideoCapture('rtsp://admin:somateam23@aicctv.iptime.org:554/profile2/media.smp')
     cap = cv2.VideoCapture(0)
+
+    #----------
+    width = int(cap.get(3)) # 가로 길이 가져오기 
+    height = int(cap.get(4)) # 세로 길이 가져오기
+    fps = 30
+    cnt = 1
+
+    fcc = cv2.VideoWriter_fourcc(*"H264")
+    now=timezone.now().strftime('%y%m%d_%H-%M-%S')
+    print(now)
+    out = cv2.VideoWriter('camera/record_video/{}.avi'.format(now), fcc, fps, (width, height))
+    #----------
+
     with mp_pose.Pose(
         min_detection_confidence=0.5,
         min_tracking_confidence=0.5) as pose:
@@ -46,6 +61,10 @@ def mediapipe_stream():
 
             _, jpeg = cv2.imencode('.jpg', background)
             frame=jpeg.tobytes()
+            
+            now=timezone.now().strftime('%y%m%d_%H-%M-%S')
+            cv2.imwrite('camera/record_video/record_img/{}.jpg'.format(now),image)
+            out.write(image)
 
             yield(b'--frame\r\n'
                 b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
@@ -55,4 +74,5 @@ def mediapipe_stream():
             # cv2.imwrite(f'save_images/test.png', background)
             # if cv2.waitKey(5) & 0xFF == 27: # esc누르면 break
             #     break
+        out.release()
         cap.release() #오픈한 캡쳐 객체 닫기
