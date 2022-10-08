@@ -7,6 +7,7 @@ from camera.ai_models.mediapipe import *
 from camera.ai_models.mediapipe_with_yolo import *
 from camera.ai_models.enhancement_yolo import *
 from camera.ai_models.mmaction import *
+from camera.ai_models.webcam import *
 
 from django.views.decorators.http import require_POST
 from django.http import HttpResponse
@@ -40,6 +41,13 @@ def enhancement_yolo(request):
 
 def mmaction2(request):
     return StreamingHttpResponse(mmaction_stream(),content_type="multipart/x-mixed-replace;boundary=frame")
+
+def webcam_demo(request):
+    # return StreamingHttpResponse([] if webcam_main() is None else webcam_main(),content_type="multipart/x-mixed-replace;boundary=frame")
+    return StreamingHttpResponse(webcam_main(),content_type="multipart/x-mixed-replace;boundary=frame")
+
+
+
 
 
 def find(request):
