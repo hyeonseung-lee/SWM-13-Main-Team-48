@@ -26,8 +26,8 @@
 
   <body class="">
     {% comment %} {% include "partials/nav_horizental.html" %} {% endcomment %}
-    {% comment %} {% include "partials/nav_vertical.html" %} {% endcomment %}
-    
+    {% include "partials/nav_vertical.html" %}
+     
     <div class="pl-16 flex h-screen w-screen bg-gray-100 font-sans">
       {% block content %}
       {% endblock content %}
