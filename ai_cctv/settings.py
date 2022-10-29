@@ -20,6 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # PWA_SERVICE_WORKER_PATH = os.path.join(
 #     BASE_DIR, 'static/js', 'serviceworker.js')
 
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
@@ -74,8 +75,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
 
     # for front-end
-    'compressor'  # modal,
-    # 'pwa'
+    'compressor',  # modal,
+    'pwa'
 ]
 
 MIDDLEWARE = [
@@ -224,32 +225,32 @@ SOCIAL_OUTH_CONFIG = {
 
 
 # Django-PWA setting
-# PWA_APP_NAME = '대신보다'
-# PWA_APP_DESCRIPTION = "대신보다 PWA"
-# PWA_APP_THEME_COLOR = '#000000'
-# PWA_APP_BACKGROUND_COLOR = '#ffffff'
-# PWA_APP_DISPLAY = 'standalone'
-# PWA_APP_SCOPE = '/'
-# PWA_APP_ORIENTATION = 'any'
-# PWA_APP_START_URL = '/'
-# PWA_APP_STATUS_BAR_COLOR = 'default'
-# PWA_APP_ICONS = [
-#     {
-#         'src': 'static/images/logo.png',
-#         'sizes': '160x160'
-#     }
-# ]
-# PWA_APP_ICONS_APPLE = [
-#     {
-#         'src': 'static/images/logo.png',
-#         'sizes': '160x160'
-#     }
-# ]
-# PWA_APP_SPLASH_SCREEN = [
-#     {
-#         'src': 'static/images/logo.png',
-#         'media': '(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)'
-#     }
-# ]
-# PWA_APP_DIR = 'ltr'
-# PWA_APP_LANG = 'ko-KR'
+PWA_APP_NAME = '대신보다'
+PWA_APP_DESCRIPTION = "대신보다 PWA"
+PWA_APP_THEME_COLOR = '#000000'
+PWA_APP_BACKGROUND_COLOR = '#ffffff'
+PWA_APP_DISPLAY = 'standalone'
+PWA_APP_SCOPE = '/'
+PWA_APP_ORIENTATION = 'any'
+PWA_APP_START_URL = '/'
+PWA_APP_STATUS_BAR_COLOR = 'default'
+PWA_APP_ICONS = [
+    {
+        'src': 'static/images/logo.png',
+        'sizes': '160x160'
+    }
+]
+PWA_APP_ICONS_APPLE = [
+    {
+        'src': 'static/images/logo.png',
+        'sizes': '160x160'
+    }
+]
+PWA_APP_SPLASH_SCREEN = [
+    {
+        'src': 'static/images/logo.png',
+        'media': '(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)'
+    }
+]
+PWA_APP_DIR = 'ltr'
+PWA_APP_LANG = 'en-US'
