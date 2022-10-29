@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div id="main-content" class="w-full flex-1">
+    {% comment %}
+    <video width="530" height="440" controls="controls" preload="metadata">
+        <source src="{% static '/videos/test.mp4' %}" type="video/mp4">
+    </video>
+    {% endcomment %}
+    <div class="bg-gray-100">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div class="mx-auto max-w-2xl py-16 sm:py-24 lg:max-w-none lg:py-32">
+            <h2 class="text-2xl font-bold text-gray-900">영상 목록</h2>
+            <div class="mt-6 space-y-12 lg:grid lg:grid-cols-3 lg:gap-x-6 lg:space-y-0">
+              {% for video in dummy_videos %}
+                  {% include "partials/list_box.html" with url=video.url action_type=video.action_type datetime=video.datetime %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

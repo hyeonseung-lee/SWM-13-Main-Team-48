@@ -1,4 +1,5 @@
 from ast import Index
+from multiprocessing import dummy
 from django.shortcuts import render
 from django.http.response import StreamingHttpResponse
 from django.views.decorators import gzip
@@ -8,7 +9,7 @@ from camera.ai_models.mediapipe_with_yolo import *
 from camera.ai_models.enhancement_yolo import *
 from camera.ai_models.mmaction import *
 from camera.ai_models.webcam import *
-
+from django.db.models import Q
 from django.views.decorators.http import require_POST
 from django.http import HttpResponse
 
@@ -55,11 +56,21 @@ def webcam_demo(request):
 
 
 def find(request):
+    dummy_videos = [
+        {'url': "/######", 'action_type': "실신", 'datetime': "2022-10-29 10:32"},
+        {'url': "/######", 'action_type': "장시간 배회", 'datetime': "2022-10-28 23:33"},
+        {'url': "/######", 'action_type': "기물파손", 'datetime': "2022-10-26 01:22"},
+    ]
     try:
-        date = request.GET['date'].replace('-', '')
-        count = Image.objects.filter(image__contains=date).count()
+        start = request.GET['start'].split("/")
+        start_date = start[2] + start[0] + start[1]
+        end = request.GET['end'].replace('/', '')
+        end_date = end[2] + end[0] + end[1]
+        date = start + "-" + end
+        count = Image.objects.filter(
+            Q(image__lte=end_date) & Q(image__gte=start_date)).count()
 
-        return render(request, 'find.html', {'date': date, 'count': count})
+        return render(request, 'find.html', {'date': date, 'count': count, 'dummy_videos': dummy_videos}, )
     except:
         return render(request, 'find.html')
 

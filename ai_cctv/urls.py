@@ -24,8 +24,10 @@ urlpatterns = [
     path('camera/', include('camera.urls')),
     path('', main, name='main'),
     path('analytics/', analytics, name='analytics'),
-    path('users/',include('users.urls')),
+    path('list/', video_list, name='video_list'),
+    path('users/', include('users.urls')),
+    # path('', include('pwa.urls'))
 
     # path('accounts/', include('allauth.urls')),
     # path('', include('pwa.urls')),
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,38 +1,49 @@
 <!--This template is based on: https://dribbble.com/shots/6531694-Marketing-Dashboard by Gregoire Vella -->
 {% load static %}
+{% load compress %}
+
 <!DOCTYPE html>
 <html lang="en">
+{% comment %} {% load pwa %}
+{% progressive_web_app_meta %} {% endcomment %}
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <title>
+    대신보다
+  </title>
+  <link rel="icon" type="image/png" href="{% static '/images/logo.png' %}">
+  <meta name="description" content="description here"/>
+  <meta name="keywords" content="keywords,here"/>
 
-  <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-    <title>
-      Demo page
-    </title>
-    <meta name="description" content="description here"/>
-    <meta name="keywords" content="keywords,here"/>
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}"/>
+  <link href="https://fonts.googleapis.com/css?family=Nunito:400,700,800" rel="stylesheet"/>
 
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}"/>
-    <link href="https://fonts.googleapis.com/css?family=Nunito:400,700,800" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous"/>
+  <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.css"/>
+  <!--Replace with your tailwind.css once created-->
+  
+  <!-- fontawesome -->
+  <script src="https://kit.fontawesome.com/fad942d57d.js" crossorigin="anonymous"></script>
+  
+  <!-- flowbite -->
+  <script src="https://unpkg.com/flowbite@1.5.3/dist/flowbite.js"></script>
+  <script src="../path/to/flowbite/dist/datepicker.js"></script>
+  <script src="https://unpkg.com/flowbite@1.5.3/dist/datepicker.js"></script>
 
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous"/>
-    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"/>
-    <!--Replace with your tailwind.css once created-->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.css"/>
-    <script src="https://kit.fontawesome.com/fad942d57d.js" crossorigin="anonymous"></script>
+</head>
+
+<body class="bg-gray-100">
+  {% comment %} {% include "partials/nav_horizental.html" %} {% endcomment %}
+  {% include "partials/nav_vertical.html" %}
     
-  </head>
-
-  <body class="">
-    {% comment %} {% include "partials/nav_horizental.html" %} {% endcomment %}
-    {% include "partials/nav_vertical.html" %}
-     
-    <div class="pl-16 flex h-screen w-screen bg-gray-100 font-sans">
-      {% block content %}
-      {% endblock content %}
-    </div>
-    
-  </body>
+  <div class="absolute inset-0 pl-16 w-screen h-screen font-sans">
+    {% block content %}
+    {% endblock content %}
+  </div>
+  
+</body>
 
 </html>

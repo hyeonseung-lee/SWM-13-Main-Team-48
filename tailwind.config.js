@@ -7,7 +7,12 @@ module.exports = {
     defaultLocale: "en-US",
   },
   purge: {
-    content: ["./pages/**/*.tsx", "./components/**/*.tsx"],
+    content: [
+      "./pages/**/*.tsx",
+      "./components/**/*.tsx",
+      "./templates/**/*.html",
+      "./node_modules/flowbite/**/*.js",
+    ],
     // These options are passed through directly to PurgeCSS
   },
   theme: {
@@ -26,7 +31,7 @@ module.exports = {
       zIndex: ["hover", "active"],
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/aspect-ratio"), require("flowbite/plugin")],
   future: {
     purgeLayersByDefault: true,
   },
