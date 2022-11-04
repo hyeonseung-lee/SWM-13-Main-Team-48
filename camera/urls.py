@@ -18,9 +18,5 @@ urlpatterns = [
 	path('webcam_thread', webcam_thread, name='webcam_thread'),
 
 	path('find',find,name='find'),
-	path('show/<str:date>',show,name='show'),
-
-	# path('test',test,name='test'),
-	# path('test1',test1,name='test1'),
     
 ]

@@ -57,34 +57,16 @@ def webcam_demo(request):
         
     return StreamingHttpResponse(webcam_main(),content_type="multipart/x-mixed-replace;boundary=frame")
 
+
+
+# ------------- 아래가 주요 사용 됨 ---------------
 def webcam_thread(request):
         
     return StreamingHttpResponse(webcam_thread_main(request),content_type="multipart/x-mixed-replace;boundary=frame")
 
 
 def find(request):
-    # dummy_videos = [
-    #     {'url': "/######", 'action_type': "실신", 'datetime': "2022-10-29 10:32"},
-    #     {'url': "/######", 'action_type': "장시간 배회", 'datetime': "2022-10-28 23:33"},
-    #     {'url': "/######", 'action_type': "기물파손", 'datetime': "2022-10-26 01:22"},
-    # ]
-    # start = request.GET['start'].split("/")
-    # start_date = start[2] + start[0] + start[1]
-    # end = request.GET['end'].replace('/', '')
-    # end_date = end[2] + end[0] + end[1]
-    # date = start + "-" + end
-
-    # print(start)
-    # print(start_date)
-    # print(end)
-    # print(end_date)
-    # print(date)
-
-    # count = Video.objects.filter(
-    #     Q(datetime__lte=end_date) & Q(datetime__gte=start_date)).count()
-    # print(count)
-    # return render(request, 'find.html', {'date': date, 'count': count} )
-    # print('hi')
+   
     try:
 
         start_date=datetime.strptime(request.GET['start'],'%m/%d/%Y')
@@ -101,52 +83,3 @@ def find(request):
     except:
         return render(request, 'find.html')
 
-
-
-def show(request,date):
-    videos=Video.objects.all()
-    result=[]
-    for i in videos:
-        path='/'.join(i.video.split('/')[-4:])
-        path=os.path.join('../../',path)
-        result.append(path)
-    return render(request,'show.html',{'date':date,"videos":result})
-
-
-# def test(request):
-#     if request.POST:
-#         a=test_model.objects.create(
-#             test=request.FILES['file']
-#         )
-#         print(type(a.test))
-#     return render(request,'test.html')
-
-# def test1(request):
-#     # if request.POST:
-#     #     a=Video.objects.create(
-#     #         profile=request.user.profile,
-#     #         video='media/record_video/20221104/221104_20-11-43.mp4',
-#     #         datetime=timezone.now()
-#     #     )
-#     #     # print(a.video)
-#     # video='media/record_video/20221104/221104_20-11-43.mp4'
-#     # t=video.split('/')
-
-#     # save_path = os.path.dirname(os.path.dirname(__file__))
-#     # save_path = os.path.join(save_path[:-7], 'media','record_video') 
-
-#     # print(t)
-#     videos=Video.objects.all()
-#     result=[]
-#     for i in videos:
-#         path='/'.join(i.video.split('/')[-4:])
-#         # print(path)
-#         path=os.path.join('../../',path)
-#         result.append(path)
-#     #     print('--------------------')
-#     #     filename=os.path.basename(i.video)
-#     #     path=os.path.join('../../','media','')
-#     #     print(os.path.exists(i.video))
-        
-
-#     return render(request,'test.html',{"videos":videos})
