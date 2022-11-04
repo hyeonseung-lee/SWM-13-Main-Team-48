@@ -15,6 +15,8 @@ from pathlib import Path
 from django.core.exceptions import ImproperlyConfigured
 from datetime import timedelta
 
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 # PWA_SERVICE_WORKER_PATH = os.path.join(
@@ -57,7 +59,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
 
     # "django.contrib.sites",
     # 'allauth',
