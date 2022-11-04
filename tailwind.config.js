@@ -1,3 +1,5 @@
+/** @type {import('tailwindcss').Config} */
+
 module.exports = {
   important: true,
   // Active dark mode on class basis
@@ -6,21 +8,19 @@ module.exports = {
     locales: ["en-US"],
     defaultLocale: "en-US",
   },
-  purge: {
-    content: [
-      "./pages/**/*.tsx",
-      "./components/**/*.tsx",
-      "./templates/**/*.html",
-      "./node_modules/flowbite/**/*.js",
-    ],
-    // These options are passed through directly to PurgeCSS
-  },
+
+  content: [
+    "./public/**/*.html",
+    "./src/**/*.{js,jsx,ts,tsx,vue}",
+    "./pages/**/*.tsx",
+    "./components/**/*.tsx",
+    "./templates/**/*.html",
+    "./node_modules/flowbite/**/*.js",
+  ],
+  // These options are passed through directly to PurgeCSS
+
   theme: {
     extend: {
-      backgroundImage: (theme) => ({
-        check: "url('/icons/check.svg')",
-        landscape: "url('/images/landscape/2.jpg')",
-      }),
       colors: {
         primary: {
           light: "#fefcbf", // For lighter primary color

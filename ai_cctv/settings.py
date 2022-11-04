@@ -68,7 +68,6 @@ INSTALLED_APPS = [
     'camera',
     'users',
 
-
     # for rest_framework
     'rest_framework',
     'rest_framework_simplejwt',

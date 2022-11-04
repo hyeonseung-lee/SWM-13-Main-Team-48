@@ -1,20 +1,22 @@
 {
   "devDependencies": {
     "@tailwindcss/aspect-ratio": "^0.4.2",
+    "@tailwindcss/postcss7-compat": "^2.2.17",
+    "autoprefixer": "^9.8.8",
     "gulp": "^4.0.2",
-    "gulp-csso": "^4.0.1",
-    "gulp-postcss": "^9.0.1",
-    "gulp-sass": "^5.1.0",
-    "node-sass": "^7.0.3",
-    "sass": "^1.55.0",
+    "gulp-csso": "^3.0.1",
+    "gulp-postcss": "^8.0.0",
+    "gulp-sass": "^4.1.1",
+    "node-sass": "^4.14.1",
+    "postcss": "^7.0.39",
+    "sass": "^1.56.0",
     "tailwindcss": "^3.2.1"
   },
   "dependencies": {
-    "autoprefixer": "^10.4.13",
     "cutty": "^1.0.22",
     "flowbite": "^1.5.3",
     "kutty": "^0.6.0",
-    "postcss": "^8.4.18"
+    "postcss-cli": "^10.0.0"
   },
   "name": "ai_cctv",
   "description": "1. 프로젝트 클론 2. secret json 파일 노션에서 다운 3. 가상환경 세팅(python 3.9사용) 4. pip install -r requirements.txt 5. python manage.py makemigrations 6. python manage.py migrate 7. python manage.py runserver",
