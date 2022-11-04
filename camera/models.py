@@ -21,5 +21,3 @@ class Camera(models.Model):
     profile=models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True, db_column='profile') 
     rtsp_url=models.CharField(verbose_name=_("rtsp url"), max_length=100,null=True, blank=True) 
 
-class test(models.Model):
-    test=models.FileField(upload_to='test')

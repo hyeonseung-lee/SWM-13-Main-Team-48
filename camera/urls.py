@@ -20,8 +20,7 @@ urlpatterns = [
 	path('find',find,name='find'),
 	path('show/<str:date>',show,name='show'),
 
-	path('test',test,name='test'),
-	path('test1',test1,name='test1'),
-
+	# path('test',test,name='test'),
+	# path('test1',test1,name='test1'),
     
 ]
