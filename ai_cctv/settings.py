@@ -254,3 +254,9 @@ PWA_APP_SPLASH_SCREEN = [
 ]
 PWA_APP_DIR = 'ltr'
 PWA_APP_LANG = 'en-US'
+
+WEBPUSH_SETTINGS = {
+    "VAPID_PUBLIC_KEY": get_secret("VAPID_PUBLIC_KEY"),
+    "VAPID_PRIVATE_KEY":get_secret("VAPID_PRIVATE_KEY"),
+    "VAPID_ADMIN_EMAIL": get_secret("EMAIL")
+}
