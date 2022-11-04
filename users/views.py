@@ -84,38 +84,38 @@ def get_token(request):
     except ConnectionError:
         return Response({'message': 'CONNECTION_ERROR'}, status=status.HTTP_400_BAD_REQUEST)
 
-# 추가 회원 가입 정보 업데이트
-# 헤더에 Bearer token(access_token) 담고 json 으로 업데이트 정보 보내주기 -> 되면 201로 응답  
-@api_view(['PUT'])
-def profile_update(request):
-    data = json.loads(request.body)
+# # 추가 회원 가입 정보 업데이트
+# # 헤더에 Bearer token(access_token) 담고 json 으로 업데이트 정보 보내주기 -> 되면 201로 응답  
+# @api_view(['PUT'])
+# def profile_update(request):
+#     data = json.loads(request.body)
 
-    if data['job']=='중상':
-        data['company_place_id']=request.user.id
-    # 식당 외에는 company를 판별할 값이 없어서 company_place_id에 카카오 Id를 담아두기
+#     if data['job']=='중상':
+#         data['company_place_id']=request.user.id
+#     # 식당 외에는 company를 판별할 값이 없어서 company_place_id에 카카오 Id를 담아두기
 
-    company_serializer=CompanySerializer(data=data)
+#     company_serializer=CompanySerializer(data=data)
 
-    # 여기서 1차로 company 테이블에 해당 회사가 있는지 확인
-    # company_code, company_place_id는 unique값이어야해서 지도에서 가져온값이나 해당 1인회사의 경우 else로 Update 부분으로 넘어감
-    if company_serializer.is_valid():
-        company=company_serializer.save()
-        data["company"]=company["company"]
-    else:
-        exist=get_object_or_404(Company,company_place_id=data['company_place_id'])       
-        company_serializer=CompanySerializer(exist,data=data)
-        # 업데이트에서는 unique값들은 업데이트하지않음(이 값들이 다르면 새로운 회사인거임)
-        if company_serializer.is_valid(raise_exception=True):
-            company=company_serializer.save()
-            data["company"]=company.company_code
+#     # 여기서 1차로 company 테이블에 해당 회사가 있는지 확인
+#     # company_code, company_place_id는 unique값이어야해서 지도에서 가져온값이나 해당 1인회사의 경우 else로 Update 부분으로 넘어감
+#     if company_serializer.is_valid():
+#         company=company_serializer.save()
+#         data["company"]=company["company"]
+#     else:
+#         exist=get_object_or_404(Company,company_place_id=data['company_place_id'])       
+#         company_serializer=CompanySerializer(exist,data=data)
+#         # 업데이트에서는 unique값들은 업데이트하지않음(이 값들이 다르면 새로운 회사인거임)
+#         if company_serializer.is_valid(raise_exception=True):
+#             company=company_serializer.save()
+#             data["company"]=company.company_code
 
-    # 기존으로 user가 생성되며 post_save로 profile이 생성됨, 그래서 초기 세팅일때도 update로 해줘야함
-    # 개발 테스트용으로 회사가 새로생기거나 job이 바뀌는 경우 아래로 profile update
-    serializer=ProfileSerializer(request.user.profile,data=data)
-    if serializer.is_valid(raise_exception=True):
-        token=serializer.save()
+#     # 기존으로 user가 생성되며 post_save로 profile이 생성됨, 그래서 초기 세팅일때도 update로 해줘야함
+#     # 개발 테스트용으로 회사가 새로생기거나 job이 바뀌는 경우 아래로 profile update
+#     serializer=ProfileSerializer(request.user.profile,data=data)
+#     if serializer.is_valid(raise_exception=True):
+#         token=serializer.save()
 
-    return Response(token,status=status.HTTP_201_CREATED) ## 메인 페이지로
+#     return Response(token,status=status.HTTP_201_CREATED) ## 메인 페이지로
 
 
 # Web용 로그아웃

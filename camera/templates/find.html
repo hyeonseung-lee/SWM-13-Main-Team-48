@@ -34,18 +34,15 @@
                         </div>  
                     </div>
                 </form>
-            <div class="mt-6 space-y-12 lg:grid lg:grid-cols-3 lg:gap-x-6 lg:space-y-0">
-                {% for video in dummy_videos %}
-                    {% include "partials/list_box.html" with url=video.url action_type=video.action_type datetime=video.datetime %}
+             <div class="mt-6 space-y-12 lg:grid lg:grid-cols-3 lg:gap-x-6 lg:space-y-0">
+                {% for video in videos %}
+                    {% include "partials/list_box.html" with url=video.video action_type=video.type datetime=video.datetime %}
                 {% endfor %}
-            </div>
+            </div> 
           </div>
         </div>
     </div>
 </div>
 
-{% if count %}
-    <a href="{% url 'camera:show' date %}">{{count}}개 사진</a>
-    
-{% endif %}
+
 {% endblock content %}
