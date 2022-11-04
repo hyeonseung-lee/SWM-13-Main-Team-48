@@ -21,6 +21,13 @@ module.exports = {
         check: "url('/icons/check.svg')",
         landscape: "url('/images/landscape/2.jpg')",
       }),
+      colors: {
+        primary: {
+          light: "#fefcbf", // For lighter primary color
+          DEFAULT: "#b7791f", // Normal primary color
+          dark: "#744210", // Used for hover, active, etc.
+        },
+      },
     },
   },
   variants: {
@@ -31,7 +38,11 @@ module.exports = {
       zIndex: ["hover", "active"],
     },
   },
-  plugins: [require("@tailwindcss/aspect-ratio"), require("flowbite/plugin")],
+  plugins: [
+    require("@tailwindcss/aspect-ratio"),
+    require("flowbite/plugin"),
+    require("kutty"),
+  ],
   future: {
     purgeLayersByDefault: true,
   },

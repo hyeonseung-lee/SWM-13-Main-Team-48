@@ -6,10 +6,6 @@ def main(request):
     return render(request, 'main.html', )
 
 
-def analytics(request):
-    return render(request, 'analytics.html')
-
-
 def video_list(request):
     dummy_videos = [
         {'url': "/######", 'action_type': "실신", 'datetime': "2022-10-29 10:32"},
