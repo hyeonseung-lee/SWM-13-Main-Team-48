@@ -14,10 +14,15 @@ urlpatterns = [
 	path('mmaction2', mmaction2, name='mmaction2'),
 	# webcam demo
 	path('webcam_demo', webcam_demo, name='webcam_demo'),
+	path('webcam_thread', webcam_thread, name='webcam_thread'),
 
 
 	path('find',find,name='find'),
 	path('show/<str:date>',show,name='show'),
 	path('videostream/<str:date>',videostream,name='videostream'),
+
+	path('test',test,name='test'),
+	path('test1',test1,name='test1'),
+
     
 ]

@@ -1,1 +1,11 @@
-<img style="width: 768px; height:432px;" src="{% url 'camera:videostream' date %}"  />
+{% comment %} <img style="width: 768px; height:432px;" src="{% url 'camera:videostream' date %}"  />
+ {% endcomment %}
+ {% load static %}
+
+ {% for video in videos %}
+    {{video}}
+    <video controls autoplay width='50%' height='40%'>
+        <source  src='{{video}}' type="video/mp4"></source>
+    </video> 
+   
+{% endfor %}

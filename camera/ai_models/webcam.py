@@ -1,12 +1,14 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import argparse
+# import argparse
 import time
 from collections import deque
 from operator import itemgetter
 from threading import Thread
-
+import multiprocessing as mp
+from django.core.files.base import ContentFile
 from django.utils import timezone
-
+# from camera.models import *
+from collections import deque
 import cv2
 import numpy as np
 import torch
@@ -29,68 +31,34 @@ EXCLUED_STEPS = [
 ]
 
 
-def parse_args():
-    parser = argparse.ArgumentParser(description='MMAction2 webcam demo')
-    # parser.add_argument('config', help='test config file path')
-    parser.add_argument('config', type=str, default='camera/ai_models/mmaction2/configs/recognition/tsn/tsn_r50_video_inference_1x1x3_100e_kinetics400_rgb.py')
-    parser.add_argument('checkpoint', type=str, default= 'camera/ai_models/mmaction2/checkpoints/tsn_r50_1x1x3_100e_kinetics400_rgb_20200614-e508be42.pth', help='checkpoint file')
-    parser.add_argument('label', type=str, default= "camera/ai_models/mmaction2/tools/data/kinetics/label_map_k400.txt", help='label file')
-    parser.add_argument(
-        # '--device', type=str, default='cuda:0', help='CPU/CUDA device option')
-        '--device', type=str, default='mps', help='CPU/CUDA device option')
-    parser.add_argument(
-        '--camera-id', type=int, default=0, help='camera device id')
-    parser.add_argument(
-        '--threshold',
-        type=float,
-        default=0.01,
-        help='recognition score threshold')
-    parser.add_argument(
-        '--average-size',
-        type=int,
-        default=1,
-        help='number of latest clips to be averaged for prediction')
-    parser.add_argument(
-        '--drawing-fps',
-        type=int,
-        default=20,
-        help='Set upper bound FPS value of the output drawing')
-    parser.add_argument(
-        '--inference-fps',
-        type=int,
-        default=4,
-        help='Set upper bound FPS value of model inference')
-    parser.add_argument(
-        '--cfg-options',
-        nargs='+',
-        action=DictAction,
-        default={},
-        help='override some settings in the used config, the key-value pair '
-        'in xxx=yyy format will be merged into config file. For example, '
-        "'--cfg-options model.backbone.depth=18 model.backbone.with_cp=True'")
-    args = parser.parse_args()
-    assert args.drawing_fps >= 0 and args.inference_fps >= 0, \
-        'upper bound FPS value of drawing and inference should be set as ' \
-        'positive number, or zero for no limit'
-    return args
-
-
 def webcam_stream():
-    print('Press "Esc", "q" or "Q" to exit')
-
+    # print('Press "Esc", "q" or "Q" to exit')
     text_info = {}
     cur_time = time.time()
-    
-   
     while True:
-
+    
         msg = 'Waiting for action ...'
-        _, frame = camera.read()
+        success, frame = camera.read()
+
+        if success==False:
+            print('error')
+            continue
         frame_queue.append(np.array(frame[:, :, ::-1]))
+        prev_queue.append(np.array(frame[:, :, ::-1]))
+        # _, jpeg = cv2.imencode('.jpg', frame)
+        # jpegbytes = jpeg.tobytes()
+
+        #계속 담을거    
+        # prev_queue.append(jpegbytes)
 
         if len(result_queue) != 0:
+
+            ck=time.time()
+            count=1
+
             text_info = {}
             results = result_queue.popleft()
+            # print(results[0][0])
             for i, result in enumerate(results):
                 selected_label, score = result
                 if score < threshold:
@@ -98,46 +66,79 @@ def webcam_stream():
                 location = (0, 40 + i * 20)
                 text = selected_label + ': ' + str(round(score, 2))
                 text_info[location] = text
-                # print("frame1 :",frame)
-                print("text1 :",text)
-                print("location1 :",location)
+                # print("frame1 :",jpegbytes)
+                # print("text1 :",text)
+                # print("location1 :",location)
+                
+                # if 'cracking neck' in text:
+
+                #     # store_mem_thread=Thread(target=sub_ins.store_mem(sub_maxlen),daemon=True)
+                #     # store_mem_thread.start()
+                #     # store_mem_thread.join()
+
+                #     # now=timezone.now()
+                #     # t=now.strftime('%y%m%d_%H-%M-%S')
+                #     # cv2.imwrite('camera/record_video/record_img/{}.jpg'.format(t),frame)
+                #     print(type(jpegbytes))
+                #     content = ContentFile(jpegbytes)
+                #     img_model=Image()
+                #     img_model.datetime=now
+                #     img_model.image.save('{}.jpg'.format(t),content,save=False)
+                #     img_model.save()
+                #     print('recording1')
+
                 cv2.putText(frame, text, location, FONTFACE, FONTSCALE,
                             FONTCOLOR, THICKNESS, LINETYPE)
-
-              
-
+                
         elif len(text_info) != 0:
-            for location, text in text_info.items():
-                print("text2 : ", text)
-                print("location2 : ", location)
-                cv2.putText(frame, text, location, FONTFACE, FONTSCALE,
-                            FONTCOLOR, THICKNESS, LINETYPE)
-
+          
+            count+=1
+            if time.time()-ck>=1:
+                # print(count)
+                pass
                
+            
+            for location, text in text_info.items():
+
+                # print("frame2 :",jpegbytes)
+                # print("text2 : ", text)
+                # print("location2 : ", location)
+                # print(type(text))
+                # if 'cracking neck' in text:
+                #     # test_now = time.time()
+                    
+                #     # if get_frame==True and len(sub_queue)==sub_maxlen: #서브가 꽉차면 이제 멈추고 내보내기
+                #     #     print(sub_queue.popleft())
+                #     #     get_frame=False
+                #     # elif get_frame==True : #서브 안찼고 아직 받아올때(서브가 찰때까지)
+                #     #     sub_queue.append(prev_queue.popleft())
+                #     #     print(len(sub_queue))
+
+                #     # elif get_frame==False: # 서브 꽉찼고 이제 내보내기
+                #     #     print(sub_queue.popleft())
+
+                #     now=timezone.now()
+                #     t=now.strftime('%y%m%d_%H-%M-%S')
+                #     # cv2.imwrite('camera/record_video/record_img/{}.jpg'.format(t),frame)
+                #     content = ContentFile(jpegbytes)
+                #     print(type(jpegbytes))
+
+                #     img_model=Image()
+                #     img_model.datetime=now
+                #     img_model.image.save('{}.jpg'.format(t),content,save=False)
+                #     img_model.save()
+                #     print('recording2')
+
+                    # print(time.time() - test_now)
+                cv2.putText(frame, text, location, FONTFACE, FONTSCALE,
+                            FONTCOLOR, THICKNESS, LINETYPE)     
         else:
             # print("frame3 :",frame)
-            print("msg3 :",msg)
+            # print("msg3 :",msg)
             cv2.putText(frame, msg, (0, 40), FONTFACE, FONTSCALE, MSGCOLOR,
                         THICKNESS, LINETYPE)
 
-           
 
-        # ------------------------------------
-        # now=timezone.now().strftime('%y/%m/%d - %H:%M:%S')
-        # cv2.imwrite('camera/record_video/record_img/{}.jpg'.format(now),frame)
-        # ------------------------------------
-
-        # try:
-        _, jpeg = cv2.imencode('.jpg', frame)
-        jpegbytes = jpeg.tobytes()
-        # print(jpegbytes)
-        # if jpegbytes is None:
-        #     print('hi')
-        # yield(b'--frame\r\n'
-            # b'Content-Type: image/jpeg\r\n\r\n' + jpegbytes + b'\r\n\r\n')    
-        # except:
-        #     continue
-        # # ------------------------------------
 
         ch = cv2.waitKey(1)
 
@@ -149,21 +150,33 @@ def webcam_stream():
             sleep_time = 1 / drawing_fps - (time.time() - cur_time)
             if sleep_time > 0:
                 time.sleep(sleep_time)
+                # print('streaming')
+                # print(sleep_time)
             cur_time = time.time()
 
 
 def inference():
+    global prev_queue
+
     score_cache = deque()
     scores_sum = 0
     cur_time = time.time()
     while True:
+
         cur_windows = []
 
-        while len(cur_windows) == 0:
+        while len(cur_windows) == 0: # 한번 모델결과를 낼때마다 0이더라 -> 모델 한번돌면 inference 반복문이 다시 돌아서 초기화됨
+            
             if len(frame_queue) == sample_length:
+                #프레임정보인거같음
                 cur_windows = list(np.array(frame_queue))
+
+                #아래 np.array가 학습 + 프로세싱에 넘겨줄 큐에 들어가야함
+                print(type(np.array(frame_queue)))
+
                 if data['img_shape'] is None:
                     data['img_shape'] = frame_queue.popleft().shape[:2]
+        
 
         cur_data = data.copy()
         cur_data['imgs'] = cur_windows
@@ -179,19 +192,34 @@ def inference():
         scores_sum += scores
 
         if len(score_cache) == average_size:
+            
             scores_avg = scores_sum / average_size
             num_selected_labels = min(len(label), 5)
+
 
             scores_tuples = tuple(zip(label, scores_avg))
             scores_sorted = sorted(
                 scores_tuples, key=itemgetter(1), reverse=True)
             results = scores_sorted[:num_selected_labels]
 
+            # if 'writing' in results[0]: #이때가 우리가 찾는 결과가 나왔을때임
+
+            multiQ=mp.Queue()
+            info=mp.Queue()
+            multiQ.put(prev_queue)
+            info.put([w,h])
+            storeP=mp.Process(target=store_video,args=(multiQ,info))
+            storeP.start()
+            storeP.join()
+            #비워주기
+            prev_queue=deque()
+                
             result_queue.append(results)
             scores_sum -= score_cache.popleft()
 
         if inference_fps > 0:
             # add a limiter for actual inference fps <= inference_fps
+
             sleep_time = 1 / inference_fps - (time.time() - cur_time)
             if sleep_time > 0:
                 time.sleep(sleep_time)
@@ -200,32 +228,43 @@ def inference():
     camera.release()
     cv2.destroyAllWindows()
 
-
+def store_video(q,info):
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    info=info.get()
+    w=info[0]
+    h=info[1]
+    out=cv2.VideoWriter('camera/images/hi.mp4',fourcc,20,(w,h))
+    for i in q.get():
+        out.write(i)
+    out.release()
 def webcam_main():
     global frame_queue, camera, frame, results, threshold, sample_length, \
         data, test_pipeline, model, device, average_size, label, \
         result_queue, drawing_fps, inference_fps
+    # global streaming
+    # global prev_maxlen,sub_maxlen, prev_queue,sub_ins 
+    global prev_queue,w,h
+    global process_inst
+    process_inst=subprocess()
+    w=''
+    h=''
 
-    # args = parse_args()
-    # average_size = args.average_size
-    # threshold = args.threshold
-    # drawing_fps = args.drawing_fps
-    # inference_fps = args.inference_fps
+    # # 1초에 15장 20초에 300장 , predict발생시점으로 부터 40초전~20초전까지 저장
+
+    prev_queue=deque()
+
     average_size = 1
     threshold = 0.01
     drawing_fps = 20
     inference_fps = 4
-
-    # device = torch.device(args.device)
-    # device = torch.device("cuda:0")
-    device = torch.device("mps")
-
-    # cfg = Config.fromfile(args.config)
-    # cfg.merge_from_dict(args.cfg_options)
+    device = torch.device("cpu")
 
     model = init_recognizer('camera/ai_models/mmaction2/configs/recognition/tsn/tsn_r50_video_inference_1x1x3_100e_kinetics400_rgb.py', 'camera/ai_models/mmaction2/checkpoints/tsn_r50_1x1x3_100e_kinetics400_rgb_20200614-e508be42.pth', device=device)
-    # camera = cv2.VideoCapture(args.camera_id)
     camera = cv2.VideoCapture(0)
+    if w=='' and h=='':
+        w=round(camera.get(cv2.CAP_PROP_FRAME_WIDTH))
+        h=round(camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    
     data = dict(img_shape=None, modality='RGB', label=-1)
 
     # with open(args.label, 'r') as f:
@@ -249,14 +288,13 @@ def webcam_main():
     test_pipeline = Compose(pipeline_)
 
     assert sample_length > 0
-
     try:
         frame_queue = deque(maxlen=sample_length)
         result_queue = deque(maxlen=1)
+        # sub_ins=subthread(sub_maxlen)
         pw = Thread(target=webcam_stream, args=(), daemon=True)
-        # pw = Thread(target=webcam_stream, args=())
         pr = Thread(target=inference, args=(), daemon=True)
-        # pr = Thread(target=inference, args=())
+
         pw.start()
         pr.start()
         pw.join()
@@ -264,72 +302,42 @@ def webcam_main():
         pass
 
 
+class subprocess():
+    def __init__(self):
+        now=timezone.now
+        self.video_name=now #변경X
+        self.storage_time=now #변경O
+        self.next = ''
+        self.w=''
+        self.h=''
+        self.subqueue=deque()
+        self.count=0
 # if __name__ == '__main__':
 #     webcam_main()
 
+# class subthread():
+#     def __init__(self,sub_len):
+#         now=timezone.now
+#         self.video_name=now #변경X
+#         self.storage_time=now #변경O
+#         self.subqueue=deque(maxlen=sub_len) 
+#         self.count=0
+#     def store_mem(self,sub_len):
+#         while self.count<sub_len:
+#             self.subqueue.append(prev_queue.popleft())
+#             self.count+=1
+#     def store_db(self,sub_len):
+#         while self.subqueue:
+#             now=timezone.now()
+#             t=now.strftime('%y%m%d_%H-%M-%S')
+#             # # cv2.imwrite('camera/record_video/record_img/{}.jpg'.format(t),frame)
+#             # print(type(jpegbytes))
+#             content = ContentFile(self.subqueue.popleft())
+#             img_model=Image()
+#             img_model.datetime=self.video_name
+#             img_model.image.save('{}.jpg'.format(t),content,save=False)
+#             img_model.save()
+#             self.count=0
 
 
-
-class CircleQueue:
-
-    def __init__(self, size):
-        self.MAX_SIZE = size
-        self.queue = [None] * size
-        self.head = -1
-        self.tail = -1
     
-    def count(self):
-        if self.head>self.tail:
-            return self.MAX_SIZE-(self.head-self.tail)
-        else:
-            return self.tail-self.head
-
-    def is_full(self):
-        if ((self.tail + 1) % self.MAX_SIZE == self.head):
-            return True
-        else:
-            return False
-    # 삽입
-    def enqueue(self, data):
-
-        if self.is_full():
-            raise IndexError('Queue full')
-
-        elif (self.head == -1):
-            self.head = 0
-            self.tail = 0
-            self.queue[self.tail] = data
-
-        else:
-            self.tail = (self.tail + 1) % self.MAX_SIZE
-            self.queue[self.tail] = data
-
-    # 삭제
-    def dequeue(self):
-        if (self.head == -1):
-            raise IndexError("The circular queue is empty\n")
-
-        elif (self.head == self.tail):
-            temp = self.queue[self.head]
-            self.head = -1
-            self.tail = -1
-            return temp
-        else:
-            temp = self.queue[self.head]
-            self.head = (self.head + 1) % self.MAX_SIZE
-            return temp
-
-    def printCQueue(self):
-        if(self.head == -1):
-            print("No element in the circular queue")
-
-        elif (self.tail >= self.head):
-            for i in range(self.head, self.tail + 1):
-                print(self.queue[i], end=" ")
-            print()
-        else:
-            for i in range(self.head, self.MAX_SIZE):
-                print(self.queue[i], end=" ")
-            for i in range(0, self.tail + 1):
-                print(self.queue[i], end=" ")
-            print()
