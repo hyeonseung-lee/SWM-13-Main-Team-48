@@ -1,38 +1,108 @@
 <!--This template is based on: https://dribbble.com/shots/6531694-Marketing-Dashboard by Gregoire Vella -->
 {% load static %}
+{% load compress %}
+<!-- for pwa -->
+{% load pwa %}
+
 <!DOCTYPE html>
 <html lang="en">
+<head>
+  <!-- for pwa -->
+  {% progressive_web_app_meta %}
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <title>
+    대신보다
+  </title>
+  <link rel="icon" type="image/png" href="{% static '/images/logo.png' %}">
+  <meta name="description" content="description here"/>
+  <meta name="keywords" content="keywords,here"/>
 
-  <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-    <title>
-      Demo page
-    </title>
-    <meta name="description" content="description here"/>
-    <meta name="keywords" content="keywords,here"/>
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}"/>
+  <link href="https://fonts.googleapis.com/css?family=Nunito:400,700,800" rel="stylesheet"/>
 
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}"/>
-    <link href="https://fonts.googleapis.com/css?family=Nunito:400,700,800" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous"/>
+  <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.css"/>
+  <!--Replace with your tailwind.css once created-->
+  
+  <!-- fontawesome -->
+  <script src="https://kit.fontawesome.com/fad942d57d.js" crossorigin="anonymous"></script>
+  
+  <!-- flowbite -->
+  <script src="https://unpkg.com/flowbite@1.5.3/dist/flowbite.js"></script>
+  <script src="../path/to/flowbite/dist/datepicker.js"></script>
+  <script src="https://unpkg.com/flowbite@1.5.3/dist/datepicker.js"></script>
 
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous"/>
-    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"/>
-    <!--Replace with your tailwind.css once created-->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.css"/>
-    <script src="https://kit.fontawesome.com/fad942d57d.js" crossorigin="anonymous"></script>
-    
-  </head>
+  <!-- kutty -->
+  <!-- All components in one -->
+  <script src="https://cdn.jsdelivr.net/npm/kutty@latest/dist/kutty.min.js"></script>
+  <!-- Single component -->
+  <!-- Include AlpineJS first -->
+  <script src="https://cdn.jsdelivr.net/npm/kutty@latest/dist/alpinejs.min.js"></script>
+  <!-- And then the single component -->
+  <script src="https://cdn.jsdelivr.net/npm/kutty@latest/dist/dropdown.min.js"></script>
+</head>
 
-  <body class="">
-    {% comment %} {% include "partials/nav_horizental.html" %} {% endcomment %}
-    {% include "partials/nav_vertical.html" %}
-     
-    <div class="pl-16 flex h-screen w-screen bg-gray-100 font-sans">
-      {% block content %}
-      {% endblock content %}
+<body class="bg-gray-100">
+  <section class="min-h-screen  bg-gray-50" x-data="{ sideBar: false }">
+    {% include "partials/navbar.html" %}
+    <div class="ml-0 transition">
+      <header class="flex items-center justify-between lg:justify-end w-full px-4 h-14">
+        <button
+          class="block btn btn-light-secondary  md:hihidden lg:hidden"
+          @click.stop="sideBar = true"
+        >
+          <span class="sr-only">Menu</span>
+          <svg
+            class="w-4 h-4"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </button>
+        
+        <div class="flex items-center">
+          <a href="#" class="flex text-gray-500">
+            <svg
+              class="shrink-0 w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"
+              />
+            </svg>
+          </a>
+          <a href="#" class="w-10 ml-4 avatar avatar-sm">
+            <img src="{% static 'images/placeholder.jpeg' %}" alt="Photo of Praveen Juge" />
+          </a>
+        </div>
+      </header>
+      <div class="p-4">
+        <!-- Add content here, remove div below -->
+        {% comment %} <div class="-mt-2 border-4 border-dashed rounded h-96"></div> {% endcomment %}
+        {% block content %}
+        {% endblock content %}
+      </div>
     </div>
-    
-  </body>
+    <!-- Sidebar Backdrop -->
+    <div
+      class="fixed inset-0 z-10 w-screen h-screen bg-black bg-opacity-25 md:hidden"
+      x-show.transition="sideBar"
+      x-cloak
+    ></div>
+  </section>
+  
+  
+</body>
 
 </html>

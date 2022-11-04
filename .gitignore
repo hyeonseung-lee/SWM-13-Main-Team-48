@@ -218,3 +218,6 @@ Temporary Items
 # to template
 .prettierignore
 node_modules/
+
+
+*.mp4 
