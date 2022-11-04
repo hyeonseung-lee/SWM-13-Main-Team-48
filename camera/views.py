@@ -1,3 +1,5 @@
+from ast import Index
+from multiprocessing import dummy
 from django.shortcuts import render
 from django.http.response import StreamingHttpResponse
 from django.views.decorators import gzip
@@ -9,6 +11,7 @@ from camera.ai_models.mmaction import *
 from camera.ai_models.webcam import *
 from camera.ai_models.webcam_thread import *
 from .models import *
+from django.db.models import Q
 from django.views.decorators.http import require_POST
 from django.http import HttpResponse
 from collections import deque
@@ -20,12 +23,12 @@ from .models import test as test_model
 import os
 
 def camerapage(request):
+    return render(request, 'camera.html')
 
 
-    return render(request,'camera.html')
-    
 @gzip.gzip_page
 def livecam(request):
+    # template으로 넘길 수는 없는지
     try:
         cam = VideoCamera()
         return StreamingHttpResponse(gen(cam), content_type="multipart/x-mixed-replace;boundary=frame")
@@ -33,17 +36,21 @@ def livecam(request):
         print("에러입니다...")
         pass
 
+
 @gzip.gzip_page
 def mediapipe(request):
     return StreamingHttpResponse(mediapipe_stream(), content_type="multipart/x-mixed-replace;boundary=frame")
- 
+
+
 @gzip.gzip_page
 def mediapipe_with_yolo(request):
     return StreamingHttpResponse(mediapipe_with_yolo_stream(), content_type="multipart/x-mixed-replace;boundary=frame")
- 
+
+
 @gzip.gzip_page
 def enhancement_yolo(request):
     return StreamingHttpResponse(enhancement_yolo_stream(), content_type="multipart/x-mixed-replace;boundary=frame")
+
 
 def mmaction2(request):
    
@@ -57,39 +64,37 @@ def webcam_thread(request):
         
     return StreamingHttpResponse(webcam_thread_main(request),content_type="multipart/x-mixed-replace;boundary=frame")
 
-def find(request):
-    try:
-        date=request.GET['date'].replace('-','')
-        count=Video.objects.filter(video__contains=date).count()
 
-        return render(request,'find.html',{'date':date,'count':count})
+def find(request):
+    dummy_videos = [
+        {'url': "/######", 'action_type': "실신", 'datetime': "2022-10-29 10:32"},
+        {'url': "/######", 'action_type': "장시간 배회", 'datetime': "2022-10-28 23:33"},
+        {'url': "/######", 'action_type': "기물파손", 'datetime': "2022-10-26 01:22"},
+    ]
+    try:
+        start = request.GET['start'].split("/")
+        start_date = start[2] + start[0] + start[1]
+        end = request.GET['end'].replace('/', '')
+        end_date = end[2] + end[0] + end[1]
+        date = start + "-" + end
+        count = Video.objects.filter(
+            Q(datetime__lte=end_date) & Q(datetime__gte=start_date)).count()
+
+        return render(request, 'find.html', {'date': date, 'count': count, 'dummy_videos': dummy_videos}, )
     except:
-        return render(request,'find.html')
+        return render(request, 'find.html')
+
+
 
 def show(request,date):
     videos=Video.objects.all()
     result=[]
     for i in videos:
         path='/'.join(i.video.split('/')[-4:])
-        # print(path)
         path=os.path.join('../../',path)
         result.append(path)
     return render(request,'show.html',{'date':date,"videos":result})
 
-def videostream(request,date):
-    return StreamingHttpResponse(read_and_encode(date),content_type="multipart/x-mixed-replace;boundary=frame")
-
-def read_and_encode(date):
-    # img=cv2.imdecode(image_byte_path,1)
-    # print(img)
-    all=Video.objects.filter(image__contains=date)
-    for i in all:
-        image=cv2.imread(i.image.path,cv2.IMREAD_COLOR)
-        _, jpg = cv2.imencode('.jpg', image)
-        frame = jpg.tobytes()
-   
-        yield(b'--frame\r\n'
-                b'Content-Type: image/jpg\r\n\r\n' + frame + b'\r\n\r\n')
 
 def test(request):
     if request.POST:

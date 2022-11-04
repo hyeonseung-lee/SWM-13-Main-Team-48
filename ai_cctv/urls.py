@@ -17,15 +17,15 @@ from django.contrib import admin
 from django.urls import path, include
 from .views import *
 from django.conf import settings
+
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('camera/', include('camera.urls')),
-    path('', main, name='main'),
-    path('analytics/', analytics, name='analytics'),
-    path('users/',include('users.urls')),
-
+    path('', main, name='dashboards'),
+    path('list/', video_list, name='video_list'),
+    path('users/', include('users.urls')),
+    path('', include('pwa.urls')),
     # path('accounts/', include('allauth.urls')),
-    # path('', include('pwa.urls')),
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

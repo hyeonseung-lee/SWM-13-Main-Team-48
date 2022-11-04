@@ -19,6 +19,8 @@ from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+# PWA_SERVICE_WORKER_PATH = os.path.join(
+#     BASE_DIR, 'static/js', 'serviceworker.js')
 
 
 # Quick-start development settings - unsuitable for production
@@ -66,12 +68,15 @@ INSTALLED_APPS = [
 
     'camera',
     'users',
-    # "pwa"
 
     # for rest_framework
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+
+    # for front-end
+    'compressor',  # modal,
+    'pwa'
 ]
 
 MIDDLEWARE = [
@@ -100,6 +105,7 @@ TEMPLATES = [
 
             ],
         },
+
     },
 ]
 
@@ -134,10 +140,10 @@ SIMPLE_JWT = {
     "USER_ID_CLAIM": "user_id",
     "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
     "TOKEN_TYPE_CLAIM": "token_type",
-    "TOKEN_USER_CLASS" : "users.User",
+    "TOKEN_USER_CLASS": "users.User",
 }
 
-AUTH_USER_MODEL="users.User"
+AUTH_USER_MODEL = "users.User"
 
 
 WSGI_APPLICATION = 'ai_cctv.wsgi.application'
@@ -195,7 +201,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
 
 
-MEDIA_URL = '/media/'		
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
@@ -218,3 +224,33 @@ SOCIAL_OUTH_CONFIG = {
 }
 
 
+# Django-PWA setting
+PWA_APP_NAME = '대신보다'
+PWA_APP_DESCRIPTION = "대신보다 PWA"
+PWA_APP_THEME_COLOR = '#000000'
+PWA_APP_BACKGROUND_COLOR = '#ffffff'
+PWA_APP_DISPLAY = 'standalone'
+PWA_APP_SCOPE = '/'
+PWA_APP_ORIENTATION = 'any'
+PWA_APP_START_URL = '/'
+PWA_APP_STATUS_BAR_COLOR = 'default'
+PWA_APP_ICONS = [
+    {
+        'src': 'static/images/logo.png',
+        'sizes': '160x160'
+    }
+]
+PWA_APP_ICONS_APPLE = [
+    {
+        'src': 'static/images/logo.png',
+        'sizes': '160x160'
+    }
+]
+PWA_APP_SPLASH_SCREEN = [
+    {
+        'src': 'static/images/logo.png',
+        'media': '(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)'
+    }
+]
+PWA_APP_DIR = 'ltr'
+PWA_APP_LANG = 'en-US'
