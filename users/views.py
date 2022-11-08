@@ -110,6 +110,8 @@ def kakao_logout(request):
         CLIENT_ID, KAKAO_LOGOUT_REDIRECT_URI)
     # print(KAKAO_LOGOUT_REDIRECT_URI)
     res = redirect(url)
-    print('카카오 로그아웃')
+    return res
+    # print('카카오 로그아웃')
+def go_main(request):
     return redirect('dashboards')
 
