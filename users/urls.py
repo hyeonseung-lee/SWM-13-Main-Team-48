@@ -13,10 +13,6 @@ urlpatterns = [
     path('kakao_logout',kakao_logout,name="kakao_logout"),
     
     # django 로그아웃
-    path('logout',TokenBlacklistView.as_view(),name="logout"),
-    # django 로그인 용(superuser사용)
-    path('login',MyTokenObtainPairView.as_view(),name="login"),
-    
-    #access토큰 재발급, {"refresh": 토큰} 꼴로 post
-    path('token-refresh', TokenRefreshView.as_view(), name='token_refresh'),
+    path('logout',service_logout,name="logout"),
+  
 ]

@@ -16,6 +16,8 @@ from mmcv.parallel import collate, scatter
 from mmaction.apis import init_recognizer
 from mmaction.datasets.pipelines import Compose
 
+from users.push_fcm_notification import *
+
 FONTFACE = cv2.FONT_HERSHEY_COMPLEX_SMALL
 FONTSCALE = 1 
 FONTCOLOR = (255, 255, 255)  # BGR, white
@@ -200,6 +202,10 @@ def save_video(request,save_path):
                     type=top_reuslt,
                     datetime=now
                 )
+
+                #푸시알림
+                #푸시알림을 받게되어있다면이라는 조건 주기
+                send_to_firebase_cloud_messaging_User(request.user.profile.fcm_toekn,request.user,top_reuslt)
                 images = []
                 cur_name = None
             
@@ -265,7 +271,8 @@ def webcam_thread_main(request):
     save_path = os.path.join(save_path[:-7], 'media','record_video') 
 
     model = init_recognizer('camera/ai_models/mmaction2/configs/recognition/tsn/tsn_r50_video_inference_1x1x3_100e_kinetics400_rgb.py', 'camera/ai_models/mmaction2/checkpoints/tsn_r50_1x1x3_100e_kinetics400_rgb_20200614-e508be42.pth', device=device)
-    camera = cv2.VideoCapture(0)
+    # camera = cv2.VideoCapture(0)
+    camera = cv2.VideoCapture('rtsp://admin:somateam23@172.16.100.251:554/profile2/media.smp')
 
     frame_width = int(camera.get(cv2.CAP_PROP_FRAME_WIDTH))
     frame_height = int(camera.get(cv2.CAP_PROP_FRAME_HEIGHT))

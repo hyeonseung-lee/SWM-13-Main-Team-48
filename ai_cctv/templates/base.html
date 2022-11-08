@@ -3,12 +3,16 @@
 {% load compress %}
 <!-- for pwa -->
 {% load pwa %}
+{% load pwa_webpush %}
+{% comment %} {% load webpush_notifications %} {% endcomment %}
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <!-- for pwa -->
+  {% webpush_header %}
   {% progressive_web_app_meta %}
+  {% comment %} {{ webpush_header() }} jinja쓰면 괜찮 {% endcomment %}
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
@@ -88,9 +92,17 @@
               />
             </svg>
           </a>
-          <a href="#" class="w-10 ml-4 avatar avatar-sm">
+          {% if request.user.is_authenticated %}
+          <a href="{% url 'users:logout' %}" class="w-10 ml-4 avatar avatar-sm">
+            로그아웃
+          </a>
+          {% else %}
+          <a href="{% url 'users:kakao_login' %}" class="w-10 ml-4 avatar avatar-sm">
             <img src="{% static 'images/placeholder.jpeg' %}" alt="Photo of Praveen Juge" />
           </a>
+          {%endif%}
+            
+          
         </div>
       </header>
       <div class="px-4">
