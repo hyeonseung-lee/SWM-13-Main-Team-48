@@ -61,7 +61,6 @@ def webcam_demo(request):
 
 # ------------- 아래가 주요 사용 됨 ---------------
 def webcam_thread(request):
-        
     return StreamingHttpResponse(webcam_thread_main(request),content_type="multipart/x-mixed-replace;boundary=frame")
 
 
