@@ -46,6 +46,8 @@ class User(AbstractBaseUser,PermissionsMixin):
 
 class Profile(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE,db_column='user')
+    fcm_token=models.CharField(max_length=200,null=True,blank=True,unique=True) # fcm push token (id)
+
     # 몇명 방문한지 기록
 #     # app_push_check=models.BooleanField(verbose_name=_("앱 푸시"), default=True) # 앱 push 알림 선택
 #     # email_push_check=models.BooleanField(verbose_name=_("email 푸시"),default=False) # email push 알림 

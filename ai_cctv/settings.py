@@ -14,7 +14,8 @@ import json
 from pathlib import Path
 from django.core.exceptions import ImproperlyConfigured
 from datetime import timedelta
-
+import firebase_admin
+from firebase_admin import credentials
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -76,7 +77,8 @@ INSTALLED_APPS = [
 
     # for front-end
     'compressor',  # modal,
-    'pwa'
+    'pwa',
+    'pwa_webpush' , 
 ]
 
 MIDDLEWARE = [
@@ -260,3 +262,8 @@ WEBPUSH_SETTINGS = {
     "VAPID_PRIVATE_KEY":get_secret("VAPID_PRIVATE_KEY"),
     "VAPID_ADMIN_EMAIL": get_secret("EMAIL")
 }
+
+#fcm
+cred_path = os.path.join(BASE_DIR, "serviceAccountKey.json")
+cred = credentials.Certificate(cred_path)
+firebase_admin.initialize_app(cred)

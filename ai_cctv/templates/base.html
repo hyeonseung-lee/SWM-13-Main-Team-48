@@ -3,12 +3,16 @@
 {% load compress %}
 <!-- for pwa -->
 {% load pwa %}
+{% load pwa_webpush %}
+{% comment %} {% load webpush_notifications %} {% endcomment %}
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <!-- for pwa -->
+  {% webpush_header %}
   {% progressive_web_app_meta %}
+  {% comment %} {{ webpush_header() }} jinja쓰면 괜찮 {% endcomment %}
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta http-equiv="X-UA-Compatible" content="ie=edge"/>

@@ -71,7 +71,7 @@ def find(request):
 
         start_date=datetime.strptime(request.GET['start'],'%m/%d/%Y')
         end_date=datetime.strptime(request.GET['end'],'%m/%d/%Y')
-        videos = Video.objects.filter(Q(datetime__lte=end_date)&Q(datetime__gte=start_date)).order_by('-datetime')
+        videos = Video.objects.filter(Q(datetime__lte=end_date)&Q(datetime__gte=start_date)&Q(profile=request.user.profile)).order_by('-datetime')
         # result=[]
         for i in videos:
             path='/'.join(i.video.split('/')[-4:])
