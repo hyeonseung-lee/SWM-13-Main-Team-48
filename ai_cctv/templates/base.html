@@ -24,6 +24,7 @@
 
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous"/>
   <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"/>
+  <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.css"/>
   <!--Replace with your tailwind.css once created-->
   
@@ -31,6 +32,7 @@
   <script src="https://kit.fontawesome.com/fad942d57d.js" crossorigin="anonymous"></script>
   
   <!-- flowbite -->
+  
   <script src="https://unpkg.com/flowbite@1.5.3/dist/flowbite.js"></script>
   <script src="../path/to/flowbite/dist/datepicker.js"></script>
   <script src="https://unpkg.com/flowbite@1.5.3/dist/datepicker.js"></script>
@@ -43,12 +45,16 @@
   <script src="https://cdn.jsdelivr.net/npm/kutty@latest/dist/alpinejs.min.js"></script>
   <!-- And then the single component -->
   <script src="https://cdn.jsdelivr.net/npm/kutty@latest/dist/dropdown.min.js"></script>
+
+  <!-- tailwind-elements -->
+  <script src="./TW-ELEMENTS-PATH/dist/js/index.min.js"></script>
+
 </head>
 
 <body class="bg-gray-100">
   <section class="min-h-screen  bg-gray-50" x-data="{ sideBar: false }">
     {% include "partials/navbar.html" %}
-    <div class="ml-0 transition">
+    <div class="ml-0 transition md:ml-60">
       <header class="flex items-center justify-between lg:justify-end w-full px-4 h-14">
         <button
           class="block btn btn-light-secondary  md:hihidden lg:hidden"
@@ -87,7 +93,7 @@
           </a>
         </div>
       </header>
-      <div class="p-4">
+      <div class="px-4">
         <!-- Add content here, remove div below -->
         {% comment %} <div class="-mt-2 border-4 border-dashed rounded h-96"></div> {% endcomment %}
         {% block content %}
@@ -96,7 +102,7 @@
     </div>
     <!-- Sidebar Backdrop -->
     <div
-      class="fixed inset-0 z-10 w-screen h-screen bg-black bg-opacity-25 md:hidden"
+      class="fixed inset-0 z-10 w-screen h-screen bg-black bg-opacity-25 md:hidden mx-2"
       x-show.transition="sideBar"
       x-cloak
     ></div>

@@ -2,19 +2,75 @@
 
 {% block content %}
 
-<div class="grid max-w-xs grid-cols-2 gap-2">
-  <div class="w-full h-10 bg-primary-light"></div>
-  <div class="border border-primary-light text-primary-light">Hello</div>
-  <div class="w-full h-10 bg-primary"></div>
-  <div class="border border-primary text-primary">Hello</div>
-  <div class="w-full h-10 bg-primary-dark"></div>
-  <div class="border border-primary-dark text-primary-dark">Hello</div>
-</div>
 <div class="relative overflow-hidden lg:w-full xl:pt-8">
   
+  <!-- Search Board -->
+  <div class="flex justify-between items-center px-2 pb-4">
+    <div class="card">
+      <div class="card-header">
+        <div class="font-semibold text-gray-900">일일 현황</div>
+      </div>
+      {% comment %} <div class="card-body">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.</div> {% endcomment %}
+    </div>
+    <div class="relative">
+      <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+        <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
+      </div>
+      <input  datepicker-autohide="" inline-datepicker datepicker-format="yyyy/mm/dd" datepicker-title="title" datepicker-orientation="bottom right"  type="text" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 datepicker-input" placeholder="Select date">  </div>
+    </div>
+  </div>
+
+  
+  <!-- Dashboard Box -->
+  <!-- box 1 -->
+  <div class="flex-shrink max-w-full px-2 lg:w-full mb-6 text-white">
+    <div class="p-4 sm:p-6 bg-gradient-to-r from-blue-400 via-blue-400 to-blue-500 text-slate-200 rounded shadow-lg shadow-blue-100/10 dark:shadow-blue-700/10 h-full">
+      <div class="relative">
+        <h4 class="mb-2">일일 누적 방문자 수</h4>
+        <h3 class="text-2xl font-bold text-slate-100 mb-4">{{state.visitor}} 건</h3>
+        {% comment %} <div class="flex flex-row items-center justify-between">
+          {% include 'partials/getPercentage.html' with value=state.visitor %}
+        </div> {% endcomment %}
+      </div>
+    </div>
+  </div>
+  
+  <!-- 2 boxes of 1 row -->
+  <div class="flex-shrink max-w-full w-full lg:w-1/3 xl:w-1/4">
+    <div class="flex flex-wrap flex-row text-white">
+    </div>
+    <!-- row -->
+    <div class="flex flex-wrap flex-row text-white">
+      <!-- box 2 -->
+      <div class="flex-shrink max-w-full px-2 w-1/2 lg:w-full mb-6">
+        <div class="p-4 sm:p-6 bg-gradient-to-r from-pink-400 via-pink-400 to-pink-500 text-slate-200 rounded shadow-lg shadow-blue-100/10 dark:shadow-blue-700/10 h-full">
+          <div class="relative">
+            <h4 class="mb-2">영업 방해 의심</h4>
+            <h3 class="text-2xl font-bold text-slate-100 mb-4">{{ state.obstructions }} 건</h3>
+          </div>
+        </div>
+      </div>
+
+      <!-- box 3 -->
+      <div class="flex-shrink max-w-full px-2 w-1/2 lg:w-full mb-6">
+        <div class="p-4 sm:p-6 bg-gradient-to-r from-green-400 via-green-400 to-green-500 text-slate-200 rounded shadow-lg shadow-blue-100/10 dark:shadow-blue-700/10 h-full">
+          <div class="relative">
+            <h4 class="mb-2">기물 파손 의심</h4>
+            <h3 class="text-2xl font-bold text-slate-100 mb-4">{{state.vandalism}} 건</h3>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+
+
+  <!-- Button -->
   <div class="mx-auto max-w-7xl">
     <div class="relative z-10  pb-8 sm:pb-16 md:pb-20 lg:w-full lg:max-w-2xl lg:pb-28 xl:pb-32">
-      <main class="mx-auto max-w-7xl px-4  sm:px-6   lg:px-8 ">
+      <main class="mx-auto max-w-7xl px-2">
         <div class="sm:text-center lg:text-left">
           <!-- Contents -->
           {% comment %} <h1 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl md:text-5xl pb-2">
@@ -27,7 +83,7 @@
           
           <!-- Buttons -->
             
-            <button class="w-full mr-5 mb-3 text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-8 py-3 text-sm md:py-4 md:px-10 md:text-lg px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button" data-modal-toggle="popup-modal">
+            <button class="w-full mr-5 mb-3 btn btn-primary" type="button" data-modal-toggle="popup-modal">
               <h1 class="text-2xl sm:text-3xl md:text-4xl ">ON</h1>
               <h6>(중단를 원할 경우 클릭하세요.)</h6>
             </button>
@@ -36,9 +92,7 @@
       </main>
     </div>
   </div>
-
-
-  {% comment %} modal  {% endcomment %}
+  <!-- modal -->
   <div id="popup-modal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 md:inset-0 h-modal md:h-full justify-center items-center" aria-hidden="true">
       <div class="relative p-4 w-full max-w-md h-full md:h-auto">
           <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
