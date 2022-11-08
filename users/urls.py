@@ -1,7 +1,5 @@
 from .views import *
 from django.urls import path
-from django.urls.conf import include
-from rest_framework_simplejwt.views import TokenBlacklistView,TokenRefreshView
 
 app_name="users"
 
@@ -14,5 +12,6 @@ urlpatterns = [
     
     # django 로그아웃
     path('logout',service_logout,name="logout"),
+    path('kakao/logout/callback/',go_main,name="go_main"),
   
 ]
