@@ -86,9 +86,17 @@
               />
             </svg>
           </a>
-          <a href="#" class="w-10 ml-4 avatar avatar-sm">
+          {% if request.user.is_authenticated %}
+          <a href="{% url 'users:logout' %}" class="w-10 ml-4 avatar avatar-sm">
+            로그아웃
+          </a>
+          {% else %}
+          <a href="{% url 'users:kakao_login' %}" class="w-10 ml-4 avatar avatar-sm">
             <img src="{% static 'images/placeholder.jpeg' %}" alt="Photo of Praveen Juge" />
           </a>
+          {%endif%}
+            
+          
         </div>
       </header>
       <div class="p-4">
