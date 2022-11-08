@@ -8,10 +8,12 @@ from django.db.models.signals import post_save
 # Create your models here.
 
 class UserManager(BaseUserManager):
-    def create_user(self,id): # user 생성 함수 
+    def create_user(self,id,password): # user 생성 함수 
         user=self.model(
             id = id
         ) 
+        user.set_password(password)
+
         user.save(using=self._db) # settings에 db중 기본 db 사용한다는 의미
         return user
     
