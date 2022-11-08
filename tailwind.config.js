@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+const colors = require("tailwindcss/colors");
 
 module.exports = {
   important: true,
@@ -11,6 +12,7 @@ module.exports = {
 
   content: [
     "./public/**/*.html",
+    "./src/**/*.{html,js}",
     "./src/**/*.{js,jsx,ts,tsx,vue}",
     "./pages/**/*.tsx",
     "./components/**/*.tsx",
@@ -22,10 +24,11 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        cyan: colors.lightblue,
         primary: {
-          light: "#fefcbf", // For lighter primary color
-          DEFAULT: "#b7791f", // Normal primary color
-          dark: "#744210", // Used for hover, active, etc.
+          light: "#E8E2FD", // For lighter primary color
+          DEFAULT: "#5900D0", // Normal primary color
+          dark: "#3A0682", // Used for hover, active, etc.
         },
       },
     },
@@ -39,6 +42,7 @@ module.exports = {
     },
   },
   plugins: [
+    require("tailwindcss"),
     require("@tailwindcss/aspect-ratio"),
     require("flowbite/plugin"),
     require("kutty"),
