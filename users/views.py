@@ -64,7 +64,9 @@ def get_token(request):
             # print(password)
             print("처음 회원가입 하는경우, 바로 로그인")
             login(request,user)
-            return redirect('dashboards')
+
+            # 여기에서 사용자 정보 받는 곳으로 Redirect 시켜야함 -----------------------
+            return redirect('users:profile_update_page')
         # 회원가입이 되어있는 경우 
         else:
             print("이미 회원가입은 했음")
@@ -114,4 +116,18 @@ def kakao_logout(request):
     # print('카카오 로그아웃')
 def go_main(request):
     return redirect('dashboards')
+
+def profile_update_page(request):
+    return render(request,'profile_update_page.html')
+
+def profile_update(request):
+    try:
+        request.user.profile.username=request.POST['username']
+        request.user.profile.photo=request.FILES.get('photo')
+        request.user.profile.save()
+        return redirect('dashboards')
+
+    except:
+        messages.warning(request, "사용자 이름 or 사진이 없습니다")
+        return redirect('users:profile_update_page')
 

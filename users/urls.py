@@ -14,4 +14,6 @@ urlpatterns = [
     path('logout',service_logout,name="logout"),
     path('kakao/logout/callback/',go_main,name="go_main"),
   
+    path('profile_update_page',profile_update_page,name="profile_update_page"),
+    path('profile_update',profile_update,name="profile_update"),
 ]
