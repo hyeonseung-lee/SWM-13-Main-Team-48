@@ -11,7 +11,8 @@ import jwt
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 import hashlib
-
+from django.contrib.auth.decorators import login_required
+from .models import * 
 # Create your views here.
 User=get_user_model()
 
@@ -98,7 +99,7 @@ def get_token(request):
 
 # def profile_update(request):
 #     return redirect('dashboards')
-
+@login_required
 def service_logout(request):
     logout(request)
     print('장고 로그아웃')
@@ -117,17 +118,74 @@ def kakao_logout(request):
 def go_main(request):
     return redirect('dashboards')
 
+@login_required
 def profile_update_page(request):
     return render(request,'profile_update_page.html')
 
+@login_required
 def profile_update(request):
     try:
         request.user.profile.username=request.POST['username']
         request.user.profile.photo=request.FILES.get('photo')
         request.user.profile.save()
         return redirect('dashboards')
-
     except:
         messages.warning(request, "사용자 이름 or 사진이 없습니다")
         return redirect('users:profile_update_page')
 
+@login_required
+def create_store_page(request):
+    return render(request,'store/store_page.html')
+
+@login_required
+def create_store(request):
+    Store.objects.create(
+        name=request.POST['name'],
+        address=request.POST['address'],
+        owner=request.user,
+    )
+    return redirect('users:show_store_list')
+
+@login_required
+def update_store_page(request,store_id):
+    store=Store.objects.get(id=store_id)
+    return render(request,'store/store_page.html',{"store":store})
+
+@login_required
+def update_store(request,store_id):
+    store=Store.objects.get(id=store_id)
+    store.name=request.POST['name']
+    store.address=request.POST['address']
+    store.save()
+    return redirect('users:show_store_list')
+
+@login_required
+def delete_store(request,store_id):
+    store=Store.objects.get(id=store_id)
+    store.delete()
+    return redirect('users:show_store_list')
+
+@login_required
+def show_store_list(request):
+    storelist=Store.objects.filter(owner=request.user)
+    return render(request,'store/store_list.html',{"storelist":storelist})
+
+@login_required
+def show_store_info(request,store_id):
+    store=Store.objects.get(id=store_id)
+    cameras=Camera.objects.filter(store=store)
+    context={
+        "store":store,
+        "cameras":cameras
+        }
+    return render(request,'store/store_info.html',context)
+
+@login_required
+def create_camera(request,store_id):
+    store=Store.objects.get(id=store_id)
+    
+    Camera.objects.create(
+        rtsp_url=request.POST['rtsp_url'],
+        store=store
+    )
+    return redirect('users:show_store_info',store_id)
