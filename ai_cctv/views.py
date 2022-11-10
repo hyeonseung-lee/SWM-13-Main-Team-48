@@ -30,3 +30,7 @@ def video_list(request):
             'action_type': "기물파손", 'datetime': "2022-10-26 01:22"},
     ]
     return render(request, 'video_list.html', {"dummy_videos": dummy_videos})
+
+
+def profile(request):
+    return render(request, 'profile.html')
