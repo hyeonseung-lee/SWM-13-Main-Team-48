@@ -1,4 +1,8 @@
 from django.shortcuts import render
+from .push_fcm_notification import send_to_firebase_cloud_messaging
+
+from firebase_admin.messaging import Message
+from fcm_django.models import FCMDevice
 
 
 def main(request):
@@ -17,6 +21,26 @@ def main(request):
     # vandalism = vandalism
     state = {"visitor": visitor,
              "obstructions": obstructions, "vandalism": vandalism}
+    # send_to_firebase_cloud_messaging()
+
+    """ test git README """
+    message_obj = Message(
+        data={
+            "Nick": "Mario",
+            "body": "great match!",
+            "Room": "PortugalVSDenmark"
+        },
+    )
+
+    # You can still use .filter() or any methods that return QuerySet (from the chain)
+    device = FCMDevice.objects.all().first()
+
+    # send_message parameters include: message, dry_run, app
+    # while True:
+    device.send_message(message_obj)
+    print(device)
+    # Boom!
+
     return render(request, 'main.html', {"state": state})
 
 
@@ -30,7 +54,3 @@ def video_list(request):
             'action_type': "기물파손", 'datetime': "2022-10-26 01:22"},
     ]
     return render(request, 'video_list.html', {"dummy_videos": dummy_videos})
-
-
-def profile(request):
-    return render(request, 'profile.html')

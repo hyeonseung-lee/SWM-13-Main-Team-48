@@ -5,7 +5,7 @@ from django.shortcuts import redirect
 import requests
 from json import JSONDecodeError
 from django.shortcuts import get_object_or_404
-from django.contrib.auth import authenticate,logout,login
+from django.contrib.auth import authenticate, logout, login
 from django.contrib import messages
 import jwt
 from rest_framework.decorators import api_view, permission_classes
@@ -13,7 +13,8 @@ from rest_framework.permissions import AllowAny
 import hashlib
 
 # Create your views here.
-User=get_user_model()
+User = get_user_model()
+
 
 def kakao_login(request):
     CLIENT_ID = SOCIAL_OUTH_CONFIG['KAKAO_REST_API_KEY']
@@ -22,7 +23,7 @@ def kakao_login(request):
     url = "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id={0}&redirect_uri={1}&respons_type=code&state={2}".format(
         CLIENT_ID, REDIRET_URL, state)
     res = redirect(url)
-    
+
     return res
 
 
@@ -34,12 +35,12 @@ def get_token(request):
     CODE = request.query_params['code']
     url = "https://kauth.kakao.com/oauth/token"
     req = {
-            'grant_type': 'authorization_code',
-            'client_id': SOCIAL_OUTH_CONFIG['KAKAO_REST_API_KEY'],
-            'redirect_url': SOCIAL_OUTH_CONFIG['KAKAO_REDIRECT_URI'],
-            'client_secret': SOCIAL_OUTH_CONFIG['KAKAO_SECRET_KEY'],
-            'code': CODE
-        }
+        'grant_type': 'authorization_code',
+        'client_id': SOCIAL_OUTH_CONFIG['KAKAO_REST_API_KEY'],
+        'redirect_url': SOCIAL_OUTH_CONFIG['KAKAO_REDIRECT_URI'],
+        'client_secret': SOCIAL_OUTH_CONFIG['KAKAO_SECRET_KEY'],
+        'code': CODE
+    }
     headers = {
         'Content-type': 'application/x-www-form-urlencoded;charset=utf-8'
     }
@@ -49,8 +50,8 @@ def get_token(request):
 
     # print(tokenJson)
     try:
-        userUrl = "https://kapi.kakao.com/v2/user/me" # 유저 정보 조회하는 uri
-        auth = "Bearer "+ tokenJson['access_token'] ## 'Bearer '여기에서 띄어쓰기 필수!!
+        userUrl = "https://kapi.kakao.com/v2/user/me"  # 유저 정보 조회하는 uri
+        auth = "Bearer " + tokenJson['access_token']  # 'Bearer '여기에서 띄어쓰기 필수!!
         HEADER = {
             "Authorization": auth,
             "Content-type": "application/x-www-form-urlencoded;charset=utf-8"
@@ -59,21 +60,21 @@ def get_token(request):
         # 처음 회원가입 하는경우
         if not User.objects.filter(id=res['id']).exists():
             # 유저 생성
-            password=hashlib.sha256(str(res['id']).encode()).hexdigest()
-            user=User.objects.create_user(id=res['id'],password=password)
+            password = hashlib.sha256(str(res['id']).encode()).hexdigest()
+            user = User.objects.create_user(id=res['id'], password=password)
             # print(password)
             print("처음 회원가입 하는경우, 바로 로그인")
-            login(request,user)
+            login(request, user)
             return redirect('dashboards')
-        # 회원가입이 되어있는 경우 
+        # 회원가입이 되어있는 경우
         else:
             print("이미 회원가입은 했음")
-            password=hashlib.sha256(str(res['id']).encode()).hexdigest()
-            user=authenticate(id=res['id'],password=password)
+            password = hashlib.sha256(str(res['id']).encode()).hexdigest()
+            user = authenticate(id=res['id'], password=password)
             # print(user)
             # print("무조건 되어야함")
             if user is not None:
-                login(request,user)
+                login(request, user)
                 return redirect('dashboards')
             else:
                 messages.warning(request, "비밀번호가 틀렸거나 회원이 아닙니다.")
@@ -97,12 +98,15 @@ def get_token(request):
 # def profile_update(request):
 #     return redirect('dashboards')
 
+
 def service_logout(request):
     logout(request)
     print('장고 로그아웃')
     return redirect('users:kakao_logout')
 
 # Web용 로그아웃
+
+
 def kakao_logout(request):
     CLIENT_ID = SOCIAL_OUTH_CONFIG['KAKAO_REST_API_KEY']
     KAKAO_LOGOUT_REDIRECT_URI = SOCIAL_OUTH_CONFIG['KAKAO_LOGOUT_REDIRECT_URI']
@@ -112,6 +116,7 @@ def kakao_logout(request):
     res = redirect(url)
     return res
     # print('카카오 로그아웃')
+
+
 def go_main(request):
     return redirect('dashboards')
-
