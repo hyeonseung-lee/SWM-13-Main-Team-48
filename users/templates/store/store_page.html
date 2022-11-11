@@ -1,0 +1,27 @@
+{% if messages  %}
+    {% for message in messages %}
+        <div class="alert {{ message.tags }} alert-auto-dismissible alert-dismissible notification-container text-center" role="alert">
+            {{ message }}
+        </div>
+        <button><a href="{% url 'users:create_store_page'%}">다시 작성하기</a></button>
+    {% endfor %}
+
+{% else %}
+    {% if store  %}
+    <form action="{%url 'users:update_store' store.id %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <p>매장명 : <input type="text" value={{store.name}} required name="name" placeholder></p>
+        <p>주소 : <input type="text" value={{store.address}}  required name="address" placeholder></p>
+        <br><button type="submit">매장 수정</button>
+    </form>
+    {% else %}
+    <form action="{%url 'users:create_store'%}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <p>매장명 : <input type="text" required name="name" placeholder></p>
+        <p>주소 : <input type="text"  required name="address" placeholder></p>
+        <br><button type="submit">매장 생성</button>
+    </form>
+    {% endif%}
+    
+
+{% endif %}

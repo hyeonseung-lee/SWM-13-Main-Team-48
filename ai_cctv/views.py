@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 
 
 def main(request):
@@ -19,7 +20,7 @@ def main(request):
              "obstructions": obstructions, "vandalism": vandalism}
     return render(request, 'main.html', {"state": state})
 
-
+@login_required
 def video_list(request):
     dummy_videos = [
         {'url': "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
@@ -31,6 +32,6 @@ def video_list(request):
     ]
     return render(request, 'video_list.html', {"dummy_videos": dummy_videos})
 
-
+@login_required
 def profile(request):
     return render(request, 'profile.html')

@@ -17,7 +17,3 @@ class Video(models.Model):
     # datetime = models.DateTimeField(verbose_name=_("날짜"), auto_now_add=True)
     datetime = models.DateTimeField(verbose_name=_("날짜")) #해당 시간 입력해줄거기때문
 
-class Camera(models.Model):
-    profile=models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True, db_column='profile') 
-    rtsp_url=models.CharField(verbose_name=_("rtsp url"), max_length=100,null=True, blank=True) 
-

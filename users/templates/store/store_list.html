@@ -1,0 +1,13 @@
+<a href="{% url 'users:create_store_page'%}">매장 등록 페이지</a>
+<br>
+<br>
+
+{% for store in storelist %}
+    <div>
+        <a href="{% url 'users:show_store_info' store.id %}">매장명 : {{store.name}}</a><br>
+        주소 : {{store.address}}<br>
+        <a href="{% url 'users:update_store_page' store.id %}">매장 수정</a>
+
+    </div>
+    <br>
+{% endfor %}
