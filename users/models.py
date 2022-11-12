@@ -53,6 +53,7 @@ class Store(models.Model):
     owner=models.ForeignKey(User,on_delete=models.DO_NOTHING,db_column='user')
 
 class Camera(models.Model):
+    # 같은 모델에 대해 onetoone, foreignkey 두개 다 설정할때 역참조에서 구별이 안됨을 방지하기위해(외래키에서 _set으로 구별이 되지만 에러가나긴함) related_name을 적어줘야함
     store=models.ForeignKey(Store, on_delete=models.DO_NOTHING, null=True, blank=True,related_name='cameras', db_column='store') 
     rtsp_url=models.CharField(verbose_name=_("rtsp url"), max_length=100,null=True, blank=True) 
     main_camera=models.OneToOneField(Store,on_delete=models.DO_NOTHING,null=True,blank=True)
