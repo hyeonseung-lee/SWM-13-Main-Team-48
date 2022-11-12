@@ -46,15 +46,6 @@ class User(AbstractBaseUser,PermissionsMixin):
 
     USERNAME_FIELD = 'id' #고유식별자
 
-class Profile(models.Model):
-    user = models.OneToOneField(User,on_delete=models.CASCADE,db_column='user')
-    fcm_token=models.CharField(max_length=200,null=True,blank=True,unique=True) # fcm push token (id)
-    photo=models.ImageField(upload_to='user_photo/',null=True,blank=True)
-    username=models.CharField(max_length=50,null=True,blank=True) 
-
-    # 몇명 방문한지 기록
-#     # app_push_check=models.BooleanField(verbose_name=_("앱 푸시"), default=True) # 앱 push 알림 선택
-#     # email_push_check=models.BooleanField(verbose_name=_("email 푸시"),default=False) # email push 알림 
 
 class Store(models.Model):
     name=models.CharField(max_length=200,null=True,blank=True) 
@@ -62,8 +53,21 @@ class Store(models.Model):
     owner=models.ForeignKey(User,on_delete=models.DO_NOTHING,db_column='user')
 
 class Camera(models.Model):
-    store=models.ForeignKey(Store, on_delete=models.DO_NOTHING, null=True, blank=True, db_column='store') 
+    store=models.ForeignKey(Store, on_delete=models.DO_NOTHING, null=True, blank=True,related_name='cameras', db_column='store') 
     rtsp_url=models.CharField(verbose_name=_("rtsp url"), max_length=100,null=True, blank=True) 
+    main_camera=models.OneToOneField(Store,on_delete=models.DO_NOTHING,null=True,blank=True)
+
+# related_name은 역참조시에 _set 대신 사용
+class Profile(models.Model):
+    user = models.OneToOneField(User,on_delete=models.CASCADE,db_column='user')
+    fcm_token=models.CharField(max_length=200,null=True,blank=True,unique=True) # fcm push token (id)
+    photo=models.ImageField(upload_to='user_photo/',null=True,blank=True)
+    username=models.CharField(max_length=50,null=True,blank=True) 
+    main_store=models.OneToOneField(Store,on_delete=models.DO_NOTHING, null=True,blank=True)
+    # 몇명 방문한지 기록
+#     # app_push_check=models.BooleanField(verbose_name=_("앱 푸시"), default=True) # 앱 push 알림 선택
+#     # email_push_check=models.BooleanField(verbose_name=_("email 푸시"),default=False) # email push 알림 
+
 
 
 
