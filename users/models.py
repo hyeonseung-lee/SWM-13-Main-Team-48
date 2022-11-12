@@ -54,10 +54,44 @@ class Profile(models.Model):
         User, on_delete=models.CASCADE, db_column='user')
     fcm_token = models.CharField(
         max_length=200, null=True, blank=True, unique=True)  # fcm push token (id)
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, db_column='user')
+    fcm_token = models.CharField(
+        max_length=200, null=True, blank=True, unique=True)  # fcm push token (id)
+    photo = models.ImageField(upload_to='user_photo/', null=True, blank=True)
+    username = models.CharField(max_length=50, null=True, blank=True)
 
     # 몇명 방문한지 기록
 #     # app_push_check=models.BooleanField(verbose_name=_("앱 푸시"), default=True) # 앱 push 알림 선택
 #     # email_push_check=models.BooleanField(verbose_name=_("email 푸시"),default=False) # email push 알림
+
+
+class Store(models.Model):
+    name = models.CharField(max_length=200, null=True, blank=True)
+    address = models.CharField(max_length=100, null=True, blank=True)  # 주소
+    owner = models.ForeignKey(
+        User, on_delete=models.DO_NOTHING, db_column='user')
+
+
+class Camera(models.Model):
+    store = models.ForeignKey(
+        Store, on_delete=models.DO_NOTHING, null=True, blank=True, db_column='store')
+    rtsp_url = models.CharField(verbose_name=_(
+        "rtsp url"), max_length=100, null=True, blank=True)
+
+
+class Store(models.Model):
+    name = models.CharField(max_length=200, null=True, blank=True)
+    address = models.CharField(max_length=100, null=True, blank=True)  # 주소
+    owner = models.ForeignKey(
+        User, on_delete=models.DO_NOTHING, db_column='user')
+
+
+class Camera(models.Model):
+    store = models.ForeignKey(
+        Store, on_delete=models.DO_NOTHING, null=True, blank=True, db_column='store')
+    rtsp_url = models.CharField(verbose_name=_(
+        "rtsp url"), max_length=100, null=True, blank=True)
 
 
 @receiver(post_save, sender=User)

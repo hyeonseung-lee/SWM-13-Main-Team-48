@@ -18,12 +18,15 @@ from django.utils import timezone
 from django.conf import settings
 from datetime import datetime
 import os
+from django.contrib.auth.decorators import login_required
 
 
+@login_required
 def camerapage(request):
     return render(request, 'camera.html')
 
 
+@login_required
 @gzip.gzip_page
 def livecam(request):
     # template으로 넘길 수는 없는지
@@ -35,37 +38,43 @@ def livecam(request):
         pass
 
 
+@login_required
 @gzip.gzip_page
 def mediapipe(request):
     return StreamingHttpResponse(mediapipe_stream(), content_type="multipart/x-mixed-replace;boundary=frame")
 
 
+@login_required
 @gzip.gzip_page
 def mediapipe_with_yolo(request):
     return StreamingHttpResponse(mediapipe_with_yolo_stream(), content_type="multipart/x-mixed-replace;boundary=frame")
 
 
+@login_required
 @gzip.gzip_page
 def enhancement_yolo(request):
     return StreamingHttpResponse(enhancement_yolo_stream(), content_type="multipart/x-mixed-replace;boundary=frame")
 
 
+@login_required
 def mmaction2(request):
 
     return StreamingHttpResponse(mmaction_stream(), content_type="multipart/x-mixed-replace;boundary=frame")
 
 
+@login_required
 def webcam_demo(request):
 
     return StreamingHttpResponse(webcam_main(), content_type="multipart/x-mixed-replace;boundary=frame")
 
 
 # ------------- 아래가 주요 사용 됨 ---------------
+@login_required
 def webcam_thread(request):
-
     return StreamingHttpResponse(webcam_thread_main(request), content_type="multipart/x-mixed-replace;boundary=frame")
 
 
+@login_required
 def find(request):
 
     try:
@@ -86,5 +95,6 @@ def find(request):
         return render(request, 'find.html')
 
 
+@login_required
 def livepage(request):
     return render(request, 'livepage.html')

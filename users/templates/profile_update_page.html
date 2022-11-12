@@ -1,0 +1,18 @@
+{% if messages  %}
+    {% for message in messages %}
+        <div class="alert {{ message.tags }} alert-auto-dismissible alert-dismissible notification-container text-center" role="alert">
+            {{ message }}
+        </div>
+        <button><a href="{% url 'users:profile_update_page'%}">다시 작성하기</a></button>
+    {% endfor %}
+
+{% else %}
+
+    <form action="{%url 'users:profile_update'  %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <p>사용자 이름 : <input type="text" value={{request.user.profile.username}} required name= "username" placeholder></p>
+        <p>사진 : <input type="file" value={{request.user.profile.photo}} name= "photo" required></p>
+        <br><button type="submit">설정</button>
+    </form>
+
+{% endif %}

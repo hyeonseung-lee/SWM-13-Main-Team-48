@@ -1,4 +1,9 @@
+from django.contrib.auth.decorators import login_required
+from fcm_django.models import FCMDevice
+from firebase_admin.messaging import Message
+from .push_fcm_notification import send_to_firebase_cloud_messaging
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 from .push_fcm_notification import send_to_firebase_cloud_messaging
 
 from firebase_admin.messaging import Message
@@ -37,13 +42,14 @@ def main(request):
 
     # send_message parameters include: message, dry_run, app
     # while True:
-    device.send_message(message_obj)
+    # device.send_message(message_obj)
     print(device)
     # Boom!
 
     return render(request, 'main.html', {"state": state})
 
 
+@login_required
 def video_list(request):
     dummy_videos = [
         {'url': "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",

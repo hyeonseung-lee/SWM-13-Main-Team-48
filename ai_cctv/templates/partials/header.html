@@ -48,6 +48,7 @@
         <img
           class="w-8 h-8 rounded-full"
           src="{% static 'images/profile_image.png' %}"
+          {% comment %} src="{{request.user.profile.photo.url}}" {% endcomment %}
           alt="user photo"
         />
         {% else %}
@@ -73,9 +74,13 @@
         "
       >
         <div class="py-3 px-4">
+          {% if request.user.is_authenticated %}
+
           <span class="block text-sm text-gray-900 dark:text-white"
-            >[USER_NAME]</span
+            >{{request.user.profile.username}}</span
           >
+          {% else %}
+          {%endif%}
           {% comment %}
           <span
             class="block text-sm font-medium text-gray-500 truncate dark:text-gray-400"
@@ -89,8 +94,20 @@
             <a
               href="{% url 'users:logout' %}"
               class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-              >Log Out</a
+              >Log Out</a>
+          </li>
+          <li>
+            <a
+              href="{% url 'profile'%}"
+              class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+              >Profile</a
             >
+          </li>
+          <li>
+            <a
+              href="{% url 'users:profile_update_page'%}"
+              class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+              >Settings</a>
           </li>
           {% else %}
           <li>
@@ -101,20 +118,7 @@
             >
           </li>
           {%endif%}
-          <li>
-            <a
-              href="/profile"
-              class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-              >Profile</a
-            >
-          </li>
-          <li>
-            <a
-              href="/settings"
-              class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-              >Settings</a
-            >
-          </li>
+          
         </ul>
       </div>
     </div>
