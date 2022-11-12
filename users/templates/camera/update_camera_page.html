@@ -1,0 +1,6 @@
+<form action="{%url 'users:update_camera' store_id camera.id %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <p>rtsp 주소 : <input type="text" value={{camera.rtsp_url}} required name="rtsp_url" placeholder="카메라 정보 입력"></p>
+    <br><button type="submit">카메라 정보 수정</button>
+</form>

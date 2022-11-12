@@ -168,7 +168,7 @@ def inference():
     camera.release()
     cv2.destroyAllWindows()
 
-def save_video(request,save_path):
+def save_video(request,default_camera,video_path,thumbnail_path):
     # linked list
     # node 안에 있는 data 저장
     global top_reuslt
@@ -191,16 +191,22 @@ def save_video(request,save_path):
 
                 if not os.path.exists(f'media/record_video/{ymd}'):
                     os.makedirs(f'media/record_video/{ymd}')
+                if not os.path.exists(f'media/record_img/{ymd}'):
+                    os.makedirs(f'media/record_img/{ymd}')
                 output = cv2.VideoWriter(f'media/record_video/{ymd}/{t}.mp4', fourcc, 10, (frame_width, frame_height))
-                for image in images:
+                for idx in range(len(images)):
+                    if idx==0:
+                        cv2.imwrite(f'media/record_video/record_img/{ymd}/{t}.jpg',frame)
                     # print(image)
-                    output.write(image)
+                    output.write(images[idx])
                 output.release()
                 video_instance=Video_model.objects.create(
                     profile=request.user.profile,
-                    video=save_path+'/{}/{}.mp4'.format(ymd,t),
+                    video=video_path+'/{}/{}.mp4'.format(ymd,t),
+                    camera=default_camera,
                     type=top_reuslt,
-                    datetime=now
+                    datetime=now,
+                    thumbnail=thumbnail_path+'/{}/{}.jpg'.format(ymd,t)
                 )
 
                 #푸시알림
@@ -255,7 +261,7 @@ class LinkedList:
         return node
     
 
-def webcam_thread_main(request):
+def webcam_thread_main(request,default_camera):
     global frame_queue, camera, frame, results, threshold, sample_length, \
         data, test_pipeline, model, device, average_size, label, \
         result_queue, drawing_fps, inference_fps, total_queue, cur_info, cur_time, linked_video, frame_width, frame_height,top_reuslt
@@ -268,7 +274,8 @@ def webcam_thread_main(request):
     device = torch.device("cpu")
 
     save_path = os.path.dirname(os.path.dirname(__file__))
-    save_path = os.path.join(save_path[:-7], 'media','record_video') 
+    video_path = os.path.join(save_path[:-7], 'media','record_video') 
+    thumbnail_path=os.path.join(save_path[:-7], 'media','record_img') 
 
     model = init_recognizer('camera/ai_models/mmaction2/configs/recognition/tsn/tsn_r50_video_inference_1x1x3_100e_kinetics400_rgb.py', 'camera/ai_models/mmaction2/checkpoints/tsn_r50_1x1x3_100e_kinetics400_rgb_20200614-e508be42.pth', device=device)
     # camera = cv2.VideoCapture(0)
@@ -310,7 +317,7 @@ def webcam_thread_main(request):
         result_queue = deque(maxlen=1)
         pw = Thread(target=show_results, args=(), daemon=True)
         pr = Thread(target=inference, args=(), daemon=True)
-        sa = Thread(target=save_video, args=(request,save_path,), daemon=True)
+        sa = Thread(target=save_video, args=(request,default_camera,video_path,thumbnail_path,), daemon=True)
         pw.start()
         pr.start()
         sa.start()
