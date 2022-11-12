@@ -186,20 +186,30 @@ def save_video(request,default_camera,video_path,thumbnail_path):
             if node.data_info is None and len(images) > 0:
                 print('저장하러옴 ㅋㅋ')
                 now=timezone.now()
+                ymd=now.strftime("%Y%m%d")
                 t=now.strftime('%y%m%d_%H-%M-%S')
-                ymd=timezone.now().strftime("%Y%m%d")
 
                 if not os.path.exists(f'media/record_video/{ymd}'):
                     os.makedirs(f'media/record_video/{ymd}')
                 if not os.path.exists(f'media/record_img/{ymd}'):
                     os.makedirs(f'media/record_img/{ymd}')
                 output = cv2.VideoWriter(f'media/record_video/{ymd}/{t}.mp4', fourcc, 10, (frame_width, frame_height))
-                for idx in range(len(images)):
-                    if idx==0:
-                        cv2.imwrite(f'media/record_video/record_img/{ymd}/{t}.jpg',frame)
+                
+                thumbnail=True
+
+                for image in images:
+                    if thumbnail:
+                        print('사진 저장')
+                        cv2.imwrite(f'media/record_img/{ymd}/{t}.jpg',image)
+                        thumbnail=False
                     # print(image)
-                    output.write(images[idx])
+                    output.write(image)
+                
                 output.release()
+                # print(video_path)
+                # print(video_path+'/{}/{}.mp4'.format(ymd,t))
+                # print(thumbnail_path)
+                # print(thumbnail_path+'/{}/{}.jpg'.format(ymd,t))
                 video_instance=Video_model.objects.create(
                     profile=request.user.profile,
                     video=video_path+'/{}/{}.mp4'.format(ymd,t),
@@ -211,7 +221,7 @@ def save_video(request,default_camera,video_path,thumbnail_path):
 
                 #푸시알림
                 #푸시알림을 받게되어있다면이라는 조건 주기
-                send_to_firebase_cloud_messaging_User(request.user.profile.fcm_toekn,request.user,top_reuslt)
+                # send_to_firebase_cloud_messaging_User(request.user.profile.fcm_toekn,request.user,top_reuslt)
                 images = []
                 cur_name = None
             
@@ -278,8 +288,8 @@ def webcam_thread_main(request,default_camera):
     thumbnail_path=os.path.join(save_path[:-7], 'media','record_img') 
 
     model = init_recognizer('camera/ai_models/mmaction2/configs/recognition/tsn/tsn_r50_video_inference_1x1x3_100e_kinetics400_rgb.py', 'camera/ai_models/mmaction2/checkpoints/tsn_r50_1x1x3_100e_kinetics400_rgb_20200614-e508be42.pth', device=device)
-    # camera = cv2.VideoCapture(0)
-    camera = cv2.VideoCapture('rtsp://admin:somateam23@172.16.100.251:554/profile2/media.smp')
+    camera = cv2.VideoCapture(0)
+    # camera = cv2.VideoCapture('rtsp://admin:somateam23@172.16.100.251:554/profile2/media.smp')
 
     frame_width = int(camera.get(cv2.CAP_PROP_FRAME_WIDTH))
     frame_height = int(camera.get(cv2.CAP_PROP_FRAME_HEIGHT))

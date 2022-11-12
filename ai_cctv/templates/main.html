@@ -1,7 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}
+{% if messages  %}
+    {% for message in messages %}
+        <div class="alert {{ message.tags }} alert-auto-dismissible alert-dismissible notification-container text-center" role="alert">
+          {{ message }}
+        </div>
+        <button><a href="{% url 'users:show_store_list'%}">매장 or 카메라 선택하기</a></button>
+    {% endfor %}
 
+{% else %}
   <!-- Search Board -->
   <div class="flex justify-between items-center px-2 pb-4">
     <div class="card">
@@ -112,7 +120,7 @@
 
 
 </div>
-
+{% endif %}
 {% endblock content %}
 
 

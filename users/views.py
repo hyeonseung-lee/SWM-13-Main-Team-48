@@ -200,7 +200,7 @@ def set_main_store(request,store_id):
 def show_store_info(request,store_id):
     store=Store.objects.get(id=store_id)
     cameras=Camera.objects.filter(store=store)
-    default=Camera.objects.filter(store=store,default_cam=True)
+    default=Camera.objects.filter(store=store,main_cam=True)
     result=None
     if default.exists():
         result=default.first()
@@ -260,14 +260,14 @@ def delete_camera(request,store_id,camera_id):
 def set_default_camera(request,store_id,camera_id):
     store=Store.objects.get(id=store_id)
     if request.user.profile.main_store==store:
-        default=Camera.objects.filter(store=store,default_cam=True)
+        default=Camera.objects.filter(store=store,main_cam=True)
         if default.exists():
             default= default.first()
-            default.default_cam=False #무조건 한개
+            default.main_cam=False #무조건 한개
             default.save()
     
         camera=Camera.objects.get(id=camera_id)
-        camera.default_cam=True
+        camera.main_cam=True
         camera.save()
         return redirect('users:show_store_info',store_id)
 

@@ -93,13 +93,10 @@ def count_people(frame:Queue, device, people_count:Value, countF_is_working):
 
     while True:
         print("count_people입니다")
-
         image = frame.get() # frame에 신호가 올때까지 여기에 머무름
-        while len(image) == 0:
-            time.sleep(0.1)
-            # send message "detect_people" func not work
-            continue
+        current_time = time.time()
         img = [letterbox(np.array(x), imgsz, auto=True, stride=stride)[0] for x in [image]]
+       
         # Stack
         img = np.stack(img, 0)
         # Convert
@@ -126,8 +123,9 @@ def count_people(frame:Queue, device, people_count:Value, countF_is_working):
         # send message "people_count var update" to show_results func
         people_count.value = len(pred[0]) #pred == [location, conf, classId], ...
         countF_is_working.value = 0
+        print('yolo 걸리는 시간(초): ', time.time() - current_time)
 
-def show_results(people_count:Value, to_count_func:Queue, to_inference_func:Queue, to_save_func:Queue, result_queue_index:Array, frame_width, frame_height, is_working, countF_is_working):
+def show_results(people_count:Value, to_count_func:Queue, to_inference_func:Queue, result_queue_index:Array, frame_width, frame_height, is_working, countF_is_working):
     '''
     frames : help = save frames for inferencing behaviors : type = multiprocessing Queue
     result_queue : help = save inferencing results : type = multiprocessing Queue
@@ -153,6 +151,11 @@ def show_results(people_count:Value, to_count_func:Queue, to_inference_func:Queu
     total_images = []
     normal = 0
     fourcc = cv2.VideoWriter_fourcc('m','p','4','v')
+
+    while is_working.value == 1: # wait until inference model loading is finished
+        pass
+    prev_time = cur_time = time.time()
+    current_time = time.time()
     while True:
         print("show_result입니다")
 
@@ -167,30 +170,51 @@ def show_results(people_count:Value, to_count_func:Queue, to_inference_func:Queu
         # 4. receive results(Array)
 
         # 5. send total images to save
-        if (people_count.value == 0 or countF_is_working.value == 0) and is_working.value == 0:
+        if (people_count.value == 0 or countF_is_working.value == 0) and is_working.value == 0 and time.time() - prev_time > 2 : # count func not working and inference func not working and 작동 term 2초 이상
         # if people_count.value == 0 or countF_is_working.value == 0 : # count func not working
             # again
             to_count_func.put(image)
+            prev_time = time.time()
             countF_is_working.value = 1 # count func working
         
         if people_count.value > 0 or len(frame_queue) > 0: # count_people func done and exist people | already gathering images(frame_queue) keep going
             # gather images(frame_queue)
             # send to inference
+            first_enter = True
             if count == 3:
                 count = 0
                 total_frame_queue.append(image)
                 frame_queue.append(np.array(image[:, :, ::-1]))
                 if len(frame_queue) == sample_length and is_working.value == 0: # when frame_queue fulls | inference func not works
+                    current_time = time.time()
                     is_working.value = 1
                     to_inference_func.put(frame_queue) # send images
-                    del frame_queue # deque 초기화 방법 알려주실 분.. (질문드리기)
-                    frame_queue = deque(maxlen=sample_length)
-                    total_images += total_frame_queue # 저장할 이미지들
-                    total_frame_queue = [] # reset
+                    frame_queue.clear() # deque 초기화 방법 알려주실 분.. (질문드리기) 왜 클리어를 사용하면 빈 리스트를...?
+
+                    total_images += total_frame_queue.copy() # 저장할 이미지들
+                    total_frame_queue.clear()
                     # 그냥 버릴 것인가 (deque maxlen에 의해 하나씩 빠짐)
             else:
                 count += 1
+        elif len(total_images) > 0: # not exist people long time, then save total images.
+            # first time, save time.time()
+            if first_enter:
+                first_enter_time = time.time()
+                first_enter = False
             
+            elif time.time() - first_enter_time > 5:
+                # save total images
+                now=timezone.now()
+                t=now.strftime('%y%m%d_%H-%M-%S')
+                ymd=timezone.now().strftime("%Y%m%d")
+                output = cv2.VideoWriter(f'media/record_video/{ymd}/{t}.mp4', fourcc, 10, (frame_width.value, frame_height.value))
+
+                # output = cv2.VideoWriter(f'data/mysave/{int(time.time())}.mp4', fourcc, 10, (frame_width.value, frame_height.value))
+                for img in total_images:
+                    output.write(img)
+                output.release()
+                total_images = []
+                first_enter = True 
             
         # show results
         # send total images to save func
@@ -217,11 +241,9 @@ def show_results(people_count:Value, to_count_func:Queue, to_inference_func:Queu
                     exist_abnormal = True
             
             normal_thres = 2
+            
             if exist_abnormal:
-                # if normal < normal_thres -1: # 처음 저장될 때 시간이 필요한 경우 주석 풀고 사용
-                #     pass
-                # else: 
-                #     initTime = time.time()
+                
                 normal = 0
             else:
                 if normal <= normal_thres:
@@ -243,7 +265,7 @@ def show_results(people_count:Value, to_count_func:Queue, to_inference_func:Queu
                     total_images = []
 
         elif len(text_info) != 0: # 기존 inference 결과가 있으면
-            if people_count.value == 0 and is_working.value == 0: # people not exist and inference not work
+            if people_count.value == 0 and len(frame_queue)==0 and is_working.value == 0: # people not exist and inference not work
                 text_info = {}
             else:
                 for location, text in text_info.items():
@@ -251,16 +273,26 @@ def show_results(people_count:Value, to_count_func:Queue, to_inference_func:Queu
                                 FONTCOLOR, THICKNESS, LINETYPE)
 
         else:
+            msg = 'Waiting for action ...'
+
             cv2.putText(image, msg, (0, 40), FONTFACE, FONTSCALE, MSGCOLOR,
                         THICKNESS, LINETYPE)
 
-        cv2.imshow('camera', image)
-
+        # success, jpg = cv2.imencode('.jpg', image)
+        # if success:
+        #     frame = jpg.tobytes()
+        #     # if type(frame)==None:
+        #     #     continue
+        #     print(type(frame))
+        #     yield(b'--frame\r\n'
+        #             b'Content-Type: image/jpg\r\n\r\n' + frame + b'\r\n\r\n')
+    
         
-        # ch = cv2.waitKey(1)
+        cv2.imshow('camera', image)
+        ch = cv2.waitKey(1)
 
-        # if ch == 27 or ch == ord('q') or ch == ord('Q'):
-        #     break
+        if ch == 27 or ch == ord('q') or ch == ord('Q'):
+            break
 
         if drawing_fps > 0:
             # add a limiter for actual drawing fps <= drawing_fps
@@ -268,10 +300,11 @@ def show_results(people_count:Value, to_count_func:Queue, to_inference_func:Queu
             if sleep_time > 0:
                 time.sleep(sleep_time)
             cur_time = time.time()
-
+    camera.release()
+    cv2.destroyAllWindows()
         # success, jpg = cv2.imencode('.jpg', image)
         # print(success,jpg)
-        # if success:
+        # if :
         #     frame = jpg.tobytes()
 
         #     yield(b'--frame\r\n'
@@ -313,11 +346,8 @@ def inference(device, from_show_func:Queue, result_queue_index:Queue, frame_widt
 
     assert sample_length > 0
 
-    initTime = cur_time = time.time()
-    current_time = cur_time
-    
-    normal = 0
     label_index = []
+    is_working.value = 0
     while True:
         cur_windows = []
 
@@ -346,6 +376,8 @@ def inference(device, from_show_func:Queue, result_queue_index:Queue, frame_widt
 
         for i, (l, s) in enumerate(results): # 정보 전달에 실패한다면... 끔찍하군
             result_queue_index[i] = l
+        is_working.value = 0
+        print('inference 걸리는 시간(초): ',time.time() - current_time)
 
         if inference_fps > 0:
             # add a limiter for actual inference fps <= inference_fps
@@ -354,22 +386,6 @@ def inference(device, from_show_func:Queue, result_queue_index:Queue, frame_widt
                 time.sleep(sleep_time)
             cur_time = time.time()
         
-        is_working.value = 0
-
-def save_video(to_save_func, frame_width, frame_height):
-    fourcc = cv2.VideoWriter_fourcc('m','p','4','v')
-    while True:
-        now=timezone.now()
-        t=now.strftime('%y%m%d_%H-%M-%S')
-        ymd=timezone.now().strftime("%Y%m%d")
-
-        images = to_save_func().get()
-        filename = time.time()
-        output = cv2.VideoWriter(f'media/record_video/{ymd}/{t}.mp4', fourcc, 10, (frame_width.value, frame_height.value))
-        # output = cv2.VideoWriter(f'data/mysave/{int(filename)}.mp4', fourcc, 10, (frame_width.value, frame_height.value))
-        for image in images:
-            output.write(image)
-        output.release()
 
 def multiprocessing_main():
     # device = torch.device("cuda:0")
@@ -379,7 +395,6 @@ def multiprocessing_main():
 
     to_inference_func = Queue()
     to_count_func = Queue()
-    to_save_func = Queue()
 
     people_count = Value('i', 0)
     result_queue_index = Array('i', [0,0,0,0,0])
@@ -388,15 +403,13 @@ def multiprocessing_main():
 
 
     try:
-        pw = Process(target=show_results, args=(people_count, to_count_func, to_inference_func, to_save_func, result_queue_index, frame_width, frame_height, is_working, countF_is_working))
+        pw = Process(target=show_results, args=(people_count, to_count_func, to_inference_func, result_queue_index, frame_width, frame_height, is_working, countF_is_working))
         pr = Process(target=inference, args=(device, to_inference_func, result_queue_index, frame_width, frame_height, is_working))
         cp = Process(target=count_people, args=(to_count_func, device, people_count, countF_is_working))
-        # sa = Process(target=save_video, args=(to_save_func, frame_width, frame_height))
         
         pw.start()
         pr.start()
         cp.start()
-        # sa.start()
         pw.join()
     except KeyboardInterrupt:
         pass

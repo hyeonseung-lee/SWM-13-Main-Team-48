@@ -81,10 +81,11 @@ def webcam_thread(request):
         print('메인 매장이없음')
         messages.warning(request, "메인 매장이 없습니다. 설정하세요")
         return redirect('dashboards')
-    default_camera=Camera.objects.filter(store=main_store,
-                                        default_cam=True)
+    default_camera=Camera.objects.filter(Q(store=main_store)&
+                                        Q(main_cam=True))
     if default_camera.exists():
         default_camera=default_camera.first()
+        print(default_camera)
         return StreamingHttpResponse(webcam_thread_main(request,default_camera), content_type="multipart/x-mixed-replace;boundary=frame")
     else:
         messages.warning(request, "디폴트 카메라가 없습니다. 설정하세요")
@@ -92,25 +93,38 @@ def webcam_thread(request):
 
 @login_required(login_url='dashboards')
 def cam_multiprocessing(request):
-    return StreamingHttpResponse(multiprocessing_main() if multiprocessing_main() else [],content_type="multipart/x-mixed-replace;boundary=frame")
+    return StreamingHttpResponse( multiprocessing_main() ,content_type="multipart/x-mixed-replace;boundary=frame")
 
 @login_required(login_url='dashboards')
 def find(request):
 
     try:
-        start_date = datetime.strptime(request.GET['start'], '%m/%d/%Y')
-        end_date = datetime.strptime(request.GET['end'], '%m/%d/%Y')
-        videos = Video.objects.filter(Q(datetime__lte=end_date) & Q(
-            datetime__gte=start_date)).order_by('-datetime')
-        # result=[]
-        for i in videos:
-            path = '/'.join(i.video.split('/')[-4:])
-            path = os.path.join('../../', path)
-            i.video = path
-            # result.append(path)
-        return render(request, 'find.html', {"videos": videos})
+        main_store=request.user.profile.main_store
+        if main_store is None:
+            print('메인 매장이없음')
+            messages.warning(request, "메인 매장이 없습니다. 설정하세요")
+            return redirect('dashboards')
+        default_camera=Camera.objects.filter(store=main_store,main_cam=True)
+        if default_camera.exists():
+            default_camera=default_camera.first()
+    
+            start_date = datetime.strptime(request.GET['start'], '%m/%d/%Y')
+            end_date = datetime.strptime(request.GET['end'], '%m/%d/%Y')
+            videos = Video.objects.filter(Q(datetime__lte=end_date)&Q(
+                datetime__gte=start_date)&Q(camera=default_camera)).order_by('-datetime')
+            
+            # result=[]
+            for i in videos:
+                path = '/'.join(i.video.split('/')[-4:])
+                path = os.path.join('../../', path)
+                i.video = path
+                # result.append(path)
+            return render(request, 'find.html', {"videos": videos})
+        else:
+            messages.warning(request, "디폴트 카메라가 없습니다. 설정하세요")
+            return redirect('dashboards')
     except:
-        return render(request, 'find.html')
+        return render(request,'find.html')
 
 @login_required(login_url='dashboards')
 def livepage(request):
