@@ -4,7 +4,6 @@ from django.utils.translation import gettext_lazy as _
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 
-
 # Create your models here.
 
 class UserManager(BaseUserManager):
@@ -49,49 +48,31 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'id'  # 고유식별자
 
 
-class Profile(models.Model):
-    user = models.OneToOneField(
-        User, on_delete=models.CASCADE, db_column='user')
-    fcm_token = models.CharField(
-        max_length=200, null=True, blank=True, unique=True)  # fcm push token (id)
-    user = models.OneToOneField(
-        User, on_delete=models.CASCADE, db_column='user')
-    fcm_token = models.CharField(
-        max_length=200, null=True, blank=True, unique=True)  # fcm push token (id)
-    photo = models.ImageField(upload_to='user_photo/', null=True, blank=True)
-    username = models.CharField(max_length=50, null=True, blank=True)
+class Store(models.Model):
+    name=models.CharField(max_length=200,null=True,blank=True) 
+    address=models.CharField(max_length=100,null=True,blank=True) # 주소
+    owner=models.ForeignKey(User,on_delete=models.CASCADE,db_column='owner',related_name='stores')
+    current_visitor=models.IntegerField(default=0,null=True,blank=True)
 
+
+# related_name은 역참조시에 _set 대신 사용
+class Camera(models.Model):
+    # 같은 모델에 대해 onetoone, foreignkey 두개 다 설정할때 역참조에서 구별이 안됨을 방지하기위해(외래키에서 _set으로 구별이 되지만 에러가나긴함) related_name을 적어줘야함
+    store=models.ForeignKey(Store, on_delete=models.CASCADE, null=True, blank=True,related_name='cameras', db_column='store') 
+    rtsp_url=models.CharField(max_length=100,null=True, blank=True) 
+    main_cam = models.BooleanField(default=False,null=True,blank=True)
+
+class Profile(models.Model):
+    user = models.OneToOneField(User,on_delete=models.CASCADE,db_column='user')
+    main_store = models.OneToOneField(Store,on_delete=models.SET_NULL,null=True,blank=True)
+    fcm_token=models.CharField(max_length=200,null=True,blank=True,unique=True) # fcm push token (id)
+    photo=models.ImageField(upload_to='user_photo/',null=True,blank=True)
+    username=models.CharField(max_length=50,null=True,blank=True) 
     # 몇명 방문한지 기록
 #     # app_push_check=models.BooleanField(verbose_name=_("앱 푸시"), default=True) # 앱 push 알림 선택
 #     # email_push_check=models.BooleanField(verbose_name=_("email 푸시"),default=False) # email push 알림
 
 
-class Store(models.Model):
-    name = models.CharField(max_length=200, null=True, blank=True)
-    address = models.CharField(max_length=100, null=True, blank=True)  # 주소
-    owner = models.ForeignKey(
-        User, on_delete=models.DO_NOTHING, db_column='user')
-
-
-class Camera(models.Model):
-    store = models.ForeignKey(
-        Store, on_delete=models.DO_NOTHING, null=True, blank=True, db_column='store')
-    rtsp_url = models.CharField(verbose_name=_(
-        "rtsp url"), max_length=100, null=True, blank=True)
-
-
-class Store(models.Model):
-    name = models.CharField(max_length=200, null=True, blank=True)
-    address = models.CharField(max_length=100, null=True, blank=True)  # 주소
-    owner = models.ForeignKey(
-        User, on_delete=models.DO_NOTHING, db_column='user')
-
-
-class Camera(models.Model):
-    store = models.ForeignKey(
-        Store, on_delete=models.DO_NOTHING, null=True, blank=True, db_column='store')
-    rtsp_url = models.CharField(verbose_name=_(
-        "rtsp url"), max_length=100, null=True, blank=True)
 
 
 @receiver(post_save, sender=User)

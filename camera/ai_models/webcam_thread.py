@@ -168,7 +168,7 @@ def inference():
     camera.release()
     cv2.destroyAllWindows()
 
-def save_video(request,save_path):
+def save_video(request,default_camera,video_path,thumbnail_path):
     # linked list
     # node 안에 있는 data 저장
     global top_reuslt
@@ -186,26 +186,42 @@ def save_video(request,save_path):
             if node.data_info is None and len(images) > 0:
                 print('저장하러옴 ㅋㅋ')
                 now=timezone.now()
+                ymd=now.strftime("%Y%m%d")
                 t=now.strftime('%y%m%d_%H-%M-%S')
-                ymd=timezone.now().strftime("%Y%m%d")
 
                 if not os.path.exists(f'media/record_video/{ymd}'):
                     os.makedirs(f'media/record_video/{ymd}')
+                if not os.path.exists(f'media/record_img/{ymd}'):
+                    os.makedirs(f'media/record_img/{ymd}')
                 output = cv2.VideoWriter(f'media/record_video/{ymd}/{t}.mp4', fourcc, 10, (frame_width, frame_height))
+                
+                thumbnail=True
+
                 for image in images:
+                    if thumbnail:
+                        print('사진 저장')
+                        cv2.imwrite(f'media/record_img/{ymd}/{t}.jpg',image)
+                        thumbnail=False
                     # print(image)
                     output.write(image)
+                
                 output.release()
+                # print(video_path)
+                # print(video_path+'/{}/{}.mp4'.format(ymd,t))
+                # print(thumbnail_path)
+                # print(thumbnail_path+'/{}/{}.jpg'.format(ymd,t))
                 video_instance=Video_model.objects.create(
                     profile=request.user.profile,
-                    video=save_path+'/{}/{}.mp4'.format(ymd,t),
+                    video=video_path+'/{}/{}.mp4'.format(ymd,t),
+                    camera=default_camera,
                     type=top_reuslt,
-                    datetime=now
+                    datetime=now,
+                    thumbnail=thumbnail_path+'/{}/{}.jpg'.format(ymd,t)
                 )
 
                 #푸시알림
                 #푸시알림을 받게되어있다면이라는 조건 주기
-                send_to_firebase_cloud_messaging_User(request.user.profile.fcm_toekn,request.user,top_reuslt)
+                # send_to_firebase_cloud_messaging_User(request.user.profile.fcm_toekn,request.user,top_reuslt)
                 images = []
                 cur_name = None
             
@@ -255,7 +271,7 @@ class LinkedList:
         return node
     
 
-def webcam_thread_main(request):
+def webcam_thread_main(request,default_camera):
     global frame_queue, camera, frame, results, threshold, sample_length, \
         data, test_pipeline, model, device, average_size, label, \
         result_queue, drawing_fps, inference_fps, total_queue, cur_info, cur_time, linked_video, frame_width, frame_height,top_reuslt
@@ -268,11 +284,12 @@ def webcam_thread_main(request):
     device = torch.device("cpu")
 
     save_path = os.path.dirname(os.path.dirname(__file__))
-    save_path = os.path.join(save_path[:-7], 'media','record_video') 
+    video_path = os.path.join(save_path[:-7], 'media','record_video') 
+    thumbnail_path=os.path.join(save_path[:-7], 'media','record_img') 
 
     model = init_recognizer('camera/ai_models/mmaction2/configs/recognition/tsn/tsn_r50_video_inference_1x1x3_100e_kinetics400_rgb.py', 'camera/ai_models/mmaction2/checkpoints/tsn_r50_1x1x3_100e_kinetics400_rgb_20200614-e508be42.pth', device=device)
-    # camera = cv2.VideoCapture(0)
-    camera = cv2.VideoCapture('rtsp://admin:somateam23@172.16.100.251:554/profile2/media.smp')
+    camera = cv2.VideoCapture(0)
+    # camera = cv2.VideoCapture('rtsp://admin:somateam23@172.16.100.251:554/profile2/media.smp')
 
     frame_width = int(camera.get(cv2.CAP_PROP_FRAME_WIDTH))
     frame_height = int(camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
@@ -310,7 +327,7 @@ def webcam_thread_main(request):
         result_queue = deque(maxlen=1)
         pw = Thread(target=show_results, args=(), daemon=True)
         pr = Thread(target=inference, args=(), daemon=True)
-        sa = Thread(target=save_video, args=(request,save_path,), daemon=True)
+        sa = Thread(target=save_video, args=(request,default_camera,video_path,thumbnail_path,), daemon=True)
         pw.start()
         pr.start()
         sa.start()

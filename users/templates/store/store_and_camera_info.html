@@ -1,0 +1,48 @@
+{% if messages  %}
+    {% for message in messages %}
+        <div class="alert {{ message.tags }} alert-auto-dismissible alert-dismissible notification-container text-center" role="alert">
+            {{ message }}
+        </div>
+        <button><a href="{% url 'users:create_store_page'%}">다시 작성하기</a></button>
+    {% endfor %}
+
+{% else %}
+
+{% if request.user.profile.main_store == store %}
+        <h1>메인 스토어 입니다</h1>
+    {% if is_default %}
+        <h2>디폴트 카메라가 설정이 되어있습니다</h2>
+    {% else %}
+        <h2>디폴트 카메라가 없습니다</h2>
+    {% endif %}
+{% else%}
+        <h1>메인 스토어가 아닙니다</h1>
+{% endif %}
+
+<form action="{%url 'users:create_camera' store.id %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <p>rtsp 주소 : <input type="text" required name="rtsp_url" placeholder="카메라 정보 입력"></p>
+    <button type="submit">카메라 정보 저장</button>
+</form>
+<br>
+{% for camera in cameras %}
+    {% if result == camera %}
+        [디폴트 카메라]<br>
+    {% endif %}
+    rtsp 주소 : {{camera.rtsp_url}}<br>
+    
+    
+    <a href="{% url 'users:update_camera_page' store.id camera.id %}">카메라 수정</a>
+    <a href="{% url 'users:delete_camera' store.id camera.id %}">카메라 삭제</a>
+    {% if request.user.profile.main_store == store %}
+        {% if not is_default %}
+            <button><a href="{% url 'users:set_default_camera' store.id camera.id %}">디폴트 카메라로 설정</a></button>
+        {% elif result != camera %}
+            <button><a href="{% url 'users:set_default_camera' store.id camera.id %}">디폴트 카메라로 변경</a></button>
+        {% endif%}
+    {% endif %}
+<br><br>
+{% endfor %}
+   
+
+{% endif %}

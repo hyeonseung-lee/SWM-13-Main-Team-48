@@ -14,7 +14,10 @@ import json
 from pathlib import Path
 from django.core.exceptions import ImproperlyConfigured
 from datetime import timedelta
-from firebase_admin import credentials, initialize_app
+import firebase_admin
+
+from firebase_admin import credentials,initialize_app
+from django.urls import reverse_lazy
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -59,7 +62,6 @@ INSTALLED_APPS = [
 
     'camera',
     'users',
-
     # for rest_framework
     'rest_framework',
     # 'rest_framework_simplejwt',
@@ -267,6 +269,8 @@ firebase cloud message
 
 cred_path = os.path.join(BASE_DIR, "serviceAccountKey.json")
 cred = credentials.Certificate(cred_path)
+
+# firebase_admin.initialize_app(cred)
 FIREBASE_APP = initialize_app(cred)
 
 # Optional ONLY IF you have initialized a firebase app already:

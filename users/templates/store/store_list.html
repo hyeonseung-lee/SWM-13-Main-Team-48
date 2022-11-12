@@ -1,12 +1,27 @@
 <a href="{% url 'users:create_store_page'%}">매장 등록 페이지</a>
 <br>
 <br>
+{% if not request.user.profile.main_store %}
+<h2>메인 매장으로 등록된 매장이 없습니다</h2>
+{% endif %}
 
 {% for store in storelist %}
+
     <div>
+       
+        {% if request.user.profile.main_store == store %}
+            [메인 매장]<br>
+        {% endif %}
         <a href="{% url 'users:show_store_info' store.id %}">매장명 : {{store.name}}</a><br>
         주소 : {{store.address}}<br>
         <a href="{% url 'users:update_store_page' store.id %}">매장 수정</a>
+        <a href="{% url 'users:delete_store' store.id %}">매장 삭제</a>
+
+        {% if request.user.profile.main_store != store %}
+            <a href="{% url 'users:set_main_store' store.id %}">메인 매장으로 변경</a>
+        {% elif not request.user.profile.main_store %}
+            <a href="{% url 'users:set_main_store' store.id %}">메인 매장으로 선택</a>
+        {% endif %}
 
     </div>
     <br>

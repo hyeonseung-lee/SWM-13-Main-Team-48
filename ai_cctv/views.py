@@ -48,8 +48,7 @@ def main(request):
 
     return render(request, 'main.html', {"state": state})
 
-
-@login_required
+@login_required(login_url='dashboards')
 def video_list(request):
     dummy_videos = [
         {'url': "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
@@ -60,3 +59,7 @@ def video_list(request):
             'action_type': "기물파손", 'datetime': "2022-10-26 01:22"},
     ]
     return render(request, 'video_list.html', {"dummy_videos": dummy_videos})
+
+@login_required(login_url='dashboards')
+def profile(request):
+    return render(request, 'profile.html')

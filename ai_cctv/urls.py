@@ -33,6 +33,7 @@ urlpatterns = [
     path('', main, name='dashboards'),
     path('list/', video_list, name='video_list'),
     path('users/', include('users.urls')),
+    path('profile',profile,name='profile'),
     path('', include('pwa.urls')),
     path('', include('pwa_webpush.urls')),
 
