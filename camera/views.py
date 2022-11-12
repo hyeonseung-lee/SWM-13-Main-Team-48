@@ -68,7 +68,8 @@ def webcam_demo(request):
 # ------------- 아래가 주요 사용 됨 ---------------
 @login_required(login_url='dashboards')
 def webcam_thread(request):
-    return StreamingHttpResponse(webcam_thread_main(request),content_type="multipart/x-mixed-replace;boundary=frame")
+    return StreamingHttpResponse(webcam_thread_main(request), content_type="multipart/x-mixed-replace;boundary=frame")
+
 
 @login_required(login_url='dashboards')
 def cam_multiprocessing(request):

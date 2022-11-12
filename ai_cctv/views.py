@@ -1,5 +1,13 @@
+from django.contrib.auth.decorators import login_required
+from fcm_django.models import FCMDevice
+from firebase_admin.messaging import Message
+from .push_fcm_notification import send_to_firebase_cloud_messaging
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from .push_fcm_notification import send_to_firebase_cloud_messaging
+
+from firebase_admin.messaging import Message
+from fcm_django.models import FCMDevice
 
 
 def main(request):
@@ -18,6 +26,26 @@ def main(request):
     # vandalism = vandalism
     state = {"visitor": visitor,
              "obstructions": obstructions, "vandalism": vandalism}
+    # send_to_firebase_cloud_messaging()
+
+    """ test git README """
+    message_obj = Message(
+        data={
+            "Nick": "Mario",
+            "body": "great match!",
+            "Room": "PortugalVSDenmark"
+        },
+    )
+
+    # You can still use .filter() or any methods that return QuerySet (from the chain)
+    device = FCMDevice.objects.all().first()
+
+    # send_message parameters include: message, dry_run, app
+    # while True:
+    # device.send_message(message_obj)
+    print(device)
+    # Boom!
+
     return render(request, 'main.html', {"state": state})
 
 @login_required(login_url='dashboards')
