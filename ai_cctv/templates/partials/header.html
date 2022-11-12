@@ -47,8 +47,8 @@
         {% if request.user.is_authenticated %}
         <img
           class="w-8 h-8 rounded-full"
-          {% comment %} src="{% static 'images/profile_image.png' %}" {% endcomment %}
-          src="{{request.user.profile.photo.url}}"
+          src="{% static 'images/profile_image.png' %}"
+          {% comment %} src="{{request.user.profile.photo.url}}" {% endcomment %}
           alt="user photo"
         />
         {% else %}

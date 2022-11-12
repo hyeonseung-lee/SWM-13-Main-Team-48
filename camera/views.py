@@ -20,9 +20,11 @@ from datetime import datetime
 import os
 from django.contrib.auth.decorators import login_required
 
+
 @login_required
 def camerapage(request):
     return render(request, 'camera.html')
+
 
 @login_required
 @gzip.gzip_page
@@ -34,6 +36,7 @@ def livecam(request):
     except:  # This is bad! replace it with proper handling
         print("에러입니다...")
         pass
+
 
 @login_required
 @gzip.gzip_page
@@ -58,6 +61,7 @@ def mmaction2(request):
 
     return StreamingHttpResponse(mmaction_stream(), content_type="multipart/x-mixed-replace;boundary=frame")
 
+
 @login_required
 def webcam_demo(request):
 
@@ -67,7 +71,8 @@ def webcam_demo(request):
 # ------------- 아래가 주요 사용 됨 ---------------
 @login_required
 def webcam_thread(request):
-    return StreamingHttpResponse(webcam_thread_main(request),content_type="multipart/x-mixed-replace;boundary=frame")
+    return StreamingHttpResponse(webcam_thread_main(request), content_type="multipart/x-mixed-replace;boundary=frame")
+
 
 @login_required
 def find(request):
@@ -88,6 +93,7 @@ def find(request):
 
     except:
         return render(request, 'find.html')
+
 
 @login_required
 def livepage(request):

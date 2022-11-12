@@ -212,6 +212,7 @@ Temporary Items
 
 #secret key
 *secrets.json
+serviceAccountKey.json
 *Pipfile
 
 
@@ -221,3 +222,5 @@ node_modules/
 
 
 *.mp4 
+
+# firebase cloud message
