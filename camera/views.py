@@ -7,9 +7,10 @@ from camera.ai_models.default import *
 from camera.ai_models.mediapipe import *
 from camera.ai_models.mediapipe_with_yolo import *
 from camera.ai_models.enhancement_yolo import *
-from camera.ai_models.mmaction import *
+from camera.ai_models.default2 import *
 from camera.ai_models.webcam import *
 from camera.ai_models.webcam_thread import *
+from camera.ai_models.cam_with_yolov7_in_multiprocessing import *
 from .models import *
 from django.db.models import Q
 from django.http import HttpResponse
@@ -20,12 +21,12 @@ from datetime import datetime
 import os
 from django.contrib.auth.decorators import login_required
 
-@login_required
+@login_required(login_url='dashboards')
 def camerapage(request):
     return render(request, 'camera.html')
 
-@login_required
 @gzip.gzip_page
+@login_required(login_url='dashboards')
 def livecam(request):
     # template으로 넘길 수는 없는지
     try:
@@ -35,41 +36,45 @@ def livecam(request):
         print("에러입니다...")
         pass
 
-@login_required
 @gzip.gzip_page
+@login_required(login_url='dashboards')
 def mediapipe(request):
     return StreamingHttpResponse(mediapipe_stream(), content_type="multipart/x-mixed-replace;boundary=frame")
 
 
-@login_required
 @gzip.gzip_page
+@login_required(login_url='dashboards')
 def mediapipe_with_yolo(request):
     return StreamingHttpResponse(mediapipe_with_yolo_stream(), content_type="multipart/x-mixed-replace;boundary=frame")
 
 
-@login_required
 @gzip.gzip_page
+@login_required(login_url='dashboards')
 def enhancement_yolo(request):
     return StreamingHttpResponse(enhancement_yolo_stream(), content_type="multipart/x-mixed-replace;boundary=frame")
 
 
-@login_required
+@login_required(login_url='dashboards')
 def mmaction2(request):
 
     return StreamingHttpResponse(mmaction_stream(), content_type="multipart/x-mixed-replace;boundary=frame")
 
-@login_required
+@login_required(login_url='dashboards')
 def webcam_demo(request):
 
     return StreamingHttpResponse(webcam_main(), content_type="multipart/x-mixed-replace;boundary=frame")
 
 
 # ------------- 아래가 주요 사용 됨 ---------------
-@login_required
+@login_required(login_url='dashboards')
 def webcam_thread(request):
     return StreamingHttpResponse(webcam_thread_main(request),content_type="multipart/x-mixed-replace;boundary=frame")
 
-@login_required
+@login_required(login_url='dashboards')
+def cam_multiprocessing(request):
+    return StreamingHttpResponse(multiprocessing_main(),content_type="multipart/x-mixed-replace;boundary=frame")
+
+@login_required(login_url='dashboards')
 def find(request):
 
     try:
@@ -89,6 +94,6 @@ def find(request):
     except:
         return render(request, 'find.html')
 
-@login_required
+@login_required(login_url='dashboards')
 def livepage(request):
     return render(request, 'livepage.html')

@@ -99,7 +99,7 @@ def get_token(request):
 
 # def profile_update(request):
 #     return redirect('dashboards')
-@login_required
+@login_required(login_url='dashboards')
 def service_logout(request):
     logout(request)
     print('장고 로그아웃')
@@ -118,11 +118,11 @@ def kakao_logout(request):
 def go_main(request):
     return redirect('dashboards')
 
-@login_required
+@login_required(login_url='dashboards')
 def profile_update_page(request):
     return render(request,'profile_update_page.html')
 
-@login_required
+@login_required(login_url='dashboards')
 def profile_update(request):
     try:
         request.user.profile.username=request.POST['username']
@@ -133,11 +133,11 @@ def profile_update(request):
         messages.warning(request, "사용자 이름 or 사진이 없습니다")
         return redirect('users:profile_update_page')
 
-@login_required
+@login_required(login_url='dashboards')
 def create_store_page(request):
     return render(request,'store/store_page.html')
 
-@login_required
+@login_required(login_url='dashboards')
 def create_store(request):
     Store.objects.create(
         name=request.POST['name'],
@@ -146,12 +146,12 @@ def create_store(request):
     )
     return redirect('users:show_store_list')
 
-@login_required
+@login_required(login_url='dashboards')
 def update_store_page(request,store_id):
     store=Store.objects.get(id=store_id)
     return render(request,'store/store_page.html',{"store":store})
 
-@login_required
+@login_required(login_url='dashboards')
 def update_store(request,store_id):
     store=Store.objects.get(id=store_id)
     store.name=request.POST['name']
@@ -159,18 +159,18 @@ def update_store(request,store_id):
     store.save()
     return redirect('users:show_store_list')
 
-@login_required
+@login_required(login_url='dashboards')
 def delete_store(request,store_id):
     store=Store.objects.get(id=store_id)
     store.delete()
     return redirect('users:show_store_list')
 
-@login_required
+@login_required(login_url='dashboards')
 def show_store_list(request):
     storelist=Store.objects.filter(owner=request.user)
     return render(request,'store/store_list.html',{"storelist":storelist})
 
-@login_required
+@login_required(login_url='dashboards')
 def show_store_info(request,store_id):
     store=Store.objects.get(id=store_id)
     cameras=Camera.objects.filter(store=store)
@@ -180,7 +180,7 @@ def show_store_info(request,store_id):
         }
     return render(request,'store/store_info.html',context)
 
-@login_required
+@login_required(login_url='dashboards')
 def create_camera(request,store_id):
     store=Store.objects.get(id=store_id)
     

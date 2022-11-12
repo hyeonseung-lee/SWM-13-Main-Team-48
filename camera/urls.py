@@ -17,6 +17,8 @@ urlpatterns = [
 
     path('webcam_thread', webcam_thread, name='webcam_thread'),
 
+    path('cam_multiprocessing', cam_multiprocessing, name='cam_multiprocessing'),
+
     path('find', find, name='find'),
     path('livepage', livepage, name='livepage')
 

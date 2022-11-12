@@ -16,7 +16,7 @@ from django.core.exceptions import ImproperlyConfigured
 from datetime import timedelta
 import firebase_admin
 from firebase_admin import credentials
-
+from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -60,7 +60,6 @@ INSTALLED_APPS = [
 
     'camera',
     'users',
-
     # for rest_framework
     'rest_framework',
     # 'rest_framework_simplejwt',
