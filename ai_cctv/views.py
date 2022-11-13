@@ -48,18 +48,30 @@ def main(request):
 
     return render(request, 'main.html', {"state": state})
 
+
 @login_required(login_url='dashboards')
 def video_list(request):
+    test_url = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
+
+    action_type = ["영업방해 의심행위", "시설물 파손 의심행위"]
+
+    swoon_description = "실신, 매장 내 드러누움 등 의심"
+    vandalism_description = "매장 내 시설물 파손 등 시설물 이상 의심"
     dummy_videos = [
-        {'url': "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-            'action_type': "실신", 'datetime': "2022-10-29 10:32"},
-        {'url': "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-            'action_type': "장시간 배회", 'datetime': "2022-10-28 23:33"},
-        {'url': "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-            'action_type': "기물파손", 'datetime': "2022-10-26 01:22"},
+        {'url': test_url,
+            'action_type': action_type[0], "description": swoon_description, 'datetime': "2022-10-29 10:32"},
+        {'url': test_url,
+            'action_type': action_type[0], "description": swoon_description, 'datetime': "2022-10-28 23:33"},
+        {'url': test_url,
+            'action_type': action_type[1], "description": vandalism_description, 'datetime': "2022-10-26 01:22"},
     ]
     return render(request, 'video_list.html', {"dummy_videos": dummy_videos})
+
 
 @login_required(login_url='dashboards')
 def profile(request):
     return render(request, 'profile.html')
+
+
+def test(request):
+    return render(request, 'test.html')
