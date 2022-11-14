@@ -14,7 +14,7 @@
 
         <div class="w-2/5 flex justify-end">
             <div class="h-2/3">
-                <button class="flex items-center justify-center w-full h-full px-4 mt-1 btn btn-primary " type="button" data-modal-toggle="popup-add">
+                <button class="flex items-center justify-center w-full h-full px-4 mt-1 btn btn-outline-primary " type="button" data-modal-toggle="popup-add">
                     <i class="text-lg mr-3 fa-regular fa-square-plus"></i>
                     <p class="text-base" >매장 등록</p>    
                 </button>
@@ -24,10 +24,10 @@
 
     <div class="p-3 bg-white rounded-lg grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">   
     {% for store in storelist %}
-        <section class="w-full px-4 py-5 border-b-2">
-            <div class="w-full flex ">
+        <section class="w-full px-4 py-5 border-b-2 ">
+            <p class="text-xs mb-1 font-semibold tracking-wide text-gray-400 uppercase">{{forloop.counter}}</p>
+            <div class="w-full flex mb-4">
                 <div class="flex flex-col justify-between w-full">
-                    <p class="text-xs font-semibold tracking-wide text-gray-400 uppercase">{{store.id}}</p>
                     {% comment %} <a href="{% url 'users:set_main_store' store.id %}" class="text-xs btn btn-light btn-xm">
                         <i class="fa-regular fa-square-check fa-xl"></i>
                     </a> {% endcomment %}
@@ -37,17 +37,24 @@
                         {{store.address}}   
                     </p>
                 </div>
-                <button class="w-1/2 h-1/2 btn btn-primary btn-lg">
-                    <a href="{% url 'camera:livepage'  %}" class="text-4xl">
-                        <i class="fa-regular fa-eye"></i>
-                    </a>
-                </button>
+                <div class="flex flex-col w-full items-end mb-2">
+                  <button class="m-1 w-2/3 h-1/2 btn btn-primary btn-lg">
+                      <a href="{% url 'camera:livepage'  %}" class="text-3xl">
+                          <i class="fa-regular fa-eye"></i>
+                      </a>
+                  </button>
+                  <button class="m-1 w-2/3 h-1/2 btn btn-primary btn-lg">
+                      <a href="{% url 'video_list'  %}" class="text-2xl">
+                          <i class="fa-solid fa-photo-film"></i>
+                      </a>
+                  </button>
+                </div>
             </div>
             <div class="flex w-full justify-between">
-                <button class="w-2/5 mr-1 mb-2 btn btn-light btn-lg" type="button" data-modal-toggle="popup-edit{{store.id}}">
+                <button class="w-2/5 mr-1 mb-2 btn btn-light-primary btn-lg" type="button" data-modal-toggle="popup-edit{{store.id}}">
                     <i class="fa-regular fa-pen-to-square"></i>
                 </button>
-                <button class="w-2/5 ml-1 mb-2 btn btn-light btn-lg" type="button" data-modal-toggle="popup-edit{{store.id}}-camera">
+                <button class="w-2/5 ml-1 mb-2 btn btn-light-primary btn-lg" type="button" data-modal-toggle="popup-edit{{store.id}}-camera">
                     <i class="fa-solid fa-camera-rotate"></i>
                 </button>
                 <a href="{% url 'users:delete_store' store.id %}" class="w-1/5 ml-1 mb-2 btn btn-light btn-lg">
@@ -98,6 +105,7 @@
                     <span class="sr-only">Close modal</span>
                 </button>
               </div>
+              <h1 class="mb-5 text-2xl font-bold text-left text-gray-800 sm:text-center">카메라 정보 수정하기</h1>
               {% if messages  %}
               {% for message in messages %}
                   <div class="alert {{ message.tags }} alert-auto-dismissible alert-dismissible notification-container text-center" role="alert">
@@ -108,23 +116,15 @@
           
               {% else %}
               
-              {% if request.user.profile.main_store == store %}
-                      <h1>메인 스토어 입니다</h1>
-                  {% if is_default %}
-                      <h2>디폴트 카메라가 설정이 되어있습니다</h2>
-                  {% else %}
-                      <h2>디폴트 카메라가 없습니다</h2>
-                  {% endif %}
-              {% else%}
-                      <h1>메인 스토어가 아닙니다</h1>
-              {% endif %}
-              
-              <form action="{%url 'users:create_camera' store.id %}" method="post" enctype="multipart/form-data">
+              <form action="{%url 'users:show_store_list' %}" method="post" enctype="multipart/form-data">
                   {% csrf_token %}
-                  <p>rtsp 주소 : <input type="text" required name="rtsp_url" placeholder="카메라 정보 입력"></p>
-                  <button type="submit">카메라 정보 저장</button>
+                  <label class="block">
+                    <span class="block mb-1 text-xs font-medium text-gray-700">RTSP Address</span>
+                    <input class="form-input" type="text" inputmode="text" required placeholder="카메라 정보 입력"  name="rtsp_url"/>
+                  </label>
+                  <button type="submit" class="w-full py-3 mt-1 btn btn-primary">카메라 정보 저장</button>
               </form>
-              <br>
+              {{store.cameras}}
               {% for camera in cameras %}
                   {% if result == camera %}
                       [디폴트 카메라]<br>

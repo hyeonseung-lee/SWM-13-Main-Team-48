@@ -201,6 +201,7 @@ def delete_store(request, store_id):
 @login_required(login_url='dashboards')
 def show_store_list(request):
     storelist = Store.objects.filter(owner=request.user)
+
     return render(request, 'store/store_list.html', {"storelist": storelist})
 
 # ---------- 매장 메인으로 설정 -------------
@@ -247,7 +248,7 @@ def create_camera(request, store_id):
         rtsp_url=request.POST['rtsp_url'],
         store=store
     )
-    return redirect('users:show_store_info', store_id)
+    return redirect('users:', store_id)
 
 
 # ---------- 카메라 주소 업데이트 페이지 -------------
