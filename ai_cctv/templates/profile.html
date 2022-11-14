@@ -23,22 +23,24 @@
       <h1 class="mb-4 text-lg font-semibold text-left text-gray-900">프로필</h1>
       <form class="mb-8 space-y-4" action="{%url 'users:profile_update'  %}" method ="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <label class="block">
-          <span class="block mb-1 text-xs font-medium text-gray-700">Avatar</span>
-          <div class="flex">
-              <img class="w-1/2 mr-5" id="avatar"
-              {% if request.user.profile.photo %}
-              src="{{request.user.profile.photo.url}}"
-              {% else %}
-              src="{% static 'images/profile_image.png' %}"
-              {% endif %}
-              />
-            </div>
-        </label>
-        <label class="block">
+        <div class="flex justify-between ml-3 my-3 py-3 border-b-2">
+          <span class="block text-xs font-medium text-gray-700">Avatar</span>
+          <div class="w-full flex justify-center">
+            <img class="w-1/2" id="avatar"
+            {% if request.user.profile.photo %}
+            src="{{request.user.profile.photo.url}}"
+            {% else %}
+            src="{% static 'images/profile_image.png' %}"
+            {% endif %}
+            />
+          </div>
+        </div>
+        <div class="flex justify-between ml-3 my-3 py-3">
           <span class="block mb-1 text-xs font-medium text-gray-700">Username</span>
-          <span class="block mb-1 text-4xl font-medium text-gray-700">{{request.user.profile.username}}</span>
-        </label>
+          <div class="w-full flex justify-center">
+            <span class="block mb-1 text-4xl font-medium text-gray-700">{{request.user.profile.username}}</span>
+          </div>
+        </div>
         {% comment %} <label class="block">
           <span class="block mb-1 text-xs font-medium text-gray-700">Email</span>
           <input class="form-input" type="email" placeholder="{{ user_form.email }}" inputmode="email" required="">

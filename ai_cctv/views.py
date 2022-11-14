@@ -59,11 +59,11 @@ def video_list(request):
     vandalism_description = "매장 내 시설물 파손 등 시설물 이상 의심"
     dummy_videos = [
         {'url': test_url,
-            'action_type': action_type[0], "description": swoon_description, 'datetime': "2022-10-29 10:32"},
+            'action_type': action_type[0], "description": swoon_description, 'datetime': "2022-10-29 10:32", "store":"STORE_NAME"},
         {'url': test_url,
-            'action_type': action_type[0], "description": swoon_description, 'datetime': "2022-10-28 23:33"},
+            'action_type': action_type[0], "description": swoon_description, 'datetime': "2022-10-28 23:33", "store":"STORE_NAME"},
         {'url': test_url,
-            'action_type': action_type[1], "description": vandalism_description, 'datetime': "2022-10-26 01:22"},
+            'action_type': action_type[1], "description": vandalism_description, 'datetime': "2022-10-26 01:22", "store":"STORE_NAME"},
     ]
     return render(request, 'video_list.html', {"dummy_videos": dummy_videos})
 
