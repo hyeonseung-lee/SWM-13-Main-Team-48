@@ -34,7 +34,6 @@
   
   <!-- fontawesome -->
   <script src="https://kit.fontawesome.com/fad942d57d.js" crossorigin="anonymous"></script>
-  
   <!-- flowbite -->
   
   <script src="https://unpkg.com/flowbite@1.5.3/dist/flowbite.js"></script>
@@ -53,6 +52,7 @@
   <!-- tailwind-elements -->
   <script src="./TW-ELEMENTS-PATH/dist/js/index.min.js"></script>
 
+
   <!-- firebase cloud message -->
   <!-- Firebase JS -->
   <script src="https://www.gstatic.com/firebasejs/4.1.2/firebase.js"></script>
@@ -62,13 +62,13 @@
 
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-gray-300">
   {% csrf_token %}
-  <section class="min-h-screen  bg-gray-50" x-data="{ sideBar: false }">
+  <section class="min-h-screen  bg-gray-100" x-data="{ sideBar: false }">
     {% include "partials/navbar.html" %}
     <div class="ml-0 transition md:ml-60">
       {% include "partials/header.html" %}
-      <div class="px-4">
+      <div class="p-5">
         <!-- Add content here, remove div below -->
         {% comment %} <div class="-mt-2 border-4 border-dashed rounded h-96"></div> {% endcomment %}
         {% block content %}

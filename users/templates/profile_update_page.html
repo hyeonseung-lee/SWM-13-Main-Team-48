@@ -1,25 +1,52 @@
-{% if messages  %}
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% comment %} {% if messages  %}
     {% for message in messages %}
         <div class="alert {{ message.tags }} alert-auto-dismissible alert-dismissible notification-container text-center" role="alert">
             {{ message }}
         </div>
         <button><a href="{% url 'users:profile_update_page'%}">다시 작성하기</a></button>
     {% endfor %}
+{% endif %} {% endcomment %}
 
-{% else %}
 
-    <form action="{%url 'users:profile_update'  %}" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {% if request.user.profile.username %}
-        <p>사용자 이름 : <input type="text" value={{request.user.profile.username}} required name= "username" placeholder="이름을 작성하세요"></p>
-        <p>사진 : <input type="file" name= "photo" ></p>
-        
-        {% else %}
-        <p>사용자 이름 : <input type="text"  required name= "username" placeholder="이름을 작성하세요"></p>
-        <p>사진 : <input type="file" name= "photo"></p>
-        {% endif %}
-        
-        <br><button type="submit">설정</button>
+<div class="w-full px-4 pt-5 pb-3 mx-auto mt-8 mb-6 bg-white rounded-none shadow-xl sm:rounded-lg sm:w-10/12 md:w-8/12 lg:w-6/12 xl:w-4/12 sm:px-6">
+    <h1 class="mb-4 text-lg font-semibold text-left text-gray-900">프로필</h1>
+    <form class="mb-8 space-y-4" action="{%url 'users:profile_update'  %}" method ="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <label class="block">
+        <span class="block mb-1 text-xs font-medium text-gray-700">Avatar</span>
+        <div class="flex">
+            <img class="w-1/6 mr-5" id="avatar"
+            {% if request.user.profile.photo %}
+            src="{{request.user.profile.photo.url}}"
+            {% else %}
+            src="{% static 'images/profile_image.png' %}"
+            {% endif %}
+            />
+            <input type="file" name= "photo" value="{{request.user.profile.username}}" onchange="loadFile(event)">
+              <script>
+              var loadFile = function(event) {
+                  var avatar = document.getElementById('avatar');
+                  avatar.src = URL.createObjectURL(event.target.files[0]);
+                  avatar.onload = function() {
+                  URL.revokeObjectURL(avatar.src) // free memory
+                  }
+              };
+              </script>
+          </div>
+      </label>
+      <label class="block">
+        <span class="block mb-1 text-xs font-medium text-gray-700">Username</span>
+        <input class="form-input" type="text" name="username" value="{{request.user.profile.username}}" required="">
+      </label>
+      {% comment %} <label class="block">
+        <span class="block mb-1 text-xs font-medium text-gray-700">Email</span>
+        <input class="form-input" type="email" placeholder="{{ user_form.email }}" inputmode="email" required="">
+      </label> {% endcomment %}
+      <input type="submit" class="w-full py-3 mt-1 btn btn-primary" value="저장하기">
     </form>
+  </div>
 
-{% endif %}
+{% endblock content %}

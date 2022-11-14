@@ -1,28 +1,193 @@
-<a href="{% url 'users:create_store_page'%}">매장 등록 페이지</a>
-<br>
-<br>
-{% if not request.user.profile.main_store %}
-<h2>메인 매장으로 등록된 매장이 없습니다</h2>
-{% endif %}
+{% extends 'base.html' %}
+{% block content %}
 
-{% for store in storelist %}
+<div class="mx-1 mt-2 py-4">
+    
 
-    <div>
-       
-        {% if request.user.profile.main_store == store %}
-            [메인 매장]<br>
-        {% endif %}
-        <a href="{% url 'users:show_store_info' store.id %}">매장명 : {{store.name}}</a><br>
-        주소 : {{store.address}}<br>
-        <a href="{% url 'users:update_store_page' store.id %}">매장 수정</a>
-        <a href="{% url 'users:delete_store' store.id %}">매장 삭제</a>
+    <div class="flex justify-between">
+        <div class="flex justify-between items-center">
+            <div class="max-w-7xl">
+                <h1 class="mb-3 text-3xl font-bold leading-tight text-gray-900 md:font-extrabold">매장 리스트</h1>
+                <br/>
+            </div>
+        </div>
 
-        {% if request.user.profile.main_store != store %}
-            <a href="{% url 'users:set_main_store' store.id %}">메인 매장으로 변경</a>
-        {% elif not request.user.profile.main_store %}
-            <a href="{% url 'users:set_main_store' store.id %}">메인 매장으로 선택</a>
-        {% endif %}
-
+        <div class="w-2/5 flex justify-end">
+            <div class="h-2/3">
+                <button class="flex items-center justify-center w-full h-full px-4 mt-1 btn btn-primary " type="button" data-modal-toggle="popup-add">
+                    <i class="text-lg mr-3 fa-regular fa-square-plus"></i>
+                    <p class="text-base" >매장 등록</p>    
+                </button>
+            </div>
+        </div>
     </div>
-    <br>
-{% endfor %}
+
+    <div class="p-3 bg-white rounded-lg grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">   
+    {% for store in storelist %}
+        <section class="w-full px-4 py-5 border-b-2">
+            <div class="w-full flex ">
+                <div class="flex flex-col justify-between w-full">
+                    <p class="text-xs font-semibold tracking-wide text-gray-400 uppercase">{{store.id}}</p>
+                    {% comment %} <a href="{% url 'users:set_main_store' store.id %}" class="text-xs btn btn-light btn-xm">
+                        <i class="fa-regular fa-square-check fa-xl"></i>
+                    </a> {% endcomment %}
+                    <h1 class="mb-3 text-2xl font-bold leading-tight text-gray-900">{{store.name}}<h1>
+                    <p class="mb-5 text-base text-gray-500 md:text-lg">
+                        {{store.address}}   
+                    </p>
+                </div>
+                <button class="w-1/2 h-1/2 btn btn-primary btn-lg">
+                    <a href="{% url 'camera:livepage'  %}" class="text-4xl">
+                        <i class="fa-regular fa-eye"></i>
+                    </a>
+                </button>
+            </div>
+            <div class="flex w-full justify-between">
+                <button class="w-2/5 mr-1 mb-2 btn btn-light btn-lg" type="button" data-modal-toggle="popup-edit{{store.id}}">
+                    <i class="fa-regular fa-pen-to-square"></i>
+                </button>
+                <button class="w-2/5 ml-1 mb-2 btn btn-light btn-lg" type="button" data-modal-toggle="popup-edit{{store.id}}-camera">
+                    <i class="fa-solid fa-camera-rotate"></i>
+                </button>
+                <a href="{% url 'users:delete_store' store.id %}" class="w-1/5 ml-1 mb-2 btn btn-light btn-lg">
+                    <i class="fa-solid fa-trash-can"></i>
+                </a>
+            </div>
+        </section>
+
+
+        <!-- edit store modal -->
+        <div id="popup-edit{{store.id}}" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 md:inset-0 h-modal justify-center items-center m-5" aria-hidden="true">
+            <div
+            class="w-full p-5 mx-auto mt-2 mb-0 space-y-4 bg-transparent border-gray-200 rounded-lg bg-white border sm:w-10/12 md:w-8/12 lg:w-6/12 xl:w-4/12 md:px-6 sm:mt-8 sm:mb-5"
+            >
+              <div class="flex justify-end">
+                <button type="button" class=" text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white" data-modal-toggle="popup-edit{{store.id}}">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+              </div>
+              <h1 class="mb-5 text-2xl font-bold text-left text-gray-800 sm:text-center">매장 수정하기</h1>
+              <form action="{%url 'users:update_store' store.id %}" method="post" enctype="multipart/form-data" class="pb-1 space-y-4">
+                {% csrf_token %}
+                <label class="block">
+                  <span class="block mb-1 text-xs font-medium text-gray-700">매장 이름</span>
+                  <input class="form-input" type="text" value="{{store.name}}" inputmode="text" required  name="name"/>
+                </label>
+                <label class="block">
+                  <span class="block mb-1 text-xs font-medium text-gray-700">주소</span>
+                  <input class="form-input" type="text" value="{{store.address}}" required name="address" />
+                </label>
+                <div class="flex items-center justify-between">
+                  <button type="submit" class="w-full py-3 mt-1 btn btn-primary">매장 수정</button>
+                </div>
+              </form>
+            </div>
+        </div>
+        
+        
+        <!-- edit store camera modal -->
+        <div id="popup-edit{{store.id}}-camera" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 md:inset-0 h-modal justify-center items-center m-5" aria-hidden="true">
+            <div
+            class="w-full p-5 mx-auto mt-2 mb-0 space-y-4 bg-transparent border-gray-200 rounded-lg bg-white border sm:w-10/12 md:w-8/12 lg:w-6/12 xl:w-4/12 md:px-6 sm:mt-8 sm:mb-5"
+            >
+              <div class="flex justify-end">
+                <button type="button" class=" text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white" data-modal-toggle="popup-edit{{store.id}}-camera">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+              </div>
+              {% if messages  %}
+              {% for message in messages %}
+                  <div class="alert {{ message.tags }} alert-auto-dismissible alert-dismissible notification-container text-center" role="alert">
+                      {{ message }}
+                  </div>
+                  <button><a href="{% url 'users:create_store_page'%}">다시 작성하기</a></button>
+              {% endfor %}
+          
+              {% else %}
+              
+              {% if request.user.profile.main_store == store %}
+                      <h1>메인 스토어 입니다</h1>
+                  {% if is_default %}
+                      <h2>디폴트 카메라가 설정이 되어있습니다</h2>
+                  {% else %}
+                      <h2>디폴트 카메라가 없습니다</h2>
+                  {% endif %}
+              {% else%}
+                      <h1>메인 스토어가 아닙니다</h1>
+              {% endif %}
+              
+              <form action="{%url 'users:create_camera' store.id %}" method="post" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <p>rtsp 주소 : <input type="text" required name="rtsp_url" placeholder="카메라 정보 입력"></p>
+                  <button type="submit">카메라 정보 저장</button>
+              </form>
+              <br>
+              {% for camera in cameras %}
+                  {% if result == camera %}
+                      [디폴트 카메라]<br>
+                  {% endif %}
+                  rtsp 주소 : {{camera.rtsp_url}}<br>
+                  
+                  
+                  <a href="{% url 'users:update_camera_page' store.id camera.id %}">카메라 수정</a>
+                  <a href="{% url 'users:delete_camera' store.id camera.id %}">카메라 삭제</a>
+                  {% if request.user.profile.main_store == store %}
+                      {% if not is_default %}
+                          <button><a href="{% url 'users:set_default_camera' store.id camera.id %}">디폴트 카메라로 설정</a></button>
+                      {% elif result != camera %}
+                          <button><a href="{% url 'users:set_default_camera' store.id camera.id %}">디폴트 카메라로 변경</a></button>
+                      {% endif%}
+                  {% endif %}
+              <br><br>
+              {% endfor %}
+              {% endif %}
+            </div>
+        </div>
+
+
+    {% endfor %}
+    </div>
+</div>
+
+
+
+
+
+<!-- modal -->
+  <div id="popup-add" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 md:inset-0 h-modal justify-center items-center m-5" aria-hidden="true">
+    <div
+    class="w-full p-5 mx-auto mt-2 mb-0 space-y-4 bg-transparent border-gray-200 rounded-lg bg-white border sm:w-10/12 md:w-8/12 lg:w-6/12 xl:w-4/12 md:px-6 sm:mt-8 sm:mb-5"
+    >
+      <div class="flex justify-end">
+        <button type="button" class=" text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white" data-modal-toggle="popup-add">
+            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+            <span class="sr-only">Close modal</span>
+        </button>
+      </div>
+      <h1 class="mb-5 text-2xl font-bold text-left text-gray-800 sm:text-center">매장 등록하기</h1>
+      <form action="{%url 'users:create_store' %}" method="post" enctype="multipart/form-data" class="pb-1 space-y-4">
+        {% csrf_token %}
+        <label class="block">
+          <span class="block mb-1 text-xs font-medium text-gray-700">매장 이름</span>
+          <input class="form-input" type="text" placeholder="Ex. 아이스크림 OO점" inputmode="text" required  name="name"/>
+        </label>
+        <label class="block">
+          <span class="block mb-1 text-xs font-medium text-gray-700">주소</span>
+          <input class="form-input" type="text" placeholder="Ex. 서울 엄복동 삼천리 자전거길 7" required name="address" />
+        </label>
+        <div class="flex items-center justify-between">
+          <button type="submit" class="w-full py-3 mt-1 btn btn-primary">매장 등록</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+
+
+
+
+
+{% endblock %}
