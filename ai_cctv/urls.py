@@ -27,15 +27,18 @@ from rest_framework.routers import DefaultRouter  # fcm
 router = DefaultRouter()
 router.register('devices', FCMDeviceAuthorizedViewSet)
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('camera/', include('camera.urls')),
     path('', main, name='dashboards'),
     path('list/', video_list, name='video_list'),
     path('users/', include('users.urls')),
-    path('profile',profile,name='profile'),
+    path('profile', profile, name='profile'),
     path('', include('pwa.urls')),
     path('', include('pwa_webpush.urls')),
+
+    path('test', test),
 
     # firebase cloud message
     path("firebase-messaging-sw.js",
