@@ -94,6 +94,8 @@ def count_people(frame:Queue, device, people_count:Value, countF_is_working):
     while True:
         print("count_people입니다")
         image = frame.get() # frame에 신호가 올때까지 여기에 머무름
+        print("기다리는게 끝났나요?")
+
         current_time = time.time()
         img = [letterbox(np.array(x), imgsz, auto=True, stride=stride)[0] for x in [image]]
        
@@ -114,7 +116,7 @@ def count_people(frame:Queue, device, people_count:Value, countF_is_working):
             img = img.unsqueeze(0)
 
         # Inference
-        with torch.no_grad():   # Calculating gradients would cause a GPU memory leak
+        with torch.no_grad(): #필요한 메모리 줄어들고 연산속도 증가  # Calculating gradients would cause a GPU memory leak
             pred = model(img, augment=False)[0]
 
         # Apply NMS
@@ -334,7 +336,7 @@ def inference(device, from_show_func:Queue, result_queue_index:Queue, frame_widt
     pipeline = cfg.data.test.pipeline
     pipeline_ = pipeline.copy()
     for step in pipeline:
-        if 'SampleFrames' in step['type']:
+        if 'fixing hair' in step['type']:
             sample_length = step['clip_len'] * step['num_clips']
             data['num_clips'] = step['num_clips']
             data['clip_len'] = step['clip_len']
