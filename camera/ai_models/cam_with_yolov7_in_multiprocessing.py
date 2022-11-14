@@ -120,8 +120,9 @@ def count_people(frame:Queue, device, people_count:Value, countF_is_working):
             pred = model(img, augment=False)[0]
 
         # Apply NMS
+        print('non_max_suppression start')
         pred = non_max_suppression(pred, conf_thres=0.25, iou_thres=0.45, classes=0) # pred[0] length > 0 :: detect people 
-        
+        print('non_max_suppression end')
         # send message "people_count var update" to show_results func
         people_count.value = len(pred[0]) #pred == [location, conf, classId], ...
         countF_is_working.value = 0
@@ -159,7 +160,7 @@ def show_results(people_count:Value, to_count_func:Queue, to_inference_func:Queu
     prev_time = cur_time = time.time()
     current_time = time.time()
     while True:
-        print("show_result입니다")
+        # print("show_result입니다")
 
         msg = 'Waiting for action ...'
 
@@ -335,8 +336,9 @@ def inference(device, from_show_func:Queue, result_queue_index:Queue, frame_widt
     cfg = model.cfg
     pipeline = cfg.data.test.pipeline
     pipeline_ = pipeline.copy()
+    sample_length = 0
     for step in pipeline:
-        if 'fixing hair' in step['type']:
+        if 'SampleFrames' in step['type']:
             sample_length = step['clip_len'] * step['num_clips']
             data['num_clips'] = step['num_clips']
             data['clip_len'] = step['clip_len']
@@ -347,6 +349,7 @@ def inference(device, from_show_func:Queue, result_queue_index:Queue, frame_widt
     test_pipeline = Compose(pipeline_)
 
     assert sample_length > 0
+    # print(sample_length)
 
     label_index = []
     is_working.value = 0
