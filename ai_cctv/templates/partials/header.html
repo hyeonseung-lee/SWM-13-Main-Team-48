@@ -106,18 +106,12 @@
               >Profile</a
             >
           </li>
-          <li>
-            <a
-              href="{% url 'users:profile_update_page'%}"
-              class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-              >Settings</a>
-          </li>
           {% else %}
           <li>
-            <a
+            <button
               class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
               data-modal-toggle="popup-modal-login"
-              >Log In</a
+              >Log In</button
             >
           </li>
           {%endif%}
@@ -160,7 +154,6 @@
       <div class="p-6 text-center">
         <a
           href="{% url 'users:kakao_login' %}"
-          data-modal-toggle="popup-modal-login"
           class=""
         >
           <img
