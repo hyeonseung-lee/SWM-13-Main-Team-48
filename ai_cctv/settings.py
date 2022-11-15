@@ -16,7 +16,7 @@ from django.core.exceptions import ImproperlyConfigured
 from datetime import timedelta
 import firebase_admin
 
-from firebase_admin import credentials,initialize_app
+from firebase_admin import credentials, initialize_app
 from django.urls import reverse_lazy
 
 
@@ -232,19 +232,19 @@ PWA_APP_START_URL = '/'
 PWA_APP_STATUS_BAR_COLOR = 'default'
 PWA_APP_ICONS = [
     {
-        'src': 'static/images/logo.png',
+        'src': 'static/images/logo-bg-white.jpeg',
         'sizes': '160x160'
     }
 ]
 PWA_APP_ICONS_APPLE = [
     {
-        'src': 'static/images/logo.png',
+        'src': 'static/images/logo-bg-white.jpeg',
         'sizes': '160x160'
     }
 ]
 PWA_APP_SPLASH_SCREEN = [
     {
-        'src': 'static/images/logo.png',
+        'src': 'static/images/logo-bg-white.jpeg',
         'media': '(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)'
     }
 ]

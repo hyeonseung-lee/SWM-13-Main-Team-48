@@ -3,7 +3,7 @@ from firebase_admin import messaging
 
 def send_to_firebase_cloud_messaging():
     # This registration token comes from the client FCM SDKs.
-    registration_token = 'BF03bSV8hfvT_urNxfC-cOQ-Mgoeg5KWJh-p_H7NVW5uxNXiIdNQ3bhw6ozdUi1Esrb-rLz8RkUf_kOJCUPIvkc'
+    registration_token = 'c2wy4Ij2fQ0:APA91bHaeDjLbwrEVSh_EZo-kmrYntB9aSiVcX2NQ53drfSdu_x-UKs5sujOojfHtrOrNlYHbhUBn5v6dsbd3BmGcumUoHsszNL75P506y5RWfCmoaYPDpF3GnS0kVFwxSS5x_eWZVAM'
 
     # See documentation on defining a message payload.
     message = messaging.Message(

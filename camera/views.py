@@ -130,7 +130,7 @@ def cam_yolo5_multiprocessing(request):
 
 @login_required(login_url='dashboards')
 def find(request):
-
+    """
     try:
         main_store = request.user.profile.main_store
         if main_store is None:
@@ -158,6 +158,8 @@ def find(request):
             return redirect('dashboards')
     except:
         return render(request, 'find.html')
+    """
+    return render(request, 'find.html')
 
 
 @login_required(login_url='dashboards')
