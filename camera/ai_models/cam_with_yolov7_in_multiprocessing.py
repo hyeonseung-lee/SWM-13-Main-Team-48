@@ -2,8 +2,8 @@
 # import torch.backends.cudnn as cudnn
 from numpy import random
 from django.utils import timezone
-from camera.ai_models.models.experimental import attempt_load
-from camera.ai_models.utils.general import check_img_size, non_max_suppression, set_logging
+from camera.ai_models.yolov7.models.experimental import attempt_load
+from camera.ai_models.yolov7.utils.general import check_img_size, non_max_suppression, set_logging
 
 # Copyright (c) OpenMMLab. All rights reserved.
 import time
@@ -76,12 +76,16 @@ def count_people(frame:Queue, device, people_count:Value, countF_is_working):
     people_count : help = this function's result, type = multiprocessing Queue
     '''
 
-    weights, imgsz ='./yolov7/yolov7.pt', 640
+    weights, imgsz ='yolov7', 1920
+    
+    print(weights)
+
     set_logging()
     half = device.type != 'cpu'
 
     # load model
     model = attempt_load(weights, map_location=device)
+
     stride = int(model.stride.max())  # model stride
     imgsz = check_img_size(imgsz, s=stride)  # check img_size
 
@@ -135,6 +139,8 @@ def show_results(people_count:Value, to_count_func:Queue, to_inference_func:Queu
     '''
     print('Press "Esc", "q" or "Q" to exit')
     camera = cv2.VideoCapture(0)
+    camera.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+    camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
     frame_width.value = int(camera.get(cv2.CAP_PROP_FRAME_WIDTH))
     frame_height.value = int(camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
     threshold = 0.01
@@ -152,7 +158,7 @@ def show_results(people_count:Value, to_count_func:Queue, to_inference_func:Queu
     frame_queue = deque(maxlen=sample_length)
     total_frame_queue = []
     total_images = []
-    normal = 0
+    normal = 2
     fourcc = cv2.VideoWriter_fourcc('m','p','4','v')
 
     while is_working.value == 1: # wait until inference model loading is finished
@@ -179,27 +185,33 @@ def show_results(people_count:Value, to_count_func:Queue, to_inference_func:Queu
             to_count_func.put(image)
             prev_time = time.time()
             countF_is_working.value = 1 # count func working
-        
+        # people_count.value=1 # 욜로 빼려고 잠시 세팅
         if people_count.value > 0 or len(frame_queue) > 0: # count_people func done and exist people | already gathering images(frame_queue) keep going
             # gather images(frame_queue)
             # send to inference
             first_enter = True
-            if count == 3:
+            if count == 3: # 3번에 한번씩
                 count = 0
                 total_frame_queue.append(image)
                 frame_queue.append(np.array(image[:, :, ::-1]))
+                print("3번째")
                 if len(frame_queue) == sample_length and is_working.value == 0: # when frame_queue fulls | inference func not works
                     current_time = time.time()
+                   
                     is_working.value = 1
-                    to_inference_func.put(frame_queue) # send images
+                    to_inference_func.put(frame_queue.copy()) # send images
                     frame_queue.clear() # deque 초기화 방법 알려주실 분.. (질문드리기) 왜 클리어를 사용하면 빈 리스트를...?
-
+                    
+                    print(frame_queue)
+                    print('비운후 출력')
+                    
                     total_images += total_frame_queue.copy() # 저장할 이미지들
                     total_frame_queue.clear()
                     # 그냥 버릴 것인가 (deque maxlen에 의해 하나씩 빠짐)
             else:
                 count += 1
-        elif len(total_images) > 0: # not exist people long time, then save total images.
+        # elif len(total_images) > 0: # not exist people long time, then save total images.
+        elif len(total_images) > 0 and normal < normal_thres - 1: # not exist people long time, then save total images.
             # first time, save time.time()
             if first_enter:
                 first_enter_time = time.time()
@@ -244,9 +256,7 @@ def show_results(people_count:Value, to_count_func:Queue, to_inference_func:Queu
                     exist_abnormal = True
             
             normal_thres = 2
-            
             if exist_abnormal:
-                
                 normal = 0
             else:
                 if normal <= normal_thres:
@@ -315,7 +325,6 @@ def show_results(people_count:Value, to_count_func:Queue, to_inference_func:Queu
     
 
 def inference(device, from_show_func:Queue, result_queue_index:Queue, frame_width, frame_height, is_working):
-    print("inference입니다")
     config = 'camera/ai_models/mmaction2/configs/recognition/tsn/tsn_r50_video_inference_1x1x3_100e_kinetics400_rgb.py'
     checkpoint = 'camera/ai_models/mmaction2/checkpoints/tsn_r50_1x1x3_100e_kinetics400_rgb_20200614-e508be42.pth'
     # config = 'mmaction2/configs/recognition/tsn/tsn_r50_video_inference_1x1x3_100e_kinetics400_rgb.py'
@@ -336,7 +345,6 @@ def inference(device, from_show_func:Queue, result_queue_index:Queue, frame_widt
     cfg = model.cfg
     pipeline = cfg.data.test.pipeline
     pipeline_ = pipeline.copy()
-    sample_length = 0
     for step in pipeline:
         if 'SampleFrames' in step['type']:
             sample_length = step['clip_len'] * step['num_clips']
@@ -347,7 +355,7 @@ def inference(device, from_show_func:Queue, result_queue_index:Queue, frame_widt
             # remove step to decode frames
             pipeline_.remove(step)
     test_pipeline = Compose(pipeline_)
-
+    
     assert sample_length > 0
     # print(sample_length)
 
@@ -355,13 +363,13 @@ def inference(device, from_show_func:Queue, result_queue_index:Queue, frame_widt
     is_working.value = 0
     while True:
         cur_windows = []
-
         while len(cur_windows) == 0:
+
             cur_windows = list(np.array(from_show_func.get()))
             current_time = time.time()
             if data['img_shape'] is None:
                 data['img_shape'] = (frame_height.value, frame_width.value)
-
+        print('나옴')
         cur_data = data.copy()
         cur_data['imgs'] = cur_windows
         cur_data = test_pipeline(cur_data)

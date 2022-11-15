@@ -18,9 +18,9 @@ class UserManager(BaseUserManager):
 
     def create_superuser(self, id, password):  # superuser 생성 함수
         user = self.create_user(
-            id=id
+            id=id,
+            password=password
         )
-        user.set_password(password)
 
         user.is_superuser = True
         user.is_admin = True
@@ -59,7 +59,7 @@ class Store(models.Model):
 class Camera(models.Model):
     # 같은 모델에 대해 onetoone, foreignkey 두개 다 설정할때 역참조에서 구별이 안됨을 방지하기위해(외래키에서 _set으로 구별이 되지만 에러가나긴함) related_name을 적어줘야함
     store=models.ForeignKey(Store, on_delete=models.CASCADE, null=True, blank=True,related_name='cameras', db_column='store') 
-    rtsp_url=models.CharField(max_length=100,null=True, blank=True) 
+    rtsp_url=models.CharField(max_length=100,null=True, blank=True,unique=True) 
     main_cam = models.BooleanField(default=False,null=True,blank=True)
 
 class Profile(models.Model):

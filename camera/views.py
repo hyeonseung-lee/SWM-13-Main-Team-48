@@ -11,17 +11,18 @@ from camera.ai_models.default2 import *
 # from camera.ai_models.webcam import *
 from camera.ai_models.webcam_thread import *
 from camera.ai_models.cam_with_yolov7_in_multiprocessing import *
+from camera.ai_models.cam_with_yolov5_in_multiprocessing import *
 from .models import *
 from django.db.models import Q
 from django.http import HttpResponse
 from collections import deque
 from django.utils import timezone
-from django.conf import settings
 from datetime import datetime
 import os
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-
+import torch
+import sys
 
 # cap=cv2.VideoCapture(0)
 # @login_required(login_url='dashboards')
@@ -43,6 +44,16 @@ def livecam(request):
         print("에러입니다...")
         pass
 
+def test(request):
+    print('여기')
+    print(torch.__version__)
+    sys.path.insert(0,'./ai_models')
+    
+    a=torch.load('ai_modelsyolov7.pt')
+    print(a)
+    print('되나')
+
+    return redirect('dashboards')
 
 @login_required(login_url='dashboards')
 def default(request):
@@ -94,9 +105,27 @@ def webcam_thread(request):
         return redirect('dashboards')
 
 
+# @login_required(login_url='dashboards')
+# def cam_yolo7_multiprocessing(request):
+#     return StreamingHttpResponse(multiprocessing_main(), content_type="multipart/x-mixed-replace;boundary=frame")
+
 @login_required(login_url='dashboards')
-def cam_multiprocessing(request):
-    return StreamingHttpResponse(multiprocessing_main(), content_type="multipart/x-mixed-replace;boundary=frame")
+def cam_yolo5_multiprocessing(request):
+    main_store = request.user.profile.main_store
+    if main_store is None:
+        print('메인 매장이없음')
+        messages.warning(request, "메인 매장이 없습니다. 설정하세요")
+        return redirect('dashboards')
+    default_camera = Camera.objects.filter(Q(store=main_store) &
+                                           Q(main_cam=True))
+    if default_camera.exists():
+        default_camera = default_camera.first()
+        print(default_camera)
+        return StreamingHttpResponse(multiprocessing_main(request,default_camera) , content_type="multipart/x-mixed-replace;boundary=frame")
+    else:
+        messages.warning(request, "디폴트 카메라가 없습니다. 설정하세요")
+        return redirect('dashboards')
+
 
 
 @login_required(login_url='dashboards')
