@@ -8,6 +8,7 @@ from .push_fcm_notification import send_to_firebase_cloud_messaging
 
 from firebase_admin.messaging import Message
 from fcm_django.models import FCMDevice
+from time import sleep
 
 
 def main(request):
@@ -26,8 +27,9 @@ def main(request):
     # vandalism = vandalism
     state = {"visitor": visitor,
              "obstructions": obstructions, "vandalism": vandalism}
-    # send_to_firebase_cloud_messaging()
 
+    # sleep(20)
+    send_to_firebase_cloud_messaging()
     """ test git README """
     message_obj = Message(
         data={
@@ -38,13 +40,8 @@ def main(request):
     )
 
     # You can still use .filter() or any methods that return QuerySet (from the chain)
-    device = FCMDevice.objects.all().first()
-
-    # send_message parameters include: message, dry_run, app
-    # while True:
+    # device = FCMDevice.objects.all().first()
     # device.send_message(message_obj)
-    print(device)
-    # Boom!
 
     return render(request, 'main.html', {"state": state})
 
@@ -59,11 +56,11 @@ def video_list(request):
     vandalism_description = "매장 내 시설물 파손 등 시설물 이상 의심"
     dummy_videos = [
         {'url': test_url,
-            'action_type': action_type[0], "description": swoon_description, 'datetime': "2022-10-29 10:32", "store":"STORE_NAME"},
+            'action_type': action_type[0], "description": swoon_description, 'datetime': "2022-10-29 10:32", "store":"store"},
         {'url': test_url,
-            'action_type': action_type[0], "description": swoon_description, 'datetime': "2022-10-28 23:33", "store":"STORE_NAME"},
+            'action_type': action_type[0], "description": swoon_description, 'datetime': "2022-10-28 23:33", "store":"store"},
         {'url': test_url,
-            'action_type': action_type[1], "description": vandalism_description, 'datetime': "2022-10-26 01:22", "store":"STORE_NAME"},
+            'action_type': action_type[1], "description": vandalism_description, 'datetime': "2022-10-26 01:22", "store":"store"},
     ]
     return render(request, 'video_list.html', {"dummy_videos": dummy_videos})
 

@@ -248,7 +248,7 @@ def create_camera(request, store_id):
         rtsp_url=request.POST['rtsp_url'],
         store=store
     )
-    return redirect('users:', store_id)
+    return redirect('users:show_store_list')
 
 
 # ---------- 카메라 주소 업데이트 페이지 -------------
@@ -269,7 +269,7 @@ def update_camera(request, store_id, camera_id):
     camera = Camera.objects.get(id=camera_id)
     camera.rtsp_url = request.POST['rtsp_url']
     camera.save()
-    return redirect('users:show_store_info', store_id)
+    return redirect('users:show_store_list')
 
 
 # ---------- 카메라 삭제 -------------
@@ -277,7 +277,7 @@ def update_camera(request, store_id, camera_id):
 def delete_camera(request, store_id, camera_id):
     camera = Camera.objects.get(id=camera_id)
     camera.delete()
-    return redirect('users:show_store_info', store_id)
+    return redirect('users:show_store_list')
 
 # ---------- default 카메라 선정 : 가게가 메인 가게일때만 가능 -------------
 
