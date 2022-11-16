@@ -215,7 +215,7 @@ def set_main_store(request, store_id):
     request.user.profile.main_store = store
     request.user.profile.save()
 
-    return redirect('users:show_store_list')
+    return redirect('dashboards')
 
 
 # ---------- 매장 및 카메라 정보 열람 -------------

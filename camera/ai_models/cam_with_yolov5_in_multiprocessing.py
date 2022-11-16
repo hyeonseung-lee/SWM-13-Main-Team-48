@@ -97,7 +97,7 @@ def show_results(people_count:Value, to_count_func:Queue, to_inference_func:Queu
     total_images = []
     first_enter = True
     normal = normal_thres=2
-    fourcc = cv2.VideoWriter_fourcc('m','p','4','v')
+    fourcc = cv2.VideoWriter_fourcc(*'avc1') # h264 내부처리 조금다른거 빼고 같아서 별칭정도로 알면된다고 함
 
     while is_working.value == 1: # wait until inference model loading is finished
         pass
@@ -175,10 +175,10 @@ def show_results(people_count:Value, to_count_func:Queue, to_inference_func:Queu
                 output.release()
                 request_val=request_val.value
                 default_cam=default_cam.value
-                print(request_val)
-                print(type(request_val))
-                print(default_cam)
-                print(type(default_cam))
+                # print(request_val)
+                # print(type(request_val))
+                # print(default_cam)
+                # print(type(default_cam))
 
                 profile=Profile.objects.get(id=request_val)
                 default_cam=Camera.objects.get(id=default_cam)
@@ -251,10 +251,10 @@ def show_results(people_count:Value, to_count_func:Queue, to_inference_func:Queu
 
                     request_val=request_val.value
                     default_cam=default_cam.value
-                    print(request_val)
-                    print(type(request_val))
-                    print(default_cam)
-                    print(type(default_cam))
+                    # print(request_val)
+                    # print(type(request_val))
+                    # print(default_cam)
+                    # print(type(default_cam))
                     
 
                     profile=Profile.objects.get(id=request_val)

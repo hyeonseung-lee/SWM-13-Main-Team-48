@@ -12,17 +12,21 @@
       <!-- Drop Down - select store -->
       <div class="dropdown-lg" x-data="dropdown()">
         <button class="btn btn-light-primary btn-lg" id="open-color-menu-large" x-spread="trigger">
-          store1
-          <svg class="dropdown-arrow" :class="{ 'rotate-180': open }" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          {{context.main_store.name}}
+          {% if context.stores %}
+            <svg class="dropdown-arrow" :class="{ 'rotate-180': open }" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          {%endif%}
         </button>
+        {% if context.stores %}
         <div class="dropdown-list" id="color-menu-large" x-spread="dropdown" x-cloak>
-          <a href="#" class="dropdown-item">store2</a>
-          <a href="#" class="dropdown-item">store3</a>
-          <a href="#" class="dropdown-item">store4</a>
+          {% for store in context.stores %}
+          <a href="{% url 'users:set_main_store' store.id %}" class="dropdown-item">{{store.name}}</a>
+          {%endfor%}
         </div>
+        {% endif %}
       </div>
       <!-- Date Search Form -->
-      <form class="mt-5" action="{% url 'camera:find' %}">
+      <form class="mt-5" action="{% url 'video_list' %}">
         {% csrf_token %}
         <div  class="flex  items-center ">
             <div  date-rangepicker="" class="sm:flex sm:justify-center sm:items-center lg:justify-start">
@@ -47,12 +51,14 @@
       </form>
     </div>
   </div>
-
-  <div class="w-full px-4 pt-5 pb-6 mx-auto mt-8 mb-6 bg-white rounded-lg grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
-    {% for video in dummy_videos %}
-        {% include "partials/list_box.html" with url=video.url action_type=video.action_type description=video.description datetime=video.datetime store=video.store %}
+  <div class="mt-6 space-y-12 lg:grid lg:grid-cols-3 lg:gap-x-6 lg:space-y-0">
+    {% for cam in context.video_list %}
+        {% for video in cam %}
+        {% include "partials/list_box.html" with   camera=video.camera video=video.video thumbnail=video.thumbnail type=video.type datetime=video.datetime %}
+        {% endfor %}    
     {% endfor %}
-  </div>
+</div> 
+  
 
   {% comment %} <div class="flex flex-col items-center justify-center mt-20 space-x-0 space-y-2 md:space-x-2 md:space-y-0 md:flex-row">
     <a href="#" class="w-full rounded-full btn btn-light btn-xl md:w-auto">Previous Page</a>

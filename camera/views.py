@@ -130,7 +130,7 @@ def cam_yolo5_multiprocessing(request):
 
 @login_required(login_url='dashboards')
 def find(request):
-    """
+    
     try:
         main_store = request.user.profile.main_store
         if main_store is None:
@@ -148,9 +148,13 @@ def find(request):
 
             # result=[]
             for i in videos:
-                path = '/'.join(i.video.split('/')[-4:])
-                path = os.path.join('../../', path)
-                i.video = path
+                video_path = '/'.join(i.video.split('/')[-4:])
+                video_path = os.path.join('../../', video_path)
+                i.video = video_path
+
+                image_path = '/'.join(i.thumbnail.split('/')[-4:])
+                image_path = os.path.join('../../', image_path)
+                i.thumbnail=image_path
                 # result.append(path)
             return render(request, 'find.html', {"videos": videos})
         else:
@@ -158,8 +162,7 @@ def find(request):
             return redirect('dashboards')
     except:
         return render(request, 'find.html')
-    """
-    return render(request, 'find.html')
+    
 
 
 @login_required(login_url='dashboards')

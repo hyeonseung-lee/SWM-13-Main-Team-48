@@ -14,7 +14,7 @@ class Video(models.Model):
     thumbpath=os.path.join(path,'media','record_img',ymd)
 
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True, db_column='profile')
-    camera=models.ForeignKey(Camera,on_delete=models.CASCADE, null=True, blank=True, db_column='camera')
+    camera = models.ForeignKey(Camera,on_delete=models.CASCADE, null=True, blank=True, db_column='camera')
     video = models.FilePathField(verbose_name=_("영상"), null=True, blank=True, path=videopath)
     type = models.CharField(verbose_name=_('상태'), max_length=100, null=True, blank=True)
     # datetime = models.DateTimeField(verbose_name=_("날짜"), auto_now_add=True)
