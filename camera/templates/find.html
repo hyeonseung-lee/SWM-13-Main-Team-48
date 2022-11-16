@@ -36,7 +36,7 @@
                 </form>
              <div class="mt-6 space-y-12 lg:grid lg:grid-cols-3 lg:gap-x-6 lg:space-y-0">
                 {% for video in videos %}
-                    {% include "partials/list_box.html" with url=video.video action_type=video.type datetime=video.datetime %}
+                    {% include "partials/list_box.html" with   camera=video.camera video=video.video thumbnail=video.thumbnail type=video.type datetime=video.datetime %}
                 {% endfor %}
             </div> 
           </div>
