@@ -38,8 +38,6 @@ urlpatterns = [
     path('', include('pwa.urls')),
     path('', include('pwa_webpush.urls')),
 
-    path('test', test),
-
     # firebase cloud message
     path("firebase-messaging-sw.js",
          TemplateView.as_view(

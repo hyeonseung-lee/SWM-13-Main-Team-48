@@ -29,7 +29,7 @@ def main(request):
              "obstructions": obstructions, "vandalism": vandalism}
 
     # sleep(20)
-    send_to_firebase_cloud_messaging()
+    # send_to_firebase_cloud_messaging()
     """ test git README """
     message_obj = Message(
         data={

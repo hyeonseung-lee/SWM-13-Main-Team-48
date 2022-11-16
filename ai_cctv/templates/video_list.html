@@ -12,7 +12,7 @@
       <!-- Drop Down - select store -->
       <div class="dropdown-lg" x-data="dropdown()">
         <button class="btn btn-light-primary btn-lg" id="open-color-menu-large" x-spread="trigger">
-          store1
+          1호점
           <svg class="dropdown-arrow" :class="{ 'rotate-180': open }" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
         </button>
         <div class="dropdown-list" id="color-menu-large" x-spread="dropdown" x-cloak>
@@ -50,7 +50,7 @@
 
   <div class="w-full px-4 pt-5 pb-6 mx-auto mt-8 mb-6 bg-white rounded-lg grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
     {% for video in dummy_videos %}
-        {% include "partials/list_box.html" with url=video.url action_type=video.action_type description=video.description datetime=video.datetime store=video.store %}
+        {% include "partials/list_box.html" with action_type=video.action_type description=video.description datetime=video.datetime store=video.store %}
     {% endfor %}
   </div>
 
