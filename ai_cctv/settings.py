@@ -13,12 +13,9 @@ import os
 import json
 from pathlib import Path
 from django.core.exceptions import ImproperlyConfigured
-from datetime import timedelta
+
 import firebase_admin
-
-from firebase_admin import credentials, initialize_app
-from django.urls import reverse_lazy
-
+from firebase_admin import credentials
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -258,38 +255,14 @@ WEBPUSH_SETTINGS = {
 }
 
 
-"""
-firebase cloud message
-"""
-
-# os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(
-#     BASE_DIR, 'serviceAccountKey.json')
-# FIREBASE_APP = initialize_app()
-
-cred_path = os.path.join(BASE_DIR, "serviceAccountKey.json")
-cred = credentials.Certificate(cred_path)
-
-# firebase_admin.initialize_app(cred)
-FIREBASE_APP = initialize_app(cred)
-
-# Optional ONLY IF you have initialized a firebase app already:
-# Visit https://firebase.google.com/docs/admin/setup/#python
-# for more options for the following:
-# Store an environment variable called GOOGLE_APPLICATION_CREDENTIALS
-# which is a path that point to a json file with your credentials.
-# Additional arguments are available: credentials, options, name
-# To learn more, visit the docs here:
-# https://cloud.google.com/docs/authentication/getting-started>
-
+# firebase cloud message
 FCM_DJANGO_SETTINGS = {
-    # default: _('FCM Django')
-    "APP_VERBOSE_NAME": "[string for AppConfig's verbose_name]",
-    # true if you want to have only one active device per registered user at a time
-    # default: False
-    "ONE_DEVICE_PER_USER": False,
-    # devices to which notifications cannot be sent,
-    # are deleted upon receiving error response from FCM
-    # default: False
-    "DELETE_INACTIVE_DEVICES": True,
+    "FCM_SERVER_KEY": "AAAA9ktfnTc:APA91bEIpP-nDU0T4QhfM6tWO54ZWck6CW4RbDJBhArVr5maqLFEUZW8aS7qop6lEHx0NvXkmJAUElZcV2B211NFMqHFRLTJFooMElJd-Q9O5e_amdHgyLEFYDz-R548hkDAPOHFRjXV",
 }
-DEFAULT=os.path.join(BASE_DIR)
+
+cred = credentials.Certificate(os.path.join(
+    BASE_DIR, 'serviceAccountKey.json'))
+firebase_admin.initialize_app(cred)
+
+
+DEFAULT = os.path.join(BASE_DIR)
