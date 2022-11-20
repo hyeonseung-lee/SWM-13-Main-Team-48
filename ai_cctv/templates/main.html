@@ -1,6 +1,40 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+<div id="token"></div>
+<div id="message"></div>
+<div id="error"></div>
+ 
+
+<script > 
+  const tokenString = document.getElementById("token");
+  const errorMessage = document.getElementById("error");
+  const message = document.getElementById("message");
+  
+  const messaging = firebase.messaging();
+  messaging
+    .requestPermission()
+    .then(() => {
+      message.innerHTML = "Notifications allowed";
+      return messaging.getToken(
+        {vapidKey: "BF03bSV8hfvT_urNxfC-cOQ-Mgoeg5KWJh-p_H7NVW5uxNXiIdNQ3bhw6ozdUi1Esrb-rLz8RkUf_kOJCUPIvkc"}
+      );
+    })
+    .then(token => {
+      tokenString.innerHTML = "Token Is : " + token;
+    })
+    .catch(err => {
+      errorMessage.innerHTML = errorMessage.innerHTML + "; " + err;
+      console.log("No permission to send push", err);
+    });
+    
+  messaging.onMessage(payload => {
+      console.log("Message received. ", payload);
+      const { title, ...options } = payload.notification;
+    });
+  
+</script>
+
 {% if messages  %}
     {% for message in messages %}
         <div class="alert {{ message.tags }} alert-auto-dismissible alert-dismissible notification-container text-center" role="alert">
@@ -106,7 +140,6 @@
 
 
 {% else %}
-
   {%if request.user.profile.main_store%}
   <!-- Search Board -->
   <div class="flex justify-between items-center px-2 py-4">

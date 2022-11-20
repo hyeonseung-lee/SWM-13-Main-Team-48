@@ -19,14 +19,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 from .views import *
 
-from django.views.generic import TemplateView  # fcm
-from fcm_django.api.rest_framework import FCMDeviceAuthorizedViewSet  # fcm
-from rest_framework.routers import DefaultRouter  # fcm
-
-""" for firebase cloud message """
-router = DefaultRouter()
-router.register('devices', FCMDeviceAuthorizedViewSet)
-
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -36,18 +28,14 @@ urlpatterns = [
     path('users/', include('users.urls')),
     path('profile', profile, name='profile'),
     path('', include('pwa.urls')),
-    path('', include('pwa_webpush.urls')),
 
-    path('test', test),
-
+    path('firebase-messaging-sw.js', firebase_messaging_sw,name='firebase_messaging_sw'),
     # firebase cloud message
-    path("firebase-messaging-sw.js",
-         TemplateView.as_view(
-             template_name="firebase-messaging-sw.js",
-             content_type="application/javascript",
-         ),
-         name="firebase-messaging-sw.js"
-         ),
-    path('api/', include(router.urls)),
-    # path('accounts/', include('allauth.urls')),
+    # path("firebase-messaging-sw.js",
+    #      TemplateView.as_view(
+    #          template_name="firebase-messaging-sw.js",
+    #          content_type="application/javascript",
+    #      ),
+    #      name="firebase-messaging-sw"
+    #      ),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

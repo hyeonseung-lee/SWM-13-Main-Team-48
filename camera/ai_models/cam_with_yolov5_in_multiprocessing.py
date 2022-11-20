@@ -224,7 +224,7 @@ def show_results(people_count:Value, to_count_func:Queue, to_inference_func:Queu
             if exist_abnormal:
                 normal = 0
             else:
-                if normal <= normal_thres:
+                if normal < normal_thres:
                     normal += 1
                 if normal == normal_thres:
                     # send total images to save_video func
@@ -273,7 +273,8 @@ def show_results(people_count:Value, to_count_func:Queue, to_inference_func:Queu
 
      
                     total_images = []
-                if normal > normal_thres:
+                else:
+                    print('저장할게 있는 상황에서 이런경우가 있나?')
                     total_images = []
 
         elif len(text_info) != 0: # 기존 inference 결과가 있으면

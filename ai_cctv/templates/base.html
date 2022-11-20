@@ -3,14 +3,14 @@
 {% load compress %}
 <!-- for pwa -->
 {% load pwa %}
-{% load pwa_webpush %}
+{% comment %} {% load pwa_webpush %} {% endcomment %}
 {% comment %} {% load webpush_notifications %} {% endcomment %}
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <!-- for pwa -->
-  {% webpush_header %}
+  {% comment %} {% webpush_header %} {% endcomment %}
   {% progressive_web_app_meta %}
   {% comment %} {{ webpush_header() }} jinja쓰면 괜찮 {% endcomment %}
   <meta charset="UTF-8"/>
@@ -52,12 +52,26 @@
   <!-- tailwind-elements -->
   <script src="./TW-ELEMENTS-PATH/dist/js/index.min.js"></script>
 
-
   <!-- firebase cloud message -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+  <script>
+  const firebaseConfig = {
+      apiKey: "AIzaSyCxObFD0D39E7e3BrGwJPAf7aYhJaeZcMY",
+      authDomain: "fcm-ai-cctv.firebaseapp.com",
+      projectId: "fcm-ai-cctv",
+      storageBucket: "fcm-ai-cctv.appspot.com",
+      messagingSenderId: "1057826512183",
+      appId: "1:1057826512183:web:d777f43a178163f20bceb2",
+      measurementId: "G-X6NR2GX2TH"
+    };
+  firebase.initializeApp(firebaseConfig);
+  </script>
   <!-- Firebase JS -->
+  {% comment %} 
   <script src="https://www.gstatic.com/firebasejs/4.1.2/firebase.js"></script>
   <script src="{% static 'js/index.js' %}"></script>
-  {% comment %} <script src="https://code.jquery.com/jquery-1.12.4.js"></script>		 {% endcomment %}
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
   <script>
     navigator.serviceWorker.register('{% static "js/firebase-messaging-sw.js" %}')
@@ -67,6 +81,7 @@
             }
             });
   </script>
+  {% endcomment %}
 </head>
 
 <body class="bg-gray-300">
