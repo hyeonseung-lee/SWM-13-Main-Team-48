@@ -29,8 +29,7 @@
     {% if result == camera %}
         [디폴트 카메라]<br>
     {% endif %}
-    rtsp 주소 : {{camera.rtsp_url}}<br>
-    
+    rtsp 주소 : <a>{{camera.rtsp_url}}</a>
     
     <a href="{% url 'users:update_camera_page' store.id camera.id %}">카메라 수정</a>
     <a href="{% url 'users:delete_camera' store.id camera.id %}">카메라 삭제</a>

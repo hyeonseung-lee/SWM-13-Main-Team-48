@@ -13,10 +13,11 @@
   },
   "dependencies": {
     "cutty": "^1.0.22",
-    "flowbite": "^1.5.3",
+    "flowbite": "^1.5.4",
     "gulp-csso": "^4.0.1",
     "kutty": "^0.6.0",
-    "postcss-cli": "^10.0.0"
+    "postcss-cli": "^10.0.0",
+    "tw-elements": "^1.0.0-alpha12"
   },
   "name": "ai_cctv",
   "description": "1. 프로젝트 클론 2. secret json 파일 노션에서 다운 3. 가상환경 세팅(python 3.9사용) 4. pip install -r requirements.txt 5. python manage.py makemigrations 6. python manage.py migrate 7. python manage.py runserver",

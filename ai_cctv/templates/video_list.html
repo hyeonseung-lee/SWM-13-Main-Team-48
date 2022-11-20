@@ -51,7 +51,7 @@
       </form>
     </div>
   </div>
-  <div class="mt-6 space-y-12 lg:grid lg:grid-cols-3 lg:gap-x-6 lg:space-y-0">
+  <div class="bg-white rounded-lg mt-6 p-6 space-y-12 lg:grid lg:grid-cols-3 lg:gap-x-6 lg:space-y-0">
     {% for cam in context.video_list %}
         {% for video in cam %}
         {% include "partials/list_box.html" with   camera=video.camera video=video.video thumbnail=video.thumbnail type=video.type datetime=video.datetime %}

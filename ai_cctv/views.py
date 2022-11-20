@@ -17,52 +17,66 @@ import datetime
 
 
 def main(request):
-    # from DB
-    # from Yolo
-    visitor = 10    # 방문자 수
-    wandor = 2      # 배회
-    # from MMAction2
-    swooner = 4     # 실신
-    vandalism = 2   # 기물파손
-    violence = 3    # 폭행
+    try:
+        # 알람 설정하기
+        alarm_state = False
 
-    # sleep(20)
-    # send_to_firebase_cloud_messaging()
-    """ test git README """
-    message_obj = Message(
-        data={
-            "Nick": "Mario",
-            "body": "great match!",
-            "Room": "PortugalVSDenmark"
-        },
-    )
-    # sleep(20)
-    # send_to_firebase_cloud_messaging()
-    """ test git README """
-    # message_obj = Message(
-    #     data={
-    #         "Nick": "Mario",
-    #         "body": "great match!",
-    #         "Room": "PortugalVSDenmark"
-    #     },
-    # )
+        today = timezone.now().date()
+        tomorrow = today+datetime.timedelta(days=1)
+        main_store = request.user.profile.main_store
 
-    # sleep(20)
-    # send_to_firebase_cloud_messaging()
-    """ test git README """
-    # message_obj = Message(
-    #     data={
-    #         "Nick": "Mario",
-    #         "body": "great match!",
-    #         "Room": "PortugalVSDenmark"
-    #     },
-    # )
+        main_store_cameras = Camera.objects.filter(store=main_store)
+        print(main_store)
+        if main_store:
+            # 전체 매장 - 드롭다운용
+            stores = Store.objects.filter(
+                owner=request.user).exclude(id=main_store.id)
+            print(stores)
 
-    # You can still use .filter() or any methods that return QuerySet (from the chain)
-    # device = FCMDevice.objects.all().first()
-    # device.send_message(message_obj)
+            # daily_cumulative_detection=0
+            daily_cumulative_detection = 0
+            # value['swooner']=0
+            # value['vandalism']=0
+            # value['violence']=0
 
-    return render(request, 'main.html', {"context": context})
+            for camera in main_store_cameras:
+
+                # 한 카메라에 대한 하루 비디오 정보
+                videos = Video.objects.filter(
+                    Q(datetime__gte=today) & Q(datetime__lte=tomorrow) & Q(camera=camera))
+
+                daily_cumulative_detection += videos.count()
+
+            #     video_type=videos.values('type').annotate(type_count=Count('type'))
+            #     for i in video_type:
+
+            #         # print(i.type_count)
+            #         # print(i.type)
+            # from DB
+            # from Yolo
+            # print(main_store)
+            context = {
+                "main_store": main_store,
+                "stores": stores,
+                "daily_cumulative_detection": daily_cumulative_detection
+            }
+
+        # sleep(20)
+        # send_to_firebase_cloud_messaging()
+        """ test git README """
+        # message_obj = Message(
+        #     data={
+        #         "Nick": "Mario",
+        #         "body": "great match!",
+        #         "Room": "PortugalVSDenmark"
+        #     },
+        # )
+
+        # You can still use .filter() or any methods that return QuerySet (from the chain)
+        # device = FCMDevice.objects.all().first()
+        # device.send_message(message_obj)
+
+        return render(request, 'main.html', {"context": context, "alarm_state": alarm_state})
     except:
         return render(request, 'main.html')
 

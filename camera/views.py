@@ -10,7 +10,7 @@ from camera.ai_models.default import *
 from camera.ai_models.default2 import *
 # from camera.ai_models.webcam import *
 from camera.ai_models.webcam_thread import *
-from camera.ai_models.cam_with_yolov7_in_multiprocessing import *
+# from camera.ai_models.cam_with_yolov7_in_multiprocessing import *
 from camera.ai_models.cam_with_yolov5_in_multiprocessing import *
 from .models import *
 from django.db.models import Q
@@ -29,6 +29,7 @@ import sys
 # def camerapage(request):
 #     return render(request, 'camera.html')
 
+
 @gzip.gzip_page
 @login_required(login_url='dashboards')
 def livecam(request):
@@ -44,16 +45,18 @@ def livecam(request):
         print("에러입니다...")
         pass
 
+
 def test(request):
     print('여기')
     print(torch.__version__)
-    sys.path.insert(0,'./ai_models')
-    
-    a=torch.load('ai_modelsyolov7.pt')
+    sys.path.insert(0, './ai_models')
+
+    a = torch.load('ai_modelsyolov7.pt')
     print(a)
     print('되나')
 
     return redirect('dashboards')
+
 
 @login_required(login_url='dashboards')
 def default(request):
@@ -121,16 +124,15 @@ def cam_yolo5_multiprocessing(request):
     if default_camera.exists():
         default_camera = default_camera.first()
         print(default_camera)
-        return StreamingHttpResponse(multiprocessing_main(request,default_camera) , content_type="multipart/x-mixed-replace;boundary=frame")
+        return StreamingHttpResponse(multiprocessing_main(request, default_camera), content_type="multipart/x-mixed-replace;boundary=frame")
     else:
         messages.warning(request, "디폴트 카메라가 없습니다. 설정하세요")
         return redirect('dashboards')
 
 
-
 @login_required(login_url='dashboards')
 def find(request):
-    
+
     try:
         main_store = request.user.profile.main_store
         if main_store is None:
@@ -154,7 +156,7 @@ def find(request):
 
                 image_path = '/'.join(i.thumbnail.split('/')[-4:])
                 image_path = os.path.join('../../', image_path)
-                i.thumbnail=image_path
+                i.thumbnail = image_path
                 # result.append(path)
             return render(request, 'find.html', {"videos": videos})
         else:
@@ -162,7 +164,6 @@ def find(request):
             return redirect('dashboards')
     except:
         return render(request, 'find.html')
-    
 
 
 @login_required(login_url='dashboards')
