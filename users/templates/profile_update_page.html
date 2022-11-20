@@ -25,7 +25,13 @@
             src="{% static 'images/placeholder.jpeg' %}"
             {% endif %}
             />
-            <input type="file" name= "photo" value="{{request.user.profile.username}}" onchange="loadFile(event)">
+            <input type="file" name= "photo" 
+              {% if request.user.profile.username %}
+              value="{{request.user.profile.username}}"
+              {% else %}
+              value="username"
+              {% endif %}
+              onchange="loadFile(event)">
               <script>
               var loadFile = function(event) {
                   var avatar = document.getElementById('avatar');

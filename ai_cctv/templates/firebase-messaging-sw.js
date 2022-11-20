@@ -4,44 +4,39 @@
 // are not available in the service worker.
 importScripts("https://www.gstatic.com/firebasejs/3.9.0/firebase-app.js");
 importScripts("https://www.gstatic.com/firebasejs/3.9.0/firebase-messaging.js");
+importScripts("https://www.gstatic.com/firebasejs/7.2.1/firebase-analytics.js");
+
+console.log("test sw");
 
 // Initialize the Firebase app in the service worker by passing in the
 // messagingSenderId.
-firebase.initializeApp({
-  // Replace messagingSenderId with yours
-  messagingSenderId: "1057826512183", // my ID
-});
+var config = {
+  apiKey: "AIzaSyCxObFD0D39E7e3BrGwJPAf7aYhJaeZcMY",
+  authDomain: "fcm-ai-cctv.firebaseapp.com",
+  //    databaseURL: "https://fcm-test-88425.firebaseio.com",
+  storageBucket: "fcm-ai-cctv.appspot.com",
+  messagingSenderId: "1057826512183",
+};
+firebase.initializeApp(config);
 
 // Retrieve an instance of Firebase Messaging so that it can handle background
 // messages.
 const messaging = firebase.messaging();
-// [END initialize_firebase_in_sw]
 
-// If you would like to customize notifications that are received in the
-// background (Web app is closed or not in browser focus) then you should
-// implement this optional method.
-// [START background_handler]
-messaging.setBackgroundMessageHandler(function (payload) {
+messaging.setBackgroundMessageHandler((payload) => {
   console.log(
     "[firebase-messaging-sw.js] Received background message ",
     payload
   );
   // Customize notification here
-  payload = payload.data;
-  const notificationTitle = payload.title;
+  const notification = JSON.parse(payload.data.notification);
+  const notificationTitle = notification.title;
   const notificationOptions = {
-    body: payload.body,
-    icon: payload.icon_url,
+    body: notification.body,
   };
-
-  self.addEventListener("notificationclick", function (event) {
-    event.notification.close();
-    clients.openWindow(payload.url);
-  });
 
   return self.registration.showNotification(
     notificationTitle,
     notificationOptions
   );
 });
-// [END background_handler]
