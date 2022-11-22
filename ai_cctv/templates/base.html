@@ -3,16 +3,14 @@
 {% load compress %}
 <!-- for pwa -->
 {% load pwa %}
-{% load pwa_webpush %}
+{% comment %} {% load pwa_webpush %} {% endcomment %}
 {% comment %} {% load webpush_notifications %} {% endcomment %}
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <!-- for pwa -->
-  {% webpush_header %}
   {% progressive_web_app_meta %}
-  {% comment %} {{ webpush_header() }} jinja쓰면 괜찮 {% endcomment %}
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
@@ -37,7 +35,7 @@
   
   <!-- flowbite -->
   <script src="https://unpkg.com/flowbite@1.5.3/dist/flowbite.js"></script>
-  <script src="../path/to/flowbite/dist/datepicker.js"></script>
+  {% comment %} <script src="../path/to/flowbite/dist/datepicker.js"></script> {% endcomment %}
   <script src="https://unpkg.com/flowbite@1.5.3/dist/datepicker.js"></script>
 
   <!-- kutty -->
@@ -50,9 +48,7 @@
   <script src="https://cdn.jsdelivr.net/npm/kutty@latest/dist/dropdown.min.js"></script>
 
   <!-- tailwind-elements -->
-  <script src="./TW-ELEMENTS-PATH/dist/js/index.min.js"></script>
-
-
+  {% comment %} <script src="./TW-ELEMENTS-PATH/dist/js/index.min.js"></script> {% endcomment %}
 
   <!-- Sign in one page  -->
   <link rel="manifest" href="manifest.json">
@@ -69,7 +65,7 @@
   <script>
     var iOS = !!navigator.platform && /iPhone/.test(navigator.platform);
     if (iOS) {
-     document.querySelector('link[rel="manifest"]').setAttribute("rel", "no-on-ios");
+      document.querySelector('link[rel="manifest"]').setAttribute("rel", "no-on-ios");
     console.log("ios detected")
     }
     else{
@@ -77,6 +73,7 @@
     }
   </script>
 
+  
 
 </head>
 
@@ -93,8 +90,8 @@
         {% endblock content %}
 
 
-
-
+        
+        {% if request.user.is_authenticated %}
         <main class="mdl-layout__content mdl-color--grey-100">
           <div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
       
@@ -124,7 +121,7 @@
       
           </div>
         </main>
-
+        {% endif %}
 
 
 
@@ -148,29 +145,28 @@
         3. Click "Add Firebase to your web app"
         4. Replace the following initialization code with the code from the Firebase console:
 -->
-<!-- START INITIALIZATION CODE -->
-<script src="https://www.gstatic.com/firebasejs/4.1.2/firebase.js"></script>
+  <!-- firebase cloud message -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
 <script>
-  // Initialize Firebase
-  var config = {
+const firebaseConfig = {
     apiKey: "AIzaSyCxObFD0D39E7e3BrGwJPAf7aYhJaeZcMY",
     authDomain: "fcm-ai-cctv.firebaseapp.com",
-//    databaseURL: "https://fcm-test-88425.firebaseio.com",
+    projectId: "fcm-ai-cctv",
     storageBucket: "fcm-ai-cctv.appspot.com",
-    messagingSenderId: "1057826512183"
+    messagingSenderId: "1057826512183",
+    appId: "1:1057826512183:web:d777f43a178163f20bceb2",
+    measurementId: "G-X6NR2GX2TH"
   };
-  firebase.initializeApp(config);
+firebase.initializeApp(firebaseConfig);
 </script>
-<!-- END INITIALIZATION CODE -->
+
 <!-- ******************************************************** -->
 {% csrf_token %}
 <script>
-  // [START get_messaging_object]
-  // Retrieve Firebase Messaging object.
-  const messaging = firebase.messaging();
-  // [END get_messaging_object]
 
-  // IDs of divs that display Instance ID token UI or request permission UI.
+  const messaging = firebase.messaging();
+ 
   const tokenDivId = 'token_div';
   const permissionDivId = 'permission_div';
 
@@ -262,7 +258,7 @@
       console.log('Sending token to server...');
       // TODO(developer): Send the current token to your server.
       $.ajax({
-        url: "/api/devices/",
+        url: "{% url 'token_save' %}",
         method: "POST",
         async: false,
         data: {
@@ -338,8 +334,24 @@
     .then(function(currentToken) {
       messaging.deleteToken(currentToken)
       .then(function() {
-        console.log('Token deleted.');
-        setTokenSentToServer(false);
+        $.ajax({
+          url: "{% url 'token_delete' %}",
+          method: "POST",
+          async: false,
+          
+          headers:{
+            'X-CSRFTOKEN': '{{ csrf_token }}',
+        },
+          success: function (data) {
+            console.log( `${data} Token deleted.`);
+            setTokenSentToServer(false);
+     
+          },
+          error: function (err) {
+            console.log(err);
+          },
+        });
+       
         // [START_EXCLUDE]
         // Once token is deleted update UI.
         resetUI();

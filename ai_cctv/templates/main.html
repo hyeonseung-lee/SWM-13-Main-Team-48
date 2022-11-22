@@ -1,6 +1,40 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+{% comment %} <div id="token"></div>
+<div id="message"></div>
+<div id="error"></div>
+ 
+
+<script > 
+  const tokenString = document.getElementById("token");
+  const errorMessage = document.getElementById("error");
+  const message = document.getElementById("message");
+  
+  const messaging = firebase.messaging();
+  messaging
+    .requestPermission()
+    .then(() => {
+      message.innerHTML = "Notifications allowed";
+      return messaging.getToken(
+        {vapidKey: "BF03bSV8hfvT_urNxfC-cOQ-Mgoeg5KWJh-p_H7NVW5uxNXiIdNQ3bhw6ozdUi1Esrb-rLz8RkUf_kOJCUPIvkc"}
+      );
+    })
+    .then(token => {
+      tokenString.innerHTML = "Token Is : " + token;
+    })
+    .catch(err => {
+      errorMessage.innerHTML = errorMessage.innerHTML + "; " + err;
+      console.log("No permission to send push", err);
+    });
+    
+  messaging.onMessage(payload => {
+      console.log("Message received. ", payload);
+      const { title, ...options } = payload.notification;
+    });
+  
+</script> {% endcomment %}
+
 {% if messages  %}
     {% for message in messages %}
         <div class="alert {{ message.tags }} alert-auto-dismissible alert-dismissible notification-container text-center" role="alert">
@@ -96,7 +130,6 @@
 
 
 {% else %}
-
   {%if request.user.profile.main_store%}
   <!-- Search Board -->
   <div class="flex justify-between items-center">
@@ -226,7 +259,7 @@
               <svg aria-hidden="true" class="mx-auto mb-4 w-14 h-14 text-gray-400 dark:text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
               <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">이상탐지 알림을 켜시겠습니까?</h3>
 
-              <a href=""> <!-- post off api -->
+              <a href="{% url 'camera:cam_yolo5_multiprocessing'%}"> <!-- post off api -->
               <button data-modal-toggle="popup-modal-offAlarm" type="button" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
                   네, 켜주세요
               </button>

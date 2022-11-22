@@ -68,7 +68,7 @@ def get_token(request):
             login(request, user)
 
             # 여기에서 사용자 정보 받는 곳으로 Redirect 시켜야함 -----------------------
-            return redirect('')
+            return redirect('profile')
         # 회원가입이 되어있는 경우
         else:
             print("이미 회원가입은 했음")
@@ -150,10 +150,10 @@ def profile_update(request):
         return redirect('profile')
 
 
-# ---------- 매장 생성 페이지 -------------
-@login_required(login_url='dashboards')
-def create_store_page(request):
-    return render(request, 'store/store_page.html')
+# # ---------- 매장 생성 페이지 -------------
+# @login_required(login_url='dashboards')
+# def create_store_page(request):
+#     return render(request, 'store/store_page.html')
 
 # ---------- 매장 생성 -------------
 
@@ -170,10 +170,10 @@ def create_store(request):
 # ---------- 매장 정보 업데이트 페이지 -------------
 
 
-@login_required(login_url='dashboards')
-def update_store_page(request, store_id):
-    store = Store.objects.get(id=store_id)
-    return render(request, 'store/store_page.html', {"store": store})
+# @login_required(login_url='dashboards')
+# def update_store_page(request, store_id):
+#     store = Store.objects.get(id=store_id)
+#     return render(request, 'store/store_page.html', {"store": store})
 
 # ---------- 매장 정보 업데이트 -------------
 
@@ -218,24 +218,24 @@ def set_main_store(request, store_id):
     return redirect('dashboards')
 
 
-# ---------- 매장 및 카메라 정보 열람 -------------
-@login_required(login_url='dashboards')
-def show_store_info(request, store_id):
-    store = Store.objects.get(id=store_id)
-    cameras = Camera.objects.filter(store=store)
-    default = Camera.objects.filter(store=store, main_cam=True)
-    result = None
-    if default.exists():
-        result = default.first()
-    default = default.exists()
+# # ---------- 매장 및 카메라 정보 열람 -------------
+# @login_required(login_url='dashboards')
+# def show_store_info(request, store_id):
+#     store = Store.objects.get(id=store_id)
+#     cameras = Camera.objects.filter(store=store)
+#     default = Camera.objects.filter(store=store, main_cam=True)
+#     result = None
+#     if default.exists():
+#         result = default.first()
+#     default = default.exists()
 
-    context = {
-        "store": store,
-        "cameras": cameras,
-        "is_default": default,
-        "result": result
-    }
-    return render(request, 'store/store_and_camera_info.html', context)
+#     context = {
+#         "store": store,
+#         "cameras": cameras,
+#         "is_default": default,
+#         "result": result
+#     }
+#     return render(request, 'store/store_and_camera_info.html', context)
 
 # ---------- 카메라 생성 -------------
 
@@ -251,15 +251,15 @@ def create_camera(request, store_id):
     return redirect('users:show_store_list')
 
 
-# ---------- 카메라 주소 업데이트 페이지 -------------
-@login_required(login_url='dashboards')
-def update_camera_page(request, store_id, camera_id):
-    camera = Camera.objects.get(id=camera_id)
-    context = {
-        "store_id": store_id,
-        "camera": camera
-    }
-    return render(request, 'camera/update_camera_page.html', context)
+# # ---------- 카메라 주소 업데이트 페이지 -------------
+# @login_required(login_url='dashboards')
+# def update_camera_page(request, store_id, camera_id):
+#     camera = Camera.objects.get(id=camera_id)
+#     context = {
+#         "store_id": store_id,
+#         "camera": camera
+#     }
+#     return render(request, 'camera/update_camera_page.html', context)
 
 # ---------- 카메라 주소 업데이트 -------------
 

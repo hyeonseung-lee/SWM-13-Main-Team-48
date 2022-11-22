@@ -8,14 +8,16 @@ const ErrElem = document.getElementById("err");
 // Initialize Firebase
 // TODO: Replace with your project's customized code snippet
 
-const config = {
+const firebaseConfig = {
   apiKey: "AIzaSyCxObFD0D39E7e3BrGwJPAf7aYhJaeZcMY",
   authDomain: "fcm-ai-cctv.firebaseapp.com",
-  //    databaseURL: "https://fcm-test-88425.firebaseio.com",
+  projectId: "fcm-ai-cctv",
   storageBucket: "fcm-ai-cctv.appspot.com",
   messagingSenderId: "1057826512183",
+  appId: "1:1057826512183:web:d777f43a178163f20bceb2",
+  measurementId: "G-X6NR2GX2TH"
 };
-firebase.initializeApp(config);
+firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 initializeApp();
 
