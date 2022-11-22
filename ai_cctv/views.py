@@ -14,7 +14,9 @@ from camera.models import *
 from django.db.models import Q, Count
 from django.utils import timezone
 import datetime
-
+from django.views.decorators.http import require_POST
+from django.http import HttpResponse
+import json
 
 def main(request):
     try:
@@ -112,3 +114,11 @@ def profile(request):
 def firebase_messaging_sw(request):
     return render(request, 'firebase-messaging-sw.js'
     ,content_type="application/javascript")
+
+
+@require_POST
+def token_save(request):
+    request.user.profile.fcm_token=request.POST['registration_id']
+    request.user.profile.save()
+    return HttpResponse(json.dumps({"user_nickname":request.user.profile.username}),content_type="application/json")
+

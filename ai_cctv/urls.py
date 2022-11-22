@@ -29,6 +29,7 @@ urlpatterns = [
     path('profile', profile, name='profile'),
     path('', include('pwa.urls')),
 
+    path('token_save/',token_save,name="token_save"),
     path('firebase-messaging-sw.js', firebase_messaging_sw,name='firebase_messaging_sw'),
     # firebase cloud message
     # path("firebase-messaging-sw.js",

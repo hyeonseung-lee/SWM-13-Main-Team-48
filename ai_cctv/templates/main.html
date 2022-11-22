@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<div id="token"></div>
+{% comment %} <div id="token"></div>
 <div id="message"></div>
 <div id="error"></div>
  
@@ -33,7 +33,7 @@
       const { title, ...options } = payload.notification;
     });
   
-</script>
+</script> {% endcomment %}
 
 {% if messages  %}
     {% for message in messages %}

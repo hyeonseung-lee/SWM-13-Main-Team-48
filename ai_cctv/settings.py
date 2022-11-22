@@ -190,7 +190,7 @@ STATIC_URL = '/static/'
 
 
 STATICFILES_DIRS=[os.path.join(BASE_DIR,"ai_cctv","static")]
-
+# 파일은 리스트나 튜플로 여러개줘도됨, collectstatic하면 root에 모이는데 파일경로 하나만 주려면 다 넘겨주면됨
 STATIC_ROOT=os.path.join(BASE_DIR,"static")
 
 

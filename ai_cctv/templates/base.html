@@ -35,7 +35,7 @@
   
   <!-- flowbite -->
   <script src="https://unpkg.com/flowbite@1.5.3/dist/flowbite.js"></script>
-  <script src="../path/to/flowbite/dist/datepicker.js"></script>
+  {% comment %} <script src="../path/to/flowbite/dist/datepicker.js"></script> {% endcomment %}
   <script src="https://unpkg.com/flowbite@1.5.3/dist/datepicker.js"></script>
 
   <!-- kutty -->
@@ -48,7 +48,7 @@
   <script src="https://cdn.jsdelivr.net/npm/kutty@latest/dist/dropdown.min.js"></script>
 
   <!-- tailwind-elements -->
-  <script src="./TW-ELEMENTS-PATH/dist/js/index.min.js"></script>
+  {% comment %} <script src="./TW-ELEMENTS-PATH/dist/js/index.min.js"></script> {% endcomment %}
 
   <!-- firebase cloud message -->
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -81,7 +81,7 @@
         {% endblock content %}
 
 
-
+        
 
         <main class="mdl-layout__content mdl-color--grey-100">
           <div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
@@ -140,12 +140,9 @@
 <!-- ******************************************************** -->
 {% csrf_token %}
 <script>
-  // [START get_messaging_object]
-  // Retrieve Firebase Messaging object.
-  const messaging = firebase.messaging();
-  // [END get_messaging_object]
 
-  // IDs of divs that display Instance ID token UI or request permission UI.
+  const messaging = firebase.messaging();
+ 
   const tokenDivId = 'token_div';
   const permissionDivId = 'permission_div';
 
@@ -237,7 +234,7 @@
       console.log('Sending token to server...');
       // TODO(developer): Send the current token to your server.
       $.ajax({
-        url: "/api/devices/",
+        url: "{% url 'token_save' %}",
         method: "POST",
         async: false,
         data: {
