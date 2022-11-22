@@ -163,6 +163,7 @@
                     </button>
                     
                     <a href="{% url 'users:delete_camera' store.id camera.id %}" class="btn btn-light-primary btn-sm">삭제</a>
+                    <a href="{% url 'users:set_default_camera' store.id camera.id %}" class="btn btn-light-primary btn-sm">디폴트</a>
                     
                   </div>
               </div>

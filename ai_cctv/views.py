@@ -122,3 +122,9 @@ def token_save(request):
     request.user.profile.save()
     return HttpResponse(json.dumps({"user_nickname":request.user.profile.username}),content_type="application/json")
 
+@require_POST
+def token_delete(request):
+    request.user.profile.fcm_token=None
+    request.user.profile.save()
+    return HttpResponse(json.dumps({"user_nickname":request.user.profile.username}),content_type="application/json")
+

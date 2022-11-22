@@ -76,13 +76,13 @@ def show_results(people_count:Value, to_count_func:Queue, to_inference_func:Queu
     thumbnail_path=os.path.join(save_path[:-7], 'media','record_img') 
 
     print('Press "Esc", "q" or "Q" to exit')
-    camera = cv2.VideoCapture(0)
+    camera = cv2.VideoCapture('rtsp://admin:somateam23@172.16.101.140:554/profile2/media.smp')
     camera.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
     camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
     frame_width.value = int(camera.get(cv2.CAP_PROP_FRAME_WIDTH))
     frame_height.value = int(camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
     threshold = 0.01
-    drawing_fps = 20
+    # drawing_fps = 20
     sample_length = 25
 
     # label info
@@ -173,19 +173,19 @@ def show_results(people_count:Value, to_count_func:Queue, to_inference_func:Queu
                     output.write(img)
                 
                 output.release()
-                request_val=request_val.value
-                default_cam=default_cam.value
+                request_value=request_val.value
+                default_camera=default_cam.value
                 # print(request_val)
                 # print(type(request_val))
                 # print(default_cam)
                 # print(type(default_cam))
 
-                profile=Profile.objects.get(id=request_val)
-                default_cam=Camera.objects.get(id=default_cam)
+                profile=Profile.objects.get(id=request_value)
+                default_cam_obj=Camera.objects.get(id=default_camera)
                 video_instance=Video_model.objects.create(
                     profile=profile,
                     video=video_path+'/{}/{}.mp4'.format(ymd,t),
-                    camera=default_cam,
+                    camera=default_cam_obj,
                     type=label[result_queue_index[0]],
                     datetime=now,
                     thumbnail=thumbnail_path+'/{}/{}.jpg'.format(ymd,t)
@@ -249,20 +249,20 @@ def show_results(people_count:Value, to_count_func:Queue, to_inference_func:Queu
                         output.write(img)
                     output.release()
 
-                    request_val=request_val.value
-                    default_cam=default_cam.value
+                    request_value=request_val.value
+                    default_camera=default_cam.value
                     # print(request_val)
                     # print(type(request_val))
                     # print(default_cam)
                     # print(type(default_cam))
                     
 
-                    profile=Profile.objects.get(id=request_val)
-                    default_cam=Camera.objects.get(id=default_cam)
+                    profile=Profile.objects.get(id=request_value)
+                    default_cam_obj=Camera.objects.get(id=default_camera)
                     video_instance=Video_model.objects.create(
                         profile=profile,
                         video=video_path+'/{}/{}.mp4'.format(ymd,t),
-                        camera=default_cam,
+                        camera=default_cam_obj,
                         type=label[result_queue_index[0]],
                         datetime=now,
                         thumbnail=thumbnail_path+'/{}/{}.jpg'.format(ymd,t)
@@ -297,12 +297,12 @@ def show_results(people_count:Value, to_count_func:Queue, to_inference_func:Queu
         if ch == 27 or ch == ord('q') or ch == ord('Q'):
             break
 
-        if drawing_fps > 0:
-            # add a limiter for actual drawing fps <= drawing_fps
-            sleep_time = 1 / drawing_fps - (time.time() - cur_time)
-            if sleep_time > 0:
-                time.sleep(sleep_time)
-            cur_time = time.time()
+        # if drawing_fps > 0:
+        #     # add a limiter for actual drawing fps <= drawing_fps
+        #     sleep_time = 1 / drawing_fps - (time.time() - cur_time)
+        #     if sleep_time > 0:
+        #         time.sleep(sleep_time)
+        #     cur_time = time.time()
     
     camera.release()
     cv2.destroyAllWindows()
