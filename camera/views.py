@@ -62,7 +62,8 @@ def test(request):
 def default(request):
     # global cap
     cap = cv2.VideoCapture()
-    cap.open(0)
+    cap.open('rtsp://admin:somateam23@172.16.101.140:554/profile2/media.smp')
+
 
     # src=request.user.profile.main_store.default_cam
     # cap=cap(src)

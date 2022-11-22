@@ -68,7 +68,7 @@ def get_token(request):
             login(request, user)
 
             # 여기에서 사용자 정보 받는 곳으로 Redirect 시켜야함 -----------------------
-            return redirect('')
+            return redirect('profile')
         # 회원가입이 되어있는 경우
         else:
             print("이미 회원가입은 했음")
