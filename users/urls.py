@@ -34,4 +34,5 @@ urlpatterns = [
     path('delete_camera/<str:store_id>/<str:camera_id>', delete_camera, name="delete_camera"),
     path('set_default_camera/<str:store_id>/<str:camera_id>', set_default_camera, name="set_default_camera"),
     
+    path('want_push', want_push, name="want_push"),
 ]
