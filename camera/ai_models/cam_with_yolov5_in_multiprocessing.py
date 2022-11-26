@@ -19,6 +19,7 @@ from mmcv import Config
 from mmcv.parallel import collate, scatter
 from mmaction.apis import init_recognizer
 from mmaction.datasets.pipelines import Compose
+from users.push_fcm_notification import *
 # import multiprocessing as mp
 # mp.set_start_method('fork')
 FONTFACE = cv2.FONT_HERSHEY_COMPLEX_SMALL
@@ -76,7 +77,11 @@ def show_results(people_count:Value, to_count_func:Queue, to_inference_func:Queu
     thumbnail_path=os.path.join(save_path[:-7], 'media','record_img') 
 
     print('Press "Esc", "q" or "Q" to exit')
-    camera = cv2.VideoCapture('rtsp://admin:somateam23@172.16.101.140:554/profile2/media.smp')
+    cam_url=Camera.objects.get(id=default_camera).rtsp_url
+    if cam_url:
+        camera = cv2.VideoCapture(cam_url)
+    else:
+        camera=cv2.VideoCapture(0)
     camera.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
     camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
     frame_width.value = int(camera.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -192,8 +197,9 @@ def show_results(people_count:Value, to_count_func:Queue, to_inference_func:Queu
                 )
                 print(video_instance)
                 # output = cv2.VideoWriter(f'data/mysave/{int(time.time())}.mp4', fourcc, 10, (frame_width.value, frame_height.value))
-                
-                # send_to_firebase_cloud_messaging_User(request.user.profile.fcm_toekn,request.user,top_reuslt)
+                if profile.push==True:
+                    send_to_firebase_cloud_messaging_User(profile.fcm_token,profile.username,label[result_queue_index[0]])
+
 
                 total_images = []
                 first_enter = True
@@ -269,7 +275,8 @@ def show_results(people_count:Value, to_count_func:Queue, to_inference_func:Queu
                     )
                     print(video_instance)
                     
-                    # send_to_firebase_cloud_messaging_User(request.user.profile.fcm_toekn,request.user,top_reuslt)
+                    if profile.push==True:
+                        send_to_firebase_cloud_messaging_User(profile.fcm_token,profile.username,label[result_queue_index[0]])
 
      
                     total_images = []

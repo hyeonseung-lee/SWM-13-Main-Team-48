@@ -23,7 +23,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 import torch
 import sys
-
+from users.push_fcm_notification import *
 # cap=cv2.VideoCapture(0)
 # @login_required(login_url='dashboards')
 # def camerapage(request):
@@ -125,6 +125,7 @@ def cam_yolo5_multiprocessing(request):
     if default_camera.exists():
         default_camera = default_camera.first()
         print(default_camera)
+
         return StreamingHttpResponse(multiprocessing_main(request, default_camera), content_type="multipart/x-mixed-replace;boundary=frame")
     else:
         messages.warning(request, "디폴트 카메라가 없습니다. 설정하세요")
@@ -170,3 +171,9 @@ def find(request):
 @login_required(login_url='dashboards')
 def livepage(request):
     return render(request, 'livepage.html')
+
+def test(request):
+    print(request.user.profile.fcm_token)
+    message_test(request.user.profile.fcm_token)
+    
+    return redirect('dashboards')

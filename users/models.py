@@ -68,6 +68,7 @@ class Profile(models.Model):
     fcm_token=models.CharField(max_length=200,null=True,blank=True,unique=True) # fcm push token (id)
     photo=models.ImageField(upload_to='user_photo/',null=True,blank=True)
     username=models.CharField(max_length=50,null=True,blank=True) 
+    push=models.BooleanField(default=False,null=True,blank=True)
     # 몇명 방문한지 기록
 #     # app_push_check=models.BooleanField(verbose_name=_("앱 푸시"), default=True) # 앱 push 알림 선택
 #     # email_push_check=models.BooleanField(verbose_name=_("email 푸시"),default=False) # email push 알림
