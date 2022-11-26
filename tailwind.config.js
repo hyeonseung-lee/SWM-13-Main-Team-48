@@ -24,7 +24,6 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        cyan: colors.lightblue,
         primary: {
           light: "#E8E2FD", // For lighter primary color
           DEFAULT: "#5900D0", // Normal primary color
