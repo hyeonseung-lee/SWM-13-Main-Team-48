@@ -21,7 +21,7 @@ import json
 def main(request):
     try:
         # 알람 설정하기
-        alarm_state = False
+        # alarm_state = False
 
         today = timezone.now().date()
         tomorrow = today+datetime.timedelta(days=1)
@@ -52,7 +52,7 @@ def main(request):
 
 
 
-        return render(request, 'main.html', {"context": context, "alarm_state": alarm_state})
+        return render(request, 'main.html', {"context": context})
     except:
         return render(request, 'main.html')
 

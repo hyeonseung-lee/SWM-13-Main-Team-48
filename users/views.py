@@ -295,8 +295,23 @@ def set_default_camera(request, store_id, camera_id):
         camera = Camera.objects.get(id=camera_id)
         camera.main_cam = True
         camera.save()
-        return redirect('users:show_store_info', store_id)
+        # return redirect('users:show_store_info', store_id)
+        return redirect('users:show_store_list')
 
     else:
         messages.warning(request, "해당가게는 메인 가게가 아닙니다")
-        return redirect('users:show_store_info', store_id)
+        # return redirect('users:show_store_info', store_id)
+        return redirect('users:show_store_list')
+
+# --- push 여부 세팅 --
+@login_required(login_url='dashboards')
+def want_push(request):
+    profile=request.user.profile
+    push=profile.push
+    if push:
+        profile.push=False
+        profile.save()
+    else:
+        profile.push=True
+        profile.save()
+    return redirect('dashboards')

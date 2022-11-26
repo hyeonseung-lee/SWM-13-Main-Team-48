@@ -17,3 +17,15 @@ def send_to_firebase_cloud_messaging_User(fcm_token,user_info,behavior):
     response = messaging.send(message)
     # Response is a message ID string.
     print('Successfully sent message:', response)
+
+def message_test(fcm_token):
+    message = messaging.Message(
+        notification=messaging.Notification(
+            title='이상행동 감지로 인한 영상 저장 안내',
+            body='이상행동이 발생했습니다',
+            
+        ),
+        token=fcm_token,
+    )
+
+    response = messaging.send(message)
