@@ -79,6 +79,8 @@ def show_results(people_count:Value, to_count_func:Queue, to_inference_func:Queu
     print('Press "Esc", "q" or "Q" to exit')
     cam_url=Camera.objects.get(id=default_camera).rtsp_url
     if cam_url:
+        if cam_url=='0':
+            cam_url=0
         camera = cv2.VideoCapture(cam_url)
     else:
         camera=cv2.VideoCapture(0)
