@@ -62,13 +62,20 @@ def test(request):
 def default(request):
     # global cap
     cap = cv2.VideoCapture()
-    cap.open('rtsp://admin:somateam23@172.16.101.140:554/profile2/media.smp')
+    main_store=request.user.profile.main_store
+    if main_store:
+        url=Camera.objects.get(store=main_store).rtsp_url
+        print(url)
+        if url == '0':
+            url=0
+        cap.open(url)
 
 
     # src=request.user.profile.main_store.default_cam
     # cap=cap(src)
-    return StreamingHttpResponse(default_streaming(cap), content_type="multipart/x-mixed-replace;boundary=frame")
-
+        return StreamingHttpResponse(default_streaming(cap), content_type="multipart/x-mixed-replace;boundary=frame")
+    else:
+        return redirect('users:show_store_list')
 # @gzip.gzip_page
 # @login_required(login_url='dashboards')
 # def mediapipe(request):
